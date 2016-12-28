@@ -1,7 +1,3 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
 /** Enables console.log comments */
 const DEBUG = true;
 
@@ -194,5 +190,4 @@ class TwoColumnsLayout extends BaseLayout {
 
 // Here we import all "public" classes to expose them
 
-exports.SimpleLayout = SimpleLayout;
-exports.TwoColumnsLayout = TwoColumnsLayout;
+export { SimpleLayout, TwoColumnsLayout };
