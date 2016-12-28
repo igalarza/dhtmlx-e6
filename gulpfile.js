@@ -41,8 +41,7 @@ gulp.task('build', function() {
 		babel({
 			presets: [["es2015", { "modules": false }]],
 			plugins: ["external-helpers"]
-		}),
-		uglify()		
+		})		
 	  ]
     })
 	

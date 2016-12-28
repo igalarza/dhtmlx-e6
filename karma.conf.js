@@ -8,7 +8,7 @@ module.exports = function(config) {
     browsers: ['Chrome'],
     frameworks: ['jasmine'],
     files: [
-		'dist/vendor/dhtmlx.js',
+		'vendor/dhtmlx.js',
 		{ pattern: 'src/**/*.js', included: false },
 		'test/**/*.spec.js'
     ],
@@ -17,7 +17,6 @@ module.exports = function(config) {
         'test/**/*.spec.js': ['rollup'],
     },
 	rollupPreprocessor: {
-//		entry: './test/main.js',
 		format: 'cjs',
 		context: 'window',
 		sourceMap: 'inline',
