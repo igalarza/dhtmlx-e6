@@ -2,6 +2,8 @@
 
 Here are some wrapper objects for the dhxmlx library written in ECMAScript 6 with the help of rollup, babel and some other cool javascript libraries.
 
+Warning! Still in early development.
+
 ### Install ###
 
 Dowonload the repository with `git clone https://github.com/igalarza/dhtmlx-e6.git`
