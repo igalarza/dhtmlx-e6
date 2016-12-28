@@ -3,12 +3,12 @@ var gulp = require('gulp');
 var rollup = require('rollup-stream');
 var nodeResolve = require('rollup-plugin-node-resolve');
 var source = require('vinyl-source-stream');
-var sourcemaps = require('gulp-sourcemaps');
+// var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
 var buffer = require('vinyl-buffer');
-var babel = require('rollup-plugin-babel');
-var uglify = require('gulp-uglify');
-var css = require('rollup-plugin-css-only');
+// var babel = require('rollup-plugin-babel');
+// var uglify = require('gulp-uglify');
+// var css = require('rollup-plugin-css-only');
 var eslint = require('rollup-plugin-eslint');
 var gulpDocumentation = require('gulp-documentation');
 var includePaths = require('rollup-plugin-includepaths');
@@ -27,7 +27,7 @@ gulp.task('build', function() {
 	  cache: cache,
 	  format: 'cjs',
 	  context: 'window',
-	  sourceMap: true,
+	  sourceMap: false,
 	  plugins: [
 		includePaths({
 			include: {},
@@ -36,12 +36,14 @@ gulp.task('build', function() {
 			extensions: ['.js', '.json']
 		}),
 		nodeResolve(),
-		css({ output: 'dist/bundle.css' }),
+		// css({ output: 'dist/bundle.css' }),
 		eslint(),
+		/*
 		babel({
 			presets: [["es2015", { "modules": false }]],
 			plugins: ["external-helpers"]
-		})		
+		})
+		*/		
 	  ]
     })
 	
@@ -56,16 +58,16 @@ gulp.task('build', function() {
     .pipe(buffer())
 
     // tell gulp-sourcemaps to load the inline sourcemap produced by rollup-stream.
-    .pipe(sourcemaps.init({loadMaps: true}))
+    // .pipe(sourcemaps.init({loadMaps: true}))
 
     // transform the code further here.
-	.pipe(uglify())
+	// .pipe(uglify())
 
     // if you want to output with a different name from the input file, use gulp-rename here.
-    .pipe(rename('dhtmlx-e6.min.js'))
+    .pipe(rename('dhtmlx-e6.js'))
 
     // write the sourcemap alongside the output file.
-    .pipe(sourcemaps.write('./'))
+    // .pipe(sourcemaps.write('./'))
 
     // and output to ./dist/app.js as normal.
     .pipe(gulp.dest('./dist'));

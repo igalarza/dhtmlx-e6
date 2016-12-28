@@ -15,7 +15,7 @@
   "files": [
 	"dist"
   ],
-  "main": "dist/dhtmlx-e6.min.js",
+  "main": "dist/dhtmlx-e6.js",
   "keywords": [
     "dhtmlx",
     "ecmascript6"
