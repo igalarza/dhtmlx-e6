@@ -5,23 +5,24 @@ var nodeResolve = require('rollup-plugin-node-resolve');
 var source = require('vinyl-source-stream');
 var sourcemaps = require('gulp-sourcemaps');
 var rename = require('gulp-rename');
-var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var babel = require('rollup-plugin-babel');
 var uglify = require('gulp-uglify');
 var css = require('rollup-plugin-css-only');
 var eslint = require('rollup-plugin-eslint');
-var inject = require('rollup-plugin-inject');
 var gulpDocumentation = require('gulp-documentation');
 var includePaths = require('rollup-plugin-includepaths');
-var Server = require('karma').Server;
+var KarmaServer = require('karma').Server;
 
-
+// Default task, creates docs and dist files.
 gulp.task('default', ['htmldocs', 'build']);
 
+// Needed to run the watch task
 var cache;
+
+// Generates dist files
 gulp.task('build', function() {
-  return rollup({
+	return rollup({
       entry: './src/main.js',
 	  cache: cache,
 	  format: 'cjs',
@@ -73,31 +74,27 @@ gulp.task('build', function() {
 
 // Watch for changes in the code!
 gulp.task('watch', function() {
-  gulp.watch('./src/**/*.js', ['build']);
+	gulp.watch('./src/**/*.js', ['build']);
 });
 
 // Generating a pretty HTML documentation site
 gulp.task('htmldocs', function () {
-  return gulp.src('src/**/*.js')
-    .pipe(gulpDocumentation('html'))
-    .pipe(gulp.dest('./docs/'));
+	return gulp.src('src/**/*.js')
+		.pipe(gulpDocumentation('html'))
+		.pipe(gulp.dest('./docs/'));
 });
 
-/**
- * Run test once and exit
- */
+// Run test once and exit
 gulp.task('test', function (done) {
-  new Server({
-    configFile: __dirname + '/karma.conf.js',
-    singleRun: true
-  }, done).start();
+	new KarmaServer({
+		configFile: __dirname + '/karma.conf.js',
+		singleRun: true
+	}, done).start();
 });
 
-/**
- * Watch for file changes and re-run tests on each change
- */
+// Watch for file changes and re-run tests on each change
 gulp.task('tdd', function (done) {
-  new Server({
-    configFile: __dirname + '/karma.conf.js'
-  }, done).start();
+	new KarmaServer({
+		configFile: __dirname + '/karma.conf.js'
+	}, done).start();
 });
