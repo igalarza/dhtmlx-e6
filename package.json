@@ -3,12 +3,23 @@
   "version": "0.1.0",
   "description": "Ecmascript 2015 Wrapper for dhtmlx library",
   "author": "Ivan Galarza <nadeyyo@gmail.com>",
-  "scripts": {},
+  "repository" : { 
+	"type" : "git",
+    "url" : "https://github.com/igalarza/dhtmlx-e6.git"
+  }
+  "scripts": {
+	"prepublish" : "gulp",
+	"test" : "gulp test"
+	
+  },
+  "files": [
+	"dist/*", "docs/*"
+  ],
   "keywords": [
     "dhtmlx",
     "ecmascript6"
   ],
-  "license": "MIT",
+  "license": "GPL-3.0",
   "devDependencies": {
     "babel-plugin-external-helpers": "^6.18.0",
     "babel-preset-env": "^1.1.1",

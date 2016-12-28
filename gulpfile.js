@@ -17,7 +17,7 @@ var includePaths = require('rollup-plugin-includepaths');
 var Server = require('karma').Server;
 
 
-gulp.task('default', ['htmldocs', 'build', 'tdd']);
+gulp.task('default', ['htmldocs', 'build']);
 
 var cache;
 gulp.task('build', function() {
@@ -40,7 +40,8 @@ gulp.task('build', function() {
 		babel({
 			presets: [["es2015", { "modules": false }]],
 			plugins: ["external-helpers"]
-		})		
+		}),
+		uglify()		
 	  ]
     })
 	
@@ -61,7 +62,7 @@ gulp.task('build', function() {
 	.pipe(uglify())
 
     // if you want to output with a different name from the input file, use gulp-rename here.
-    .pipe(rename('bundle.js'))
+    .pipe(rename('dhtmlx-e6.min.js'))
 
     // write the sourcemap alongside the output file.
     .pipe(sourcemaps.write('./'))

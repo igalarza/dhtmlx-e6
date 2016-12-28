@@ -1,8 +1,4 @@
 
-import { SimpleLayout } from './layout/SimpleLayout';
-import { TwoColumnsLayout } from './layout/TwoColumnsLayout';
-
-
-
-var simpleLayout = new SimpleLayout(document.body);
-var twoColumns = new TwoColumnsLayout(simpleLayout.getCell());
+// Here we import all "public" classes to expose them 
+import { SimpleLayout } from 'layout/SimpleLayout';
+import { TwoColumnsLayout } from 'layout/TwoColumnsLayout';
