@@ -13,13 +13,7 @@
 	
   },
   "files": [
-	"src", 
-	"test", 
-	"vendor",
-	"gulpfile.js",
-	"karma.conf.js",
-	".babelrc",
-	".eslintrc.json"
+	"dist"
   ],
   "keywords": [
     "dhtmlx",
