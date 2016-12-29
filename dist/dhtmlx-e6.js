@@ -89,10 +89,22 @@ class LayoutCell extends dhtmlxObject {
 		impl.hideHeader();
 		
 		impl.setText('');
-		
-		// next line throws: Uncaught TypeError: Cannot read property 'style' of undefined
-		// at window.dhtmlXLayoutCell.dhtmlXLayoutCell.hideArrow
-		// impl.hideArrow();
+	}
+	
+	load (url, async, data) {
+		this.impl.attachURL(url, async, data);
+	}
+	
+	get height () {
+		return this.impl.getHeight();
+	}
+	
+	set height (height) {
+		this.impl.setHeight(height);
+	}
+	
+	set html (html) {
+		this.impl.attachHTMLString(html);
 	}
 }
 
@@ -135,7 +147,11 @@ class BaseLayout extends dhtmlxObject {
 			var cell = new LayoutCell(this, cellImpl);
 			cells.push(cell);
 		});
-	}	
+	}
+	
+	destroy () {
+		this.impl.unload();
+	}
 	
 	/**
 	 * Array of layout cells (regions inside the layout)
@@ -188,6 +204,40 @@ class TwoColumnsLayout extends BaseLayout {
 	}
 }
 
+/** Layout with page-like structure: header, body and footer */
+class PageLayout extends BaseLayout {
+	
+	/**
+	 * Creates the SimpleLayout object
+	 * @constructor
+	 * @param {mixed} container - Object or dom id of the parent element.
+	 * @param {int} headerHeight - Fixed header height in pixels.
+	 * @param {int} footerHeight - Fixed footer height in pixels.
+	 */
+	constructor (container, headerHeight, footerHeight) {
+		super(container, '3E');
+		
+		this.header.height = headerHeight;
+		this.header.impl.fixSize(false, true);
+		
+		this.footer.height = footerHeight;
+		this.footer.impl.fixSize(false, true);
+	}
+	
+	/** The only LayoutCell object in the layout */
+	get header () {
+		return this.cells[0];
+	}
+	
+	get body () {
+		return this.cells[1];	
+	}
+	
+	get footer () {
+		return this.cells[2];	
+	}
+}
+
 // Here we import all "public" classes to expose them
 
-export { SimpleLayout, TwoColumnsLayout };
+export { SimpleLayout, TwoColumnsLayout, PageLayout };
