@@ -1,18 +1,24 @@
 
 import { OBJECT_TYPE } from 'globals';
-import { LayoutCell } from 'LayoutCell';
+import { LayoutCell } from 'layout/LayoutCell';
 
-describe("Checks the dhtmlxObject object!", function() {
+describe("Checks the LayoutCell object", function() {
 	
-	// We need to create a layout to have a cell implementation
-	var layout = new dhtmlXLayoutObject({
-		// id or object for parent container
-		parent: document.body,    	
-		// layout's pattern			
-		pattern: '1C'          	
+	beforeEach(function() {
+		// We need to create a layout to have a cell implementation
+		layout = new dhtmlXLayoutObject({
+			// id or object for parent container
+			parent: document.body,    	
+			// layout's pattern			
+			pattern: '1C'          	
+		});
+		
+		obj = new LayoutCell('testContainer', layout.cells('a'));
 	});
 	
-	var obj = new LayoutCell('testContainer', layout.cells('a'));
+	afterEach(function() {
+		layout.unload();
+	});
 
 	it("checking if the object is defined", function() {
 		expect(obj).toBeDefined();

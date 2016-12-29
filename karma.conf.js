@@ -10,14 +10,15 @@ module.exports = function(config) {
     files: [
 		'vendor/dhtmlx.js',
 		{ pattern: 'src/**/*.js', included: false },
-		'test/**/*.spec.js'
+		'test/**/*.spec.js',
+		'vendor/dhtmlx.css'
     ],
 	preprocessors: {
 		'src/**/*.js': ['rollup'],
         'test/**/*.spec.js': ['rollup'],
     },
 	rollupPreprocessor: {
-		format: 'cjs',
+//		format: 'cjs',
 		context: 'window',
 		sourceMap: 'inline',
 		plugins: [

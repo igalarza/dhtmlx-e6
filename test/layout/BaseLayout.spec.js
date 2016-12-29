@@ -4,7 +4,17 @@ import { BaseLayout } from 'layout/BaseLayout';
 
 describe("Checks the BaseLayout object", function() {
 	
-	var obj = new BaseLayout(document.body, '1C');
+	beforeEach(function() {
+		var baseStyle = "width:100%;height:100%;margin:0px;overflow:hidden;";
+		document.body.style = baseStyle;
+		document.documentElement.style = baseStyle;
+		
+		obj = new BaseLayout(document.body, '1C');
+	});
+	
+	afterEach(function() {
+		obj.destroy();
+	});
 
 	it("checking if the object is defined", function() {
 		expect(obj).toBeDefined();
