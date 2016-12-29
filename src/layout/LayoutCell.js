@@ -15,9 +15,21 @@ export class LayoutCell extends dhtmlxObject {
 		impl.hideHeader();
 		
 		impl.setText('');
-		
-		// next line throws: Uncaught TypeError: Cannot read property 'style' of undefined
-		// at window.dhtmlXLayoutCell.dhtmlXLayoutCell.hideArrow
-		// impl.hideArrow();
+	}
+	
+	load (url, async, data) {
+		this.impl.attachURL(url, async, data);
+	}
+	
+	get height () {
+		return this.impl.getHeight();
+	}
+	
+	set height (height) {
+		this.impl.setHeight(height);
+	}
+	
+	set html (html) {
+		this.impl.attachHTMLString(html);
 	}
 }

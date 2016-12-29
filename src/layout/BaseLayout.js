@@ -42,7 +42,11 @@ export class BaseLayout extends dhtmlxObject {
 			var cell = new LayoutCell(this, cellImpl);
 			cells.push(cell);
 		});
-	}	
+	}
+	
+	destroy () {
+		this.impl.unload();
+	}
 	
 	/**
 	 * Array of layout cells (regions inside the layout)
