@@ -1,5 +1,5 @@
 
-import { dhtmlxObject } from 'dhtmlxObject';
+import { dhtmlxObject } from 'global/dhtmlxObject';
 
 describe("Checks the dhtmlxObject object", function() {
 	

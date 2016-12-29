@@ -15,6 +15,6 @@ export class SimpleLayout extends BaseLayout {
 	
 	/** The only LayoutCell object in the layout */
 	get cell () {
-		return this.cells[0];
+		return this.childs[0];
 	}
 }

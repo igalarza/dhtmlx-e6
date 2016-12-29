@@ -1,6 +1,9 @@
 /** Enables console.log comments */
 const DEBUG = true;
 
+/** dhtmlx skin applied to all objects */
+const SKIN = 'material';
+
 /** All the dhtmlx object types */
 const OBJECT_TYPE = {
 	LAYOUT : 'layout',
@@ -12,7 +15,11 @@ const OBJECT_TYPE = {
 	WINDOW : 'window'
 };
 
-// Returns true if it is a DOM node    
+/**
+ * Checks if the parameter is a DOM node.
+ * @param {mixed} o - Dom Node or any other variable.
+ * @return {boolean} true if the parameter is a DOM Node.
+ */   
 function isNode (o) {
 	return (
 		typeof Node === "object" ? o instanceof Node : 
@@ -39,13 +46,23 @@ class dhtmlxObject {
 		this._childs = [];
     }
 	
-	/**
-	 * Adds a reference to a child object (e. g. adds a menu to a layout)
-	 * @param {dhtmlxObject} child - The child object that will be attached to this object
-	 */
-    addChild (child) {
-        this._childs.push(child);
-    }
+	/** Destroys the object and all this childs. */
+	destroy () {
+		// First, the childs
+		while (this.childs.lenght > 0) {
+			var child = this.childs.pop();
+			if (typeof child === 'object' 
+				&& typeof child.destroy === 'function') {
+					
+				child.destroy();
+			}			
+		}
+		
+		// Finally, the object
+		if (typeof this.impl.unload === 'function') {
+			this.impl.unload();
+		}
+	}
 	
    /**
      * Type of component: layout, window, grid, etc. 
@@ -69,18 +86,28 @@ class dhtmlxObject {
 	}
 	
 	/**
-	 * Child objects, they must be added manually with the addChild function
+	 * Child objects, could be any other dhtmlxObject
 	 */
 	get childs () {
 		return this._childs;
 	}
 }
 
+/**
+  * Base class for all layout objects, see:
+  * https://docs.dhtmlx.com/layout__index.html
+  */
 class LayoutCell extends dhtmlxObject {
 	
+	/**
+	 * Creates the LayoutCell object, called from BaseLayout class
+	 * @constructor
+	 * @param {mixed} container - Object or dom id of the parent element.
+	 * @param {string} impl - dhtmlx object, created in the BaseLayout class.
+	 */
 	constructor (container, impl) {
 		if (DEBUG) {
-			console.log('LayoutCell constructor.');
+			console.log('LayoutCell constructor');
 		}
 		
 		super(OBJECT_TYPE.LAYOUT_CELL, container, impl);
@@ -91,16 +118,20 @@ class LayoutCell extends dhtmlxObject {
 		impl.setText('');
 	}
 	
-	load (url, async, data) {
-		this.impl.attachURL(url, async, data);
-	}
-	
 	get height () {
 		return this.impl.getHeight();
 	}
 	
 	set height (height) {
 		this.impl.setHeight(height);
+	}
+	
+	get width () {
+		return this.impl.getWidth();
+	}
+	
+	set width (width) {
+		this.impl.setWidth(width);
 	}
 	
 	set html (html) {
@@ -118,46 +149,39 @@ class BaseLayout extends dhtmlxObject {
 	 * Creates the BaseLayout object
 	 * @constructor
 	 * @param {mixed} container - Object or dom id of the parent element.
-	 * @param {string} pattern - dhtmlx object, must be created by child class.
+	 * @param {string} pattern - dhtmlx layout pattern, see: http://docs.dhtmlx.com/layout__patterns.html
 	 */
 	constructor (container, pattern) {
+		if (DEBUG) {
+			console.log('BaseLayout constructor');
+		}
 		var impl = null;
-		if (typeof container === 'string' || isNode(container)) {
+		if (isNode(container)) {
 			
 			impl = new dhtmlXLayoutObject({
 				// id or object for parent container
 				parent: container,    	
 				// layout's pattern			
-				pattern: pattern          	
+				pattern: pattern,
+				// layout's skin
+				skin: SKIN
 			});
 		
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
 			impl = container.impl.attachLayout(pattern);
 		}
-		super(OBJECT_TYPE.LAYOUT, container, impl);
-		this._cells = [];	
+		super(OBJECT_TYPE.LAYOUT, container, impl);	
 		this.initCells();
 	}
 	
 	/**  Internal method called by the constructor */
 	initCells() {
 		// Needed inside the forEachItem
-		var cells = this._cells;	
+		var cells = this.childs;	
 		this.impl.forEachItem(function (cellImpl) {
 			var cell = new LayoutCell(this, cellImpl);
 			cells.push(cell);
 		});
-	}
-	
-	destroy () {
-		this.impl.unload();
-	}
-	
-	/**
-	 * Array of layout cells (regions inside the layout)
-	 */
-	get cells () {
-		return this._cells;
 	}
 }
 
@@ -175,7 +199,7 @@ class SimpleLayout extends BaseLayout {
 	
 	/** The only LayoutCell object in the layout */
 	get cell () {
-		return this.cells[0];
+		return this.childs[0];
 	}
 }
 
@@ -195,12 +219,12 @@ class TwoColumnsLayout extends BaseLayout {
 	
 	/** Left LayoutCell */
 	get left () {
-		return this._cells[0];
+		return this.childs[0];
 	}
 	
 	/** Right LayoutCell */
 	get right () {
-		return this._cells[1];
+		return this.childs[1];
 	}
 }
 
@@ -226,17 +250,22 @@ class PageLayout extends BaseLayout {
 	
 	/** The only LayoutCell object in the layout */
 	get header () {
-		return this.cells[0];
+		return this.childs[0];
 	}
 	
 	get body () {
-		return this.cells[1];	
+		return this.childs[1];	
 	}
 	
 	get footer () {
-		return this.cells[2];	
+		return this.childs[2];	
 	}
 }
+
+/**
+ * Base class for Menu objects, see:
+ * http://docs.dhtmlx.com/menu__index.html
+ */
 
 // Here we import all "public" classes to expose them
 

@@ -18,13 +18,23 @@ export class dhtmlxObject {
 		this._childs = [];
     }
 	
-	/**
-	 * Adds a reference to a child object (e. g. adds a menu to a layout)
-	 * @param {dhtmlxObject} child - The child object that will be attached to this object
-	 */
-    addChild (child) {
-        this._childs.push(child);
-    }
+	/** Destroys the object and all this childs. */
+	destroy () {
+		// First, the childs
+		while (this.childs.lenght > 0) {
+			var child = this.childs.pop();
+			if (typeof child === 'object' 
+				&& typeof child.destroy === 'function') {
+					
+				child.destroy();
+			}			
+		}
+		
+		// Finally, the object
+		if (typeof this.impl.unload === 'function') {
+			this.impl.unload();
+		}
+	}
 	
    /**
      * Type of component: layout, window, grid, etc. 
@@ -48,7 +58,7 @@ export class dhtmlxObject {
 	}
 	
 	/**
-	 * Child objects, they must be added manually with the addChild function
+	 * Child objects, could be any other dhtmlxObject
 	 */
 	get childs () {
 		return this._childs;

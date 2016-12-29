@@ -1,5 +1,5 @@
 
-import { BaseLayout } from 'BaseLayout';
+import { BaseLayout } from 'layout/BaseLayout';
 
 /**
   * Layout with two columns: left and right
@@ -17,11 +17,11 @@ export class TwoColumnsLayout extends BaseLayout {
 	
 	/** Left LayoutCell */
 	get left () {
-		return this._cells[0];
+		return this.childs[0];
 	}
 	
 	/** Right LayoutCell */
 	get right () {
-		return this._cells[1];
+		return this.childs[1];
 	}
 }

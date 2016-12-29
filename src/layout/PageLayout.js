@@ -23,14 +23,14 @@ export class PageLayout extends BaseLayout {
 	
 	/** The only LayoutCell object in the layout */
 	get header () {
-		return this.cells[0];
+		return this.childs[0];
 	}
 	
 	get body () {
-		return this.cells[1];	
+		return this.childs[1];	
 	}
 	
 	get footer () {
-		return this.cells[2];	
+		return this.childs[2];	
 	}
 }
