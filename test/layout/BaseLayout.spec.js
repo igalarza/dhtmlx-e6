@@ -1,5 +1,5 @@
 
-import { OBJECT_TYPE } from 'global/globals';
+import { OBJECT_TYPE } from 'global/config';
 import { BaseLayout } from 'layout/BaseLayout';
 
 describe("Checks the BaseLayout object", function() {

@@ -1,5 +1,5 @@
 
-import { OBJECT_TYPE } from 'global/globals';
+import { OBJECT_TYPE } from 'global/config';
 import { LayoutCell } from 'layout/LayoutCell';
 
 describe("Checks the LayoutCell object", function() {

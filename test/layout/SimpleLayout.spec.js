@@ -1,5 +1,5 @@
 
-import { OBJECT_TYPE } from 'global/globals';
+import { OBJECT_TYPE } from 'global/config';
 import { SimpleLayout } from 'layout/SimpleLayout';
 
 describe("Checks the SimpleLayout object", function() {

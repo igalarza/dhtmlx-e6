@@ -1,12 +1,12 @@
 
-import { DEBUG, OBJECT_TYPE } from 'global/globals';
-import { dhtmlxObject } from 'global/dhtmlxObject';
+import { DEBUG, OBJECT_TYPE } from 'global/config';
+import { BaseObject } from 'global/BaseObject';
 
 /**
   * Base class for all layout objects, see:
   * https://docs.dhtmlx.com/layout__index.html
   */
-export class LayoutCell extends dhtmlxObject {
+export class LayoutCell extends BaseObject {
 	
 	/**
 	 * Creates the LayoutCell object, called from BaseLayout class

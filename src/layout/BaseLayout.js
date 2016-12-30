@@ -1,13 +1,13 @@
 
-import { isNode , OBJECT_TYPE, SKIN, DEBUG } from 'global/globals';
-import { dhtmlxObject } from 'global/dhtmlxObject';
+import { isNode , OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { BaseObject } from 'global/BaseObject';
 import { LayoutCell } from 'LayoutCell';
 
 /**
   * Base class for all layout objects, see:
   * https://docs.dhtmlx.com/layout__index.html
   */
-export class BaseLayout extends dhtmlxObject {
+export class BaseLayout extends BaseObject {
 	
 	/**
 	 * Creates the BaseLayout object
@@ -41,7 +41,7 @@ export class BaseLayout extends dhtmlxObject {
 	/**  Internal method called by the constructor */
 	initCells() {
 		// Needed inside the forEachItem
-		var cells = this.childs;	
+		var cells = this._childs;	
 		this.impl.forEachItem(function (cellImpl) {
 			var cell = new LayoutCell(this, cellImpl);
 			cells.push(cell);

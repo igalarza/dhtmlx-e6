@@ -1,8 +1,8 @@
 
 /**
-  * Parent object of all the wrappers, it holds some common variables.
+  * Parent class of all the objects in the library, it holds some common variables.
   */	 
-export class dhtmlxObject {
+export class BaseObject {
 	
 	/**
 	 * Called by child objects.

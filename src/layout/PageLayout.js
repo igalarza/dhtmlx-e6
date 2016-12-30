@@ -1,4 +1,5 @@
 
+import { DEBUG } from 'global/config';
 import { BaseLayout } from 'layout/BaseLayout';
 
 /** Layout with page-like structure: header, body and footer */
@@ -12,6 +13,9 @@ export class PageLayout extends BaseLayout {
 	 * @param {int} footerHeight - Fixed footer height in pixels.
 	 */
 	constructor (container, headerHeight, footerHeight) {
+		if (DEBUG) {
+			console.log('TwoColumnsLayout constructor');
+		}
 		super(container, '3E');
 		
 		this.header.height = headerHeight;

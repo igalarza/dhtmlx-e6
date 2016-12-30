@@ -1,4 +1,5 @@
 
+import { DEBUG } from 'global/config';
 import { BaseLayout } from 'layout/BaseLayout';
 
 /**
@@ -12,6 +13,9 @@ export class TwoColumnsLayout extends BaseLayout {
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 */
 	constructor (container) {
+		if (DEBUG) {
+			console.log('TwoColumnsLayout constructor');
+		}
 		super(container, '2U');
 	}
 	

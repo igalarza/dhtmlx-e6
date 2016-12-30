@@ -1,9 +1,9 @@
 
-import { dhtmlxObject } from 'global/dhtmlxObject';
+import { BaseObject } from 'global/BaseObject';
 
-describe("Checks the dhtmlxObject object", function() {
+describe("Checks the BaseObject object", function() {
 	
-	var obj = new dhtmlxObject('typeName', 'container', 'impl');
+	var obj = new BaseObject('typeName', 'container', 'impl');
 
 	it("checking if the object is defined", function() {
 		expect(obj).toBeDefined();
