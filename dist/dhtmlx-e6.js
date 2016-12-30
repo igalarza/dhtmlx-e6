@@ -1,3 +1,60 @@
+class Action {
+		
+	constructor (name, impl) {
+
+		this._name = name;
+		this._impl = impl;		
+	}
+	
+	get name () { return this._name; }
+	get impl () { return this._impl; }	
+}
+
+class MenuItem {
+	
+	constructor (parentName, name, action, caption, icon = null, iconDisabled = null) {
+		
+		this._parentName = parentName;
+		this._name = name;
+		this._action = action;
+		this._caption = caption;
+		this._icon = icon;
+		this._iconDisabled = iconDisabled;
+	}
+	
+	get parentName () { return this._parentName; }
+	get name () { return this._name; }
+	get action () { return this._action; }
+	get caption () { return this._caption; }
+	get icon () { return this._icon; }
+	get iconDisabled () { return this._iconDisabled; }
+}
+
+class ActionManager {
+	
+	constructor (context) {		
+		this._context = context;
+		this._actions = [];
+	}
+	
+	createMenuItem (actionName, parentName, caption, icon, iconDisabled) {		
+		var action = this.actions[actionName];
+		return new MenuItem(parentName, actionName, action, caption, icon, iconDisabled);
+	}
+	
+	addAction (action) {
+		this._actions[action.name] = action.impl;
+	}
+	
+	get context () {
+		return this._context;
+	}
+	
+	get actions () {
+		return this._actions;
+	}
+}
+
 /** Enables console.log comments */
 const DEBUG = true;
 
@@ -28,9 +85,9 @@ function isNode (o) {
 }
 
 /**
-  * Parent object of all the wrappers, it holds some common variables.
+  * Parent class of all the objects in the library, it holds some common variables.
   */	 
-class dhtmlxObject {
+class BaseObject {
 	
 	/**
 	 * Called by child objects.
@@ -97,7 +154,7 @@ class dhtmlxObject {
   * Base class for all layout objects, see:
   * https://docs.dhtmlx.com/layout__index.html
   */
-class LayoutCell extends dhtmlxObject {
+class LayoutCell extends BaseObject {
 	
 	/**
 	 * Creates the LayoutCell object, called from BaseLayout class
@@ -143,7 +200,7 @@ class LayoutCell extends dhtmlxObject {
   * Base class for all layout objects, see:
   * https://docs.dhtmlx.com/layout__index.html
   */
-class BaseLayout extends dhtmlxObject {
+class BaseLayout extends BaseObject {
 	
 	/**
 	 * Creates the BaseLayout object
@@ -177,7 +234,7 @@ class BaseLayout extends dhtmlxObject {
 	/**  Internal method called by the constructor */
 	initCells() {
 		// Needed inside the forEachItem
-		var cells = this.childs;	
+		var cells = this._childs;	
 		this.impl.forEachItem(function (cellImpl) {
 			var cell = new LayoutCell(this, cellImpl);
 			cells.push(cell);
@@ -214,6 +271,9 @@ class TwoColumnsLayout extends BaseLayout {
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 */
 	constructor (container) {
+		if (DEBUG) {
+			console.log('TwoColumnsLayout constructor');
+		}
 		super(container, '2U');
 	}
 	
@@ -239,6 +299,9 @@ class PageLayout extends BaseLayout {
 	 * @param {int} footerHeight - Fixed footer height in pixels.
 	 */
 	constructor (container, headerHeight, footerHeight) {
+		if (DEBUG) {
+			console.log('TwoColumnsLayout constructor');
+		}
 		super(container, '3E');
 		
 		this.header.height = headerHeight;
@@ -266,7 +329,68 @@ class PageLayout extends BaseLayout {
  * Base class for Menu objects, see:
  * http://docs.dhtmlx.com/menu__index.html
  */
+class Menu extends BaseObject {
+	
+	constructor (container, actionManager) {
+		if (DEBUG) {
+			console.log('Menu constructor');
+		}
+		var impl = null;
+		if (isNode(container)) {
+			impl = new dhtmlXMenuObject(container, SKIN);
+			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
+			|| container.type === OBJECT_TYPE.LAYOUT
+			|| container.type === OBJECT_TYPE.WINDOW) {
+			
+			impl = container.impl.attachMenu();
+			impl.setSkin(SKIN);
+		}
+		
+		super(OBJECT_TYPE.MENU, container, impl);
+		
+		this._itemCounter = 0;
+		this._actionManager = actionManager;
+		
+		var self = this;
+		impl.attachEvent("onClick", function (id, zoneId, cas) {
+			if (DEBUG) {
+				console.log('Menu onClickEvent');
+			}
+			
+			if (typeof self._childs[id] === 'function') {
+				// The context in the actionManager is sent to the action
+				self._childs[id](self._actionManager.context);
+			}
+		});
+	}
+	
+	addTextContainer (name, caption, parentName = null) {		
+		return this.addMenuItem(new MenuItem(parentName, name, null, caption));
+	}
+	
+	addMenuItem (menuItem) {
+		if (menuItem.parentName === '') {
+			this.impl.addNewSibling(null, menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+		} else {
+			this.impl.addNewChild(menuItem.parentName, (++ this._itemCounter), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+		}
+		this._childs[menuItem.name] = menuItem.action;
+		// curryfing!
+		return this;
+	}
+	
+	set childs (menuItems) {
+		// Clean array first
+		this._childs = [];
+		
+		// Populate array
+		for (var i = 0; i < menuItems.length; i++) {
+			this.addMenuItem(menuItems[i]);
+		}
+	}
+}
 
 // Here we import all "public" classes to expose them
 
-export { SimpleLayout, TwoColumnsLayout, PageLayout };
+export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, Menu, MenuItem };

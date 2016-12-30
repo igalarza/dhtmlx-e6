@@ -1,13 +1,18 @@
 
+// gulp imports
 var gulp = require('gulp');
-var rollup = require('rollup-stream');
-var nodeResolve = require('rollup-plugin-node-resolve');
-var source = require('vinyl-source-stream');
 var rename = require('gulp-rename');
+var gulpDocumentation = require('gulp-documentation');
+var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var eslint = require('rollup-plugin-eslint');
-var gulpDocumentation = require('gulp-documentation');
+
+// rollup imports
+var rollup = require('rollup-stream');
 var includePaths = require('rollup-plugin-includepaths');
+var nodeResolve = require('rollup-plugin-node-resolve');
+
+// testing imports
 var KarmaServer = require('karma').Server;
 
 // Default task, creates docs and dist files.
@@ -21,8 +26,6 @@ gulp.task('build', function() {
 	return rollup({
       entry: './src/main.js',
 	  cache: cache,
-//	  format: 'cjs',
-//	  context: 'window',
 	  sourceMap: false,
 	  plugins: [
 		includePaths({
@@ -46,23 +49,12 @@ gulp.task('build', function() {
 	// buffer the output. most gulp plugins, including gulp-sourcemaps, don't support streams.
     .pipe(buffer())
 
-    // tell gulp-sourcemaps to load the inline sourcemap produced by rollup-stream.
-    // .pipe(sourcemaps.init({loadMaps: true}))
-
-    // transform the code further here.
-	// .pipe(uglify())
-
     // if you want to output with a different name from the input file, use gulp-rename here.
     .pipe(rename('dhtmlx-e6.js'))
-
-    // write the sourcemap alongside the output file.
-    // .pipe(sourcemaps.write('./'))
 
     // and output to ./dist/app.js as normal.
     .pipe(gulp.dest('./dist'));
 });
-
-
 
 // Watch for changes in the code!
 gulp.task('watch', function() {
