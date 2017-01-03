@@ -10,6 +10,9 @@ class Action {
 	get impl () { return this._impl; }	
 }
 
+/**
+ * Items inside the menu
+ */
 class MenuItem {
 	
 	constructor (parentName, name, action, caption, icon = null, iconDisabled = null) {
@@ -97,56 +100,106 @@ class BaseObject {
 	 * @param {object} impl - dhtmlx object, must be created by child class.
 	 */
     constructor (type, container, impl) {
-		this._type = type;
-        this._container = container;
-        this._impl = impl;
-		this._childs = [];
+		// It can be called without arguments, for testing integration reasons.
+		if (arguments.length === 3) {
+			this.init(type, container, impl);
+		}		
     }
+	
+	init (type, container, impl) {			
+		if (arguments.length === 3) {
+			// Clean up before assignations
+			this.destroy();
+			// Init properties
+			this._type = type;
+			this._container = container;
+			this._impl = impl;
+			this._childs = [];	
+		} else {
+			throw new Error('BaseObject init method requires 3 parameters');
+		}
+	}
 	
 	/** Destroys the object and all this childs. */
 	destroy () {
 		// First, the childs
-		while (this.childs.lenght > 0) {
-			var child = this.childs.pop();
-			if (typeof child === 'object' 
-				&& typeof child.destroy === 'function') {
-					
-				child.destroy();
-			}			
+		if (typeof this._childs !== 'undefined') {
+			while (this.childs.length > 0) {
+				var child = this.childs.pop();
+				if (typeof child === 'object' 
+					&& typeof child.destroy === 'function') {
+						
+					child.destroy();
+				}			
+			}
 		}
 		
 		// Finally, the object
-		if (typeof this.impl.unload === 'function') {
+		if (typeof this._impl !== 'undefined' &&
+			typeof this.impl.unload === 'function') {
+			if (DEBUG) {
+				console.log('Call to unload() in destroy method.');
+			}
 			this.impl.unload();
 		}
 	}
 	
-   /**
+	attachEvent (eventName, actionManager) {
+		var self = this;
+		this.impl.attachEvent(eventName, function (id, zoneId, cas) {
+			if (DEBUG) {
+				console.log('Menu onClickEvent');
+			}
+			
+			if (typeof self._childs[id] === 'function') {
+				// The context in the actionManager is sent to the action
+				self._childs[id](actionManager.context);
+			}
+		});
+	}
+	
+    /**
      * Type of component: layout, window, grid, etc. 
      */
 	get type () {
-		return this._type;
+		if (typeof this._type !== 'undefined') {
+			return this._type;
+		} else {
+			throw new Error('this._type is undefined: init method has not been called');
+		}
 	}
 	
 	/**
      * Usually is other dhtmlxObject, the root layout should be inside document.body
      */
 	get container () { 
-		return this._container;
+		if (typeof this._container !== 'undefined') {
+			return this._container;
+		} else {
+			throw new Error('this._container is undefined: init method has not been called');
+		}
 	}
 	
 	/**
      * dhtmlx object, must be created by child class before calling super in the constructor.
      */
 	get impl () {
-		return this._impl;
+		if (typeof this._impl !== 'undefined') {
+			return this._impl;
+		} else {
+			throw new Error('this._impl is undefined: init method has not been called');
+		}
 	}
 	
 	/**
 	 * Child objects, could be any other dhtmlxObject
 	 */
 	get childs () {
-		return this._childs;
+		if (typeof this._childs !== 'undefined') {
+			return this._childs;
+		} else {
+			throw new Error('this._childs is undefined: init method has not been called');
+		}
 	}
 }
 
@@ -166,13 +219,23 @@ class LayoutCell extends BaseObject {
 		if (DEBUG) {
 			console.log('LayoutCell constructor');
 		}
+		// We will init the BaseObject properties in the init method
+		super();
 		
-		super(OBJECT_TYPE.LAYOUT_CELL, container, impl);
-		
-		// Header is hidden by default
-		impl.hideHeader();
-		
-		impl.setText('');
+		if (arguments.length === 2) {
+			this.init(container, impl);
+		}
+	}
+	
+	init (container, impl) {
+		if (arguments.length === 2) {
+			super.init(OBJECT_TYPE.LAYOUT_CELL, container, impl);
+			
+			// Header is hidden by default
+			this.header = null;
+		} else {
+			throw new Error('LayoutCell init method requires two parameters');
+		}
 	}
 	
 	get height () {
@@ -194,6 +257,20 @@ class LayoutCell extends BaseObject {
 	set html (html) {
 		this.impl.attachHTMLString(html);
 	}
+	
+	get header () {
+		return this.impl.getText();
+	}
+	
+	set header (text) {
+		if (text == null) {
+			this.impl.setText('');
+			this.impl.hideHeader();
+		} else {
+			this.impl.setText(text);
+			this.impl.showHeader();
+		}		
+	}
 }
 
 /**
@@ -203,7 +280,7 @@ class LayoutCell extends BaseObject {
 class BaseLayout extends BaseObject {
 	
 	/**
-	 * Creates the BaseLayout object
+	 * Creates the BaseLayout object. Can be called without arguments, for testing purposes.
 	 * @constructor
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 * @param {string} pattern - dhtmlx layout pattern, see: http://docs.dhtmlx.com/layout__patterns.html
@@ -212,34 +289,74 @@ class BaseLayout extends BaseObject {
 		if (DEBUG) {
 			console.log('BaseLayout constructor');
 		}
-		var impl = null;
-		if (isNode(container)) {
-			
-			impl = new dhtmlXLayoutObject({
-				// id or object for parent container
-				parent: container,    	
-				// layout's pattern			
-				pattern: pattern,
-				// layout's skin
-				skin: SKIN
-			});
 		
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
-			impl = container.impl.attachLayout(pattern);
+		// We will init the BaseObject properties in the init method
+		super();
+		
+		if (arguments.length === 2) {
+			this.init(container, pattern);
 		}
-		super(OBJECT_TYPE.LAYOUT, container, impl);	
-		this.initCells();
 	}
 	
-	/**  Internal method called by the constructor */
+	init(container, pattern) {
+		
+		if (arguments.length === 2) {
+		
+			// Creates the dhtmlx object (see function below)
+			var impl = initDhtmlxLayout(container, pattern);
+			
+			// BaseObject init method
+			super.init(OBJECT_TYPE.LAYOUT, container, impl);
+			
+			// Inits the LayoutCell objects
+			this.initCells();
+			
+			if (container instanceof LayoutCell) {
+				var containerLayout = container.container;
+				containerLayout.attachEvent("onResizeFinish", function(){
+					impl.setSizes();
+				});
+			}
+			
+		} else {
+			throw new Error('BaseLayout init method requires two parameters');
+		}
+	}
+	
+	/**  
+	 * Internal method called by the constructor, it creates the LayoutCell 
+	 * objects and adds them to the this.childs array
+	 */
 	initCells() {
 		// Needed inside the forEachItem
-		var cells = this._childs;	
-		this.impl.forEachItem(function (cellImpl) {
+		var cells = this.childs;	
+		this._impl.forEachItem(function (cellImpl) {
+			// here this point to the dhtmlXLayoutObject object.
 			var cell = new LayoutCell(this, cellImpl);
+			// adds the new cell to this._childs
 			cells.push(cell);
 		});
 	}
+}
+
+/** Creates the dhtmlXLayoutObject inside its container. */
+function initDhtmlxLayout (container, pattern) {
+	var impl = null;
+	if (isNode(container)) {
+		
+		impl = new dhtmlXLayoutObject({
+			// id or object for parent container
+			parent: container,    	
+			// layout's pattern			
+			pattern: pattern,
+			// layout's skin
+			skin: SKIN
+		});
+	
+	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
+		impl = container.impl.attachLayout(pattern);
+	}
+	return impl;
 }
 
 /** Layout with only one cell */
@@ -302,13 +419,28 @@ class PageLayout extends BaseLayout {
 		if (DEBUG) {
 			console.log('TwoColumnsLayout constructor');
 		}
-		super(container, '3E');
 		
-		this.header.height = headerHeight;
-		this.header.impl.fixSize(false, true);
+		super();
 		
-		this.footer.height = footerHeight;
-		this.footer.impl.fixSize(false, true);
+		if (arguments.length === 3) {
+			this.init(container, headerHeight, footerHeight);
+		}	
+	}
+	
+	init (container, headerHeight, footerHeight) {
+		if (arguments.length === 3) {
+			super.init(container, '3E');
+			
+			this.header.height = headerHeight;
+			this.header.impl.fixSize(false, true);
+			
+			this.footer.height = footerHeight;
+			this.footer.impl.fixSize(false, true);
+			
+			this.impl.setAutoSize("a;b;c", "b");
+		} else {
+			throw new Error('PageLayout init method requires two parameters');
+		}
 	}
 	
 	/** The only LayoutCell object in the layout */
@@ -331,49 +463,47 @@ class PageLayout extends BaseLayout {
  */
 class Menu extends BaseObject {
 	
+	/**
+	 * @constructor
+	 * @param {mixed} container - Object or dom id of the parent element.
+	 * @param {actionManager} ActionManager - Contains the actions the menu will execute.
+	 */
 	constructor (container, actionManager) {
 		if (DEBUG) {
 			console.log('Menu constructor');
 		}
-		var impl = null;
-		if (isNode(container)) {
-			impl = new dhtmlXMenuObject(container, SKIN);
-			
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
-			|| container.type === OBJECT_TYPE.LAYOUT
-			|| container.type === OBJECT_TYPE.WINDOW) {
-			
-			impl = container.impl.attachMenu();
-			impl.setSkin(SKIN);
-		}
-		
+		// Creates the dhtmlx object (see function below)
+		var impl = initDhtmlxMenu(container);
+
+		// BaseObject constructor
 		super(OBJECT_TYPE.MENU, container, impl);
 		
-		this._itemCounter = 0;
-		this._actionManager = actionManager;
-		
-		var self = this;
-		impl.attachEvent("onClick", function (id, zoneId, cas) {
-			if (DEBUG) {
-				console.log('Menu onClickEvent');
-			}
-			
-			if (typeof self._childs[id] === 'function') {
-				// The context in the actionManager is sent to the action
-				self._childs[id](self._actionManager.context);
-			}
-		});
+		// Enable onClick event 
+		this.attachEvent("onClick", actionManager);
 	}
 	
+	/**
+	 * Adds a text container (with no action) to the menu.
+	 * @param {mixed} container - Object or dom id of the parent element.
+	 * @param {name} string - The name that identifies the MenuItem.
+	 * @param {caption} string - The visible text of the container.
+	 * @param {parentName} string - The name of the parent MenuItem (default null).
+	 * returns {Menu} The menu object itself, to chain item creation.
+	 */
 	addTextContainer (name, caption, parentName = null) {		
 		return this.addMenuItem(new MenuItem(parentName, name, null, caption));
 	}
 	
+	/**
+	 * Adds a MenuItem (with action) to the menu container 
+	 * @param {MenuItem} menuItem - The MenuItem object, usually created in the ActionManager
+	 * returns {Menu} The menu object itself, to chain item creation
+	 */
 	addMenuItem (menuItem) {
 		if (menuItem.parentName === '') {
 			this.impl.addNewSibling(null, menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
 		} else {
-			this.impl.addNewChild(menuItem.parentName, (++ this._itemCounter), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+			this.impl.addNewChild(menuItem.parentName, (this._childs.length), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
 		}
 		this._childs[menuItem.name] = menuItem.action;
 		// curryfing!
@@ -389,6 +519,22 @@ class Menu extends BaseObject {
 			this.addMenuItem(menuItems[i]);
 		}
 	}
+}
+
+/** Creates the dhtmlXMenuObject inside its container. */
+function initDhtmlxMenu(container) {
+	var impl = null;
+	if (isNode(container)) {
+		impl = new dhtmlXMenuObject(container, SKIN);
+		
+	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
+		|| container.type === OBJECT_TYPE.LAYOUT
+		|| container.type === OBJECT_TYPE.WINDOW) {
+		
+		impl = container.impl.attachMenu();
+		impl.setSkin(SKIN);
+	}
+	return impl;
 }
 
 // Here we import all "public" classes to expose them
