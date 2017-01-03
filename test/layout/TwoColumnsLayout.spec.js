@@ -2,7 +2,7 @@
 import { OBJECT_TYPE } from 'global/config';
 import { TwoColumnsLayout } from 'layout/TwoColumnsLayout';
 
-describe("Checks the TwoColumnsLayout object!", function() {
+	describe("Checks the TwoColumnsLayout object!", function() {
 	
 	var obj = null;
 	

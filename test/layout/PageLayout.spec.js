@@ -3,6 +3,8 @@ import { PageLayout } from 'layout/PageLayout';
 
 describe("Checks the PageLayout object", function() {
 	
+	var obj = null;
+	
 	beforeAll(function() {
 		var baseStyle = "width:100%;height:100%;margin:0px;overflow:hidden;";
 		document.body.style = baseStyle;

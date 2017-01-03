@@ -32,6 +32,8 @@ export class LayoutCell extends BaseObject {
 			
 			// Header is hidden by default
 			this.header = null;
+			
+			this.impl.fixSize(false, false);
 		} else {
 			throw new Error('LayoutCell init method requires two parameters');
 		}

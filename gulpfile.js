@@ -80,10 +80,10 @@ gulp.task('test', function (done) {
 gulp.task('tdd', function (done) {
 	new KarmaServer({
 		configFile: __dirname + '/karma.conf.js'
-	}, done).start();
+	}, function() { done(); }).start();
 });
 
-// Watch for changes in the code!
+// Deploys in the local dhtmlx-e6-demo project
 gulp.task('deploy-demo', function() {
 	return gulp.src('dist/dhtmlx-e6.js')
     .pipe(gulp.dest('../dhtmlx-e6-demo/node_modules/dhtmlx-e6/dist'));

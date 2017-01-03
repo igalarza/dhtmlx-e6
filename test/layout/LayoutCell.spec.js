@@ -8,12 +8,13 @@ describe("Checks the LayoutCell object", function() {
 	
 	beforeAll(function() {
 		// We need to create a layout to have a cell implementation
-		layout = new dhtmlXLayoutObject({
+		var layout = new dhtmlXLayoutObject({
 			// id or object for parent container
 			parent: document.body,    	
 			// layout's pattern			
-			pattern: '1C'          	
+			pattern: '3U'          	
 		});
+		
 		
 		obj = new LayoutCell('testContainer', layout.cells('a'));
 		spyOn(obj.impl, 'setHeight').and.callThrough();
@@ -45,11 +46,28 @@ describe("Checks the LayoutCell object", function() {
 	});
 	
 	it("checking if setters are working", function() {
-		obj.height = 100;
-		obj.width = 100;
+		var widthValue = 100;
+		var heightValue = 200;
+		obj.height = heightValue;
+		obj.width = widthValue;
 		obj.html = "<p>test</p>";
+		
+		// This won't work if the cell can't resize itself properly
+		expect(obj.width).toBe(widthValue);
+		expect(obj.height).toBe(heightValue);
+		
 		expect(obj.impl.setHeight).toHaveBeenCalled();
 		expect(obj.impl.setWidth).toHaveBeenCalled();
 		expect(obj.impl.attachHTMLString).toHaveBeenCalled();
+	});
+	
+	it("checking if init method throws exception", function() {
+		expect(obj.init).toThrowError();
+	});
+	
+	it("testing header text options", function() {
+		var testHeader = "Header text";
+		obj.header = testHeader;
+		expect(obj.header).toBe(testHeader);
 	});
 });
