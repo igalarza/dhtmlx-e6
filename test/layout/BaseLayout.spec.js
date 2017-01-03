@@ -6,20 +6,19 @@ describe("Checks the BaseLayout object", function() {
 	
 	var obj = null;
 	
-	beforeEach(function() {
-		var baseStyle = "width:100%;height:100%;margin:0px;overflow:hidden;";
-		document.body.style = baseStyle;
-		document.documentElement.style = baseStyle;
-		
-		obj = new BaseLayout(document.body, '1C');
+	beforeAll(function() {
+		obj = new BaseLayout();
+		spyOn(obj, 'initCells').and.callThrough();	
+		obj.init(document.body, '1C');
 	});
 	
-	afterEach(function() {
+	afterAll(function() {
 		obj.destroy();
 	});
 
 	it("checking if the object is defined", function() {
 		expect(obj).toBeDefined();
+		expect(obj.initCells).toHaveBeenCalledTimes(1);
 	});
 	
 	it("checking if the object has its properties", function() {

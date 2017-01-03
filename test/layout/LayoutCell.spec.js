@@ -6,7 +6,7 @@ describe("Checks the LayoutCell object", function() {
 	
 	var obj = null;
 	
-	beforeEach(function() {
+	beforeAll(function() {
 		// We need to create a layout to have a cell implementation
 		layout = new dhtmlXLayoutObject({
 			// id or object for parent container
@@ -21,8 +21,8 @@ describe("Checks the LayoutCell object", function() {
 		spyOn(obj.impl, 'attachHTMLString').and.callThrough();
 	});
 	
-	afterEach(function() {
-		layout.unload();
+	afterAll(function() {
+		obj.unload();
 	});
 
 	it("checking if the object is defined", function() {
@@ -33,6 +33,15 @@ describe("Checks the LayoutCell object", function() {
 		expect(obj.container).toEqual('testContainer');
 		expect(obj.type).toEqual(OBJECT_TYPE.LAYOUT_CELL);
 		expect(obj.impl).toBeDefined();
+	});
+	
+	it("checking if the object has been init properly", function() {
+		
+		var headerText = obj.impl.getText();
+		expect(headerText).toBe('');
+		
+		var isHeaderVisible = obj.impl.isHeaderVisible();
+		expect(isHeaderVisible).toBe(false);
 	});
 	
 	it("checking if setters are working", function() {

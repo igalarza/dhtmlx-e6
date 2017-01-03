@@ -4,7 +4,11 @@ import { SimpleLayout } from 'layout/SimpleLayout';
 
 describe("Checks the SimpleLayout object", function() {
 	
-	var obj = new SimpleLayout(document.body);
+	var obj = null;
+	
+	beforeAll(function() {
+		obj = new SimpleLayout(document.body);
+	});	
 
 	it("checking if the object is defined", function() {
 		expect(obj).toBeDefined();
@@ -13,5 +17,9 @@ describe("Checks the SimpleLayout object", function() {
 	it("checking if the object has its properties", function() {
 		expect(obj.type).toEqual(OBJECT_TYPE.LAYOUT);
 		expect(obj.cell.type).toEqual(OBJECT_TYPE.LAYOUT_CELL);
+	});
+	
+	afterAll(function() {
+		obj.destroy();
 	});
 });

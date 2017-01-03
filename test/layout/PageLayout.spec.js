@@ -3,7 +3,7 @@ import { PageLayout } from 'layout/PageLayout';
 
 describe("Checks the PageLayout object", function() {
 	
-	beforeEach(function() {
+	beforeAll(function() {
 		var baseStyle = "width:100%;height:100%;margin:0px;overflow:hidden;";
 		document.body.style = baseStyle;
 		document.documentElement.style = baseStyle;
@@ -11,7 +11,7 @@ describe("Checks the PageLayout object", function() {
 		obj = new PageLayout(document.body, 300, 200);
 	});
 	
-	afterEach(function() {
+	afterAll(function() {
 		obj.destroy();
 	});
 
@@ -30,7 +30,7 @@ describe("Checks the PageLayout object", function() {
 		expect(obj.footer).toBeDefined();
 		
 		// Heights are not as expected in test! Needs review.
-		// expect(obj.header.height).toEqual(300);
-		// expect(obj.footer.height).toEqual(200);
+		expect(obj.header.height).toEqual(300);
+		expect(obj.footer.height).toEqual(200);
 	});
 });
