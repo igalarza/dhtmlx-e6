@@ -16,13 +16,28 @@ export class PageLayout extends BaseLayout {
 		if (DEBUG) {
 			console.log('TwoColumnsLayout constructor');
 		}
-		super(container, '3E');
 		
-		this.header.height = headerHeight;
-		this.header.impl.fixSize(false, true);
+		super();
 		
-		this.footer.height = footerHeight;
-		this.footer.impl.fixSize(false, true);
+		if (arguments.length === 3) {
+			this.init(container, headerHeight, footerHeight);
+		}	
+	}
+	
+	init (container, headerHeight, footerHeight) {
+		if (arguments.length === 3) {
+			super.init(container, '3E');
+			
+			this.header.height = headerHeight;
+			this.header.impl.fixSize(false, true);
+			
+			this.footer.height = footerHeight;
+			this.footer.impl.fixSize(false, true);
+			
+			this.impl.setAutoSize("a;b;c", "b");
+		} else {
+			throw new Error('PageLayout init method requires two parameters');
+		}
 	}
 	
 	/** The only LayoutCell object in the layout */

@@ -10,49 +10,47 @@ import { MenuItem } from 'menu/MenuItem';
  */
 export class Menu extends BaseObject {
 	
+	/**
+	 * @constructor
+	 * @param {mixed} container - Object or dom id of the parent element.
+	 * @param {actionManager} ActionManager - Contains the actions the menu will execute.
+	 */
 	constructor (container, actionManager) {
 		if (DEBUG) {
 			console.log('Menu constructor');
 		}
-		var impl = null;
-		if (isNode(container)) {
-			impl = new dhtmlXMenuObject(container, SKIN);
-			
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
-			|| container.type === OBJECT_TYPE.LAYOUT
-			|| container.type === OBJECT_TYPE.WINDOW) {
-			
-			impl = container.impl.attachMenu();
-			impl.setSkin(SKIN);
-		}
-		
+		// Creates the dhtmlx object (see function below)
+		var impl = initDhtmlxMenu(container);
+
+		// BaseObject constructor
 		super(OBJECT_TYPE.MENU, container, impl);
 		
-		this._itemCounter = 0;
-		this._actionManager = actionManager;
-		
-		var self = this;
-		impl.attachEvent("onClick", function (id, zoneId, cas) {
-			if (DEBUG) {
-				console.log('Menu onClickEvent');
-			}
-			
-			if (typeof self._childs[id] === 'function') {
-				// The context in the actionManager is sent to the action
-				self._childs[id](self._actionManager.context);
-			}
-		});
+		// Enable onClick event 
+		this.attachEvent("onClick", actionManager);
 	}
 	
+	/**
+	 * Adds a text container (with no action) to the menu.
+	 * @param {mixed} container - Object or dom id of the parent element.
+	 * @param {name} string - The name that identifies the MenuItem.
+	 * @param {caption} string - The visible text of the container.
+	 * @param {parentName} string - The name of the parent MenuItem (default null).
+	 * returns {Menu} The menu object itself, to chain item creation.
+	 */
 	addTextContainer (name, caption, parentName = null) {		
 		return this.addMenuItem(new MenuItem(parentName, name, null, caption));
 	}
 	
+	/**
+	 * Adds a MenuItem (with action) to the menu container 
+	 * @param {MenuItem} menuItem - The MenuItem object, usually created in the ActionManager
+	 * returns {Menu} The menu object itself, to chain item creation
+	 */
 	addMenuItem (menuItem) {
 		if (menuItem.parentName === '') {
 			this.impl.addNewSibling(null, menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
 		} else {
-			this.impl.addNewChild(menuItem.parentName, (++ this._itemCounter), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+			this.impl.addNewChild(menuItem.parentName, (this._childs.length), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
 		}
 		this._childs[menuItem.name] = menuItem.action;
 		// curryfing!
@@ -68,4 +66,20 @@ export class Menu extends BaseObject {
 			this.addMenuItem(menuItems[i]);
 		}
 	}
+}
+
+/** Creates the dhtmlXMenuObject inside its container. */
+function initDhtmlxMenu(container) {
+	var impl = null;
+	if (isNode(container)) {
+		impl = new dhtmlXMenuObject(container, SKIN);
+		
+	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
+		|| container.type === OBJECT_TYPE.LAYOUT
+		|| container.type === OBJECT_TYPE.WINDOW) {
+		
+		impl = container.impl.attachMenu();
+		impl.setSkin(SKIN);
+	}
+	return impl;
 }

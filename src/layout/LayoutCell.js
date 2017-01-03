@@ -18,13 +18,23 @@ export class LayoutCell extends BaseObject {
 		if (DEBUG) {
 			console.log('LayoutCell constructor');
 		}
+		// We will init the BaseObject properties in the init method
+		super();
 		
-		super(OBJECT_TYPE.LAYOUT_CELL, container, impl);
-		
-		// Header is hidden by default
-		impl.hideHeader();
-		
-		impl.setText('');
+		if (arguments.length === 2) {
+			this.init(container, impl);
+		}
+	}
+	
+	init (container, impl) {
+		if (arguments.length === 2) {
+			super.init(OBJECT_TYPE.LAYOUT_CELL, container, impl);
+			
+			// Header is hidden by default
+			this.header = null;
+		} else {
+			throw new Error('LayoutCell init method requires two parameters');
+		}
 	}
 	
 	get height () {
@@ -45,5 +55,19 @@ export class LayoutCell extends BaseObject {
 	
 	set html (html) {
 		this.impl.attachHTMLString(html);
+	}
+	
+	get header () {
+		return this.impl.getText();
+	}
+	
+	set header (text) {
+		if (text == null) {
+			this.impl.setText('');
+			this.impl.hideHeader();
+		} else {
+			this.impl.setText(text);
+			this.impl.showHeader();
+		}		
 	}
 }

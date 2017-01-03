@@ -1,12 +1,11 @@
 
-/**
- * Items inside the menu
- */
-export class MenuItem {
+
+
+export class ToolbarButton {
 	
-	constructor (parentName, name, action, caption, icon = null, iconDisabled = null) {
+	constructor (type, name, action, caption, icon = null, iconDisabled = null) {
 		
-		this._parentName = parentName;
+		this._type = type;
 		this._name = name;
 		this._action = action;
 		this._caption = caption;
@@ -14,7 +13,7 @@ export class MenuItem {
 		this._iconDisabled = iconDisabled;
 	}
 	
-	get parentName () { return this._parentName; }
+	get type () { return this._type; }
 	get name () { return this._name; }
 	get action () { return this._action; }
 	get caption () { return this._caption; }
