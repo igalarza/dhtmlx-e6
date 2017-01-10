@@ -28,4 +28,13 @@ describe("Checks the BaseLayout object", function() {
 		expect(obj.childs[0].type).toEqual(OBJECT_TYPE.LAYOUT_CELL);
 		expect(obj.childs[0].impl).toBeDefined();
 	});
+	
+	it("checking that the resize method is called", function() {
+		
+		spyOn(obj.impl, 'attachEvent').and.callThrough();
+		
+		var otherLayout = new BaseLayout(obj.childs[0], '1C');
+		
+		expect(obj.impl.attachEvent).toHaveBeenCalledTimes(1);
+	});
 });
