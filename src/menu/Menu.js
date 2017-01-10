@@ -19,11 +19,22 @@ export class Menu extends BaseObject {
 		if (DEBUG) {
 			console.log('Menu constructor');
 		}
-		// Creates the dhtmlx object (see function below)
-		var impl = initDhtmlxMenu(container);
 
-		// BaseObject constructor
-		super(OBJECT_TYPE.MENU, container, impl);
+		// We will init the BaseObject properties in the init method
+		super();
+		
+		if (arguments.length === 2) {
+			this.init(container, actionManager);
+		}	
+	}
+
+	init (container, actionManager) {
+
+		// Creates the dhtmlx object
+		var impl = this.initDhtmlxMenu(container);
+
+		// BaseObject init method
+		super.init(OBJECT_TYPE.MENU, container, impl);
 		
 		// Enable onClick event 
 		this.attachEvent("onClick", actionManager);
@@ -56,6 +67,22 @@ export class Menu extends BaseObject {
 		// curryfing!
 		return this;
 	}
+
+	/** Creates the dhtmlXMenuObject inside its container. */
+	initDhtmlxMenu(container) {
+		var impl = null;
+		if (isNode(container)) {
+			impl = new dhtmlXMenuObject(container, SKIN);
+			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
+			|| container.type === OBJECT_TYPE.LAYOUT
+			|| container.type === OBJECT_TYPE.WINDOW) {
+			
+			impl = container.impl.attachMenu();
+			impl.setSkin(SKIN);
+		}
+		return impl;
+	}
 	
 	set childs (menuItems) {
 		// Clean array first
@@ -66,20 +93,4 @@ export class Menu extends BaseObject {
 			this.addMenuItem(menuItems[i]);
 		}
 	}
-}
-
-/** Creates the dhtmlXMenuObject inside its container. */
-function initDhtmlxMenu(container) {
-	var impl = null;
-	if (isNode(container)) {
-		impl = new dhtmlXMenuObject(container, SKIN);
-		
-	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
-		|| container.type === OBJECT_TYPE.LAYOUT
-		|| container.type === OBJECT_TYPE.WINDOW) {
-		
-		impl = container.impl.attachMenu();
-		impl.setSkin(SKIN);
-	}
-	return impl;
 }

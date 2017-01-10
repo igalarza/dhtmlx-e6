@@ -4,7 +4,7 @@ import { MenuItem } from 'menu/MenuItem';
 
 export class ActionManager {
 	
-	constructor (context) {		
+	constructor (context) {	
 		this._context = context;
 		this._actions = [];
 	}
@@ -13,9 +13,13 @@ export class ActionManager {
 		var action = this.actions[actionName];
 		return new MenuItem(parentName, actionName, action, caption, icon, iconDisabled);
 	}
-	
-	addAction (action) {
+
+	addActionObj (action) {
 		this._actions[action.name] = action.impl;
+	}
+
+	addAction (name, impl) {
+		this._actions[name] = impl;
 	}
 	
 	get context () {

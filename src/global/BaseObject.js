@@ -60,14 +60,11 @@ export class BaseObject {
 	
 	attachEvent (eventName, actionManager) {
 		var self = this;
-		this.impl.attachEvent(eventName, function (id, zoneId, cas) {
-			if (DEBUG) {
-				console.log('Menu onClickEvent');
-			}
+		this.impl.attachEvent(eventName, function (id) {
 			
 			if (typeof self._childs[id] === 'function') {
 				// The context in the actionManager is sent to the action
-				self._childs[id](actionManager.context);
+				self._childs[id](arguments, actionManager.context);
 			}
 		});
 	}

@@ -28,12 +28,12 @@ export class BaseLayout extends BaseObject {
 		}
 	}
 	
-	init(container, pattern) {
+	init (container, pattern) {
 		
 		if (arguments.length === 2) {
 		
 			// Creates the dhtmlx object (see function below)
-			var impl = initDhtmlxLayout(container, pattern);
+			var impl = this.initDhtmlxLayout(container, pattern);
 			
 			// BaseObject init method
 			super.init(OBJECT_TYPE.LAYOUT, container, impl);
@@ -57,7 +57,7 @@ export class BaseLayout extends BaseObject {
 	 * Internal method called by the constructor, it creates the LayoutCell 
 	 * objects and adds them to the this.childs array
 	 */
-	initCells() {
+	initCells () {
 		// Needed inside the forEachItem
 		var cells = this.childs;	
 		this._impl.forEachItem(function (cellImpl) {
@@ -67,24 +67,25 @@ export class BaseLayout extends BaseObject {
 			cells.push(cell);
 		});
 	}
+
+	/** Creates the dhtmlXLayoutObject inside its container. */
+	initDhtmlxLayout (container, pattern) {
+		var impl = null;
+		if (isNode(container)) {
+			
+			impl = new dhtmlXLayoutObject({
+				// id or object for parent container
+				parent: container,    	
+				// layout's pattern			
+				pattern: pattern,
+				// layout's skin
+				skin: SKIN
+			});
+		
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
+			impl = container.impl.attachLayout(pattern);
+		}
+		return impl;
+	}
 }
 
-/** Creates the dhtmlXLayoutObject inside its container. */
-function initDhtmlxLayout (container, pattern) {
-	var impl = null;
-	if (isNode(container)) {
-		
-		impl = new dhtmlXLayoutObject({
-			// id or object for parent container
-			parent: container,    	
-			// layout's pattern			
-			pattern: pattern,
-			// layout's skin
-			skin: SKIN
-		});
-	
-	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
-		impl = container.impl.attachLayout(pattern);
-	}
-	return impl;
-}
