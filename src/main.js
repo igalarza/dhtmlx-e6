@@ -11,4 +11,23 @@ import { PageLayout } from 'layout/PageLayout';
 import { Menu } from 'menu/Menu';
 import { MenuItem } from 'menu/MenuItem';
 
-export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, Menu, MenuItem };
+import { BaseTree } from 'tree/BaseTree';
+import { TreeItem } from 'tree/TreeItem';
+
+export {
+	// Action management
+	ActionManager, 
+	Action, 
+
+	// Layouts
+	SimpleLayout, 
+	TwoColumnsLayout, 
+	PageLayout,
+
+	// Tree layouts
+	BaseTree,
+	TreeItem,
+
+	Menu, 
+	MenuItem
+};

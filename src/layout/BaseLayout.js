@@ -59,10 +59,11 @@ export class BaseLayout extends BaseObject {
 	 */
 	initCells () {
 		// Needed inside the forEachItem
-		var cells = this.childs;	
+		var self = this;
+		var cells = this.childs;
 		this._impl.forEachItem(function (cellImpl) {
 			// here this point to the dhtmlXLayoutObject object.
-			var cell = new LayoutCell(this, cellImpl);
+			var cell = new LayoutCell(self, cellImpl);
 			// adds the new cell to this._childs
 			cells.push(cell);
 		});

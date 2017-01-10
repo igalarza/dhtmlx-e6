@@ -3,8 +3,8 @@ import { isNode , OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
 import { BaseObject } from 'global/BaseObject';
 
 /**
-  * Base class for all tree objects, see:
-  * http://docs.dhtmlx.com/tree__index.html
+  * Base class for all TreeView objects, see:
+  * http://docs.dhtmlx.com/treeview__index.html
   */
 export class BaseTree extends BaseObject {
 
@@ -23,12 +23,19 @@ export class BaseTree extends BaseObject {
 
 	init (container, actionManager = null) {
 
-		if (arguments.length === 1) {
+		if (arguments.length >= 1) {
 
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxTree(container);
-
 			impl.setSkin(SKIN);
+
+			// BaseObject init method
+			super.init(OBJECT_TYPE.TREE, container, impl);
+			
+			// Enable onSelect event 
+			if (actionManager != null) {
+				this.attachEvent("onSelect", actionManager);
+			}
 
 		} else {
 			throw new Error('BaseTree init method requires one parameter');
@@ -37,7 +44,8 @@ export class BaseTree extends BaseObject {
 
 	addItem (treeItem) {
 
-		this.impl.insertNewItem(treeItem.parentId, treeItem.id, treeItem.text);
+		this.impl.addItem(treeItem.id, treeItem.text, treeItem.parentId);
+		this._childs[treeItem.id] = treeItem.action;
 
 	}
 
@@ -46,10 +54,10 @@ export class BaseTree extends BaseObject {
 		var impl = null;
 		if (isNode(container)) {
 			
-			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
+			impl = new dhtmlXTreeView(container, "100%", "100%", 0);
 		
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
-			impl = container.impl.attachTree(pattern);
+			impl = container.impl.attachTreeView();
 		}
 		return impl;
 	}

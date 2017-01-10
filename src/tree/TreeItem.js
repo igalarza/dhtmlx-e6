@@ -2,18 +2,12 @@
 
 export class TreeItem {
 
-	constructor(parentId, id, text, actionHandler = null, image = null, 
-		image2 = null, image3 = null, optionStr = null, children = null) {
+	constructor(parentId, id, text, action = null) {
 
 		this._parentId = parentId;
 		this._id = id;
 		this._text = text;
-		this._actionHandler = actionHandler;
-		this._image = image;
-		this._image2 = image2;
-		this._image3 = image3;
-		this._optionStr = optionStr;
-		this._children = children;
+		this._action = action;
 	}
 
 	get parentId () {
@@ -26,5 +20,9 @@ export class TreeItem {
 
 	get text () {
 		return this._text;
+	}
+
+	get action () {
+		return this._action;
 	}
 }
