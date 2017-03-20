@@ -9,12 +9,14 @@ module.exports = function(config) {
     browsers: ['Chrome'],
     frameworks: ['jasmine'],
     files: [
-		'vendor/dhtmlx.max.js',
-		{ pattern: 'src/**/*.js', included: false },
-		'test/**/*.spec.js',
+		{ pattern: 'vendor/dhtmlx.max.js', included: true },
+		{ pattern: 'src/**/*.js', included: true },
+		{ pattern: 'test/**/*.js', included: true }, 
 		// css files are required for size validations
-		'vendor/dhtmlx.css',
-		'test/main.css',
+		{ pattern: 'test/main.css', included: false },
+		{ pattern: 'vendor/dhtmlx.css', included: false },
+		{ pattern: 'vendor/imgs/**/**.*', included: false },
+		{ pattern: 'vendor/fonts/**/**.*', included: false }
     ],
 	
 	// coverage reporter generates the coverage
@@ -22,7 +24,7 @@ module.exports = function(config) {
 	
 	preprocessors: {
 		'src/**/*.js': ['rollup'],
-        'test/**/*.spec.js': ['rollup']
+        'test/**/*.js': ['rollup']
     },
 	
 	rollupPreprocessor: {
@@ -34,12 +36,15 @@ module.exports = function(config) {
 		plugins: [
 			includePaths({
 				include: {},
-				paths: ['src/'],
+				paths: [
+					'src/', 
+					'test/'
+				],
 				external: [],
 				extensions: ['.js', '.json']
 			}),
 			istanbul({
-                exclude: ['test/**/*.js']
+                exclude: ['test/**/*.spec.js']
             }),
 			babel({
 				presets: [["es2015", { "modules": false }]],

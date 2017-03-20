@@ -4,7 +4,7 @@
 export const DEBUG = true;
 
 /** dhtmlx skin applied to all objects */
-export const SKIN = 'material';
+export const SKIN = 'dhx_web';
 
 /** All the dhtmlx object types */
 export const OBJECT_TYPE = {
@@ -14,7 +14,8 @@ export const OBJECT_TYPE = {
 	MENU : 'menu', 
 	GRID : 'grid', 
 	TREE : 'tree', 
-	WINDOW : 'window'
+	WINDOW : 'window',
+	WINDOW_MANAGER : 'windowManager'
 };
 
 /**

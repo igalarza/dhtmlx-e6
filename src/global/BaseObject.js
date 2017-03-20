@@ -52,7 +52,7 @@ export class BaseObject {
 		if (typeof this._impl !== 'undefined' &&
 			typeof this.impl.unload === 'function') {
 			if (DEBUG) {
-				console.log('Call to unload() in destroy method.');
+				console.log(this.type +': Call to unload() in destroy method.');
 			}
 			this.impl.unload();
 		}
