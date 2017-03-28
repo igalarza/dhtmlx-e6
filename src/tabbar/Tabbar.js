@@ -45,5 +45,6 @@ export class Tabbar extends BaseObject {
             
             impl = container.impl.attachTabbar();
         }
+        return impl;
     }
 }
