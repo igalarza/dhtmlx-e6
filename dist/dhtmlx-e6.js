@@ -648,6 +648,80 @@ class BaseTree extends BaseObject {
 	}
 }
 
+class Tabbar extends BaseObject {
+    
+    constructor (container) {
+        if (DEBUG) {
+            console.log('Tabbar constructor');
+        }
+        
+        // We will init the BaseObject properties in the init method
+        super();
+        
+        if (arguments.length === 1) {
+            this.init(container);
+        }
+    }
+    
+    init (container) {
+        if (arguments.length === 1) {
+            
+            // Creates the dhtmlx object (see function below)
+            var impl = this.initDhtmlxTabbar(container);
+            
+            // BaseObject init method
+            super.init(OBJECT_TYPE.TABBAR, container, impl);
+            
+        } else {
+            throw new Error('Tabbar init method requires one parameter');
+        }
+    }
+    
+    initDhtmlxTabbar (container) {
+        var impl = null;
+        if (isNode(container)) {
+            
+            impl = new dhtmlXTabBar({
+                parent: container,
+                skin: SKIN
+            });
+            
+        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
+            
+            impl = container.impl.attachTabbar();
+        }
+    }
+}
+
+class Tab extends BaseObject {
+    
+    constructor (container, id, text, position = null, active = false, close = false) {
+        
+        if (DEBUG) {
+            console.log('Tab constructor');
+        }
+        
+        // We will init the BaseObject properties in the init method
+        super();
+        
+        if (arguments.length >= 3) {
+            this.init(container, id, text, position, active, close);
+        }
+    }
+    
+    
+    init (container, id, text, position = null, active = false, close = false) {
+        
+        // TODO check that container must be a Tabbar object
+        container.impl.addTab(id, text, null, position, active, close);
+        
+        var impl = container.impl.tabs(id);
+        
+         // BaseObject init method
+        super.init(OBJECT_TYPE.TAB, container, impl);
+    }
+}
+
 // Here we import all "public" classes to expose them
 
-export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, MenuItem };
+export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, MenuItem, Tabbar, Tab };

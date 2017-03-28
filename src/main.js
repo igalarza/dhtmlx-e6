@@ -14,6 +14,9 @@ import { MenuItem } from 'menu/MenuItem';
 import { BaseTree } from 'tree/BaseTree';
 import { TreeItem } from 'tree/TreeItem';
 
+import { Tabbar } from 'tabbar/Tabbar';
+import { Tab } from 'tabbar/Tab';
+
 export {
 	// Action management
 	ActionManager, 
@@ -28,6 +31,11 @@ export {
 	BaseTree,
 	TreeItem,
 
+        // Menus
 	Menu, 
-	MenuItem
+	MenuItem,
+	
+	// Tabbar
+	Tabbar,
+        Tab
 };
