@@ -16,7 +16,7 @@ var nodeResolve = require('rollup-plugin-node-resolve');
 var KarmaServer = require('karma').Server;
 
 // Default task, creates docs and dist files.
-gulp.task('default', ['htmldocs', 'build']);
+gulp.task('default', ['build']);
 
 // Needed to run the watch task
 var cache;

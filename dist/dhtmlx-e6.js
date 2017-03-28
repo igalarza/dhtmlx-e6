@@ -33,20 +33,56 @@ class MenuItem {
 	get iconDisabled () { return this._iconDisabled; }
 }
 
+class TreeItem {
+
+	constructor(parentId, id, text, action = null) {
+
+		this._parentId = parentId;
+		this._id = id;
+		this._text = text;
+		this._action = action;
+	}
+
+	get parentId () {
+		return this._parentId;
+	}
+
+	get id () {
+		return this._id;
+	}
+
+	get text () {
+		return this._text;
+	}
+
+	get action () {
+		return this._action;
+	}
+}
+
 class ActionManager {
 	
-	constructor (context) {		
+	constructor (context) {	
 		this._context = context;
 		this._actions = [];
 	}
 	
-	createMenuItem (actionName, parentName, caption, icon, iconDisabled) {		
+	createMenuItem (parentName, actionName, caption, icon, iconDisabled) {		
 		var action = this.actions[actionName];
 		return new MenuItem(parentName, actionName, action, caption, icon, iconDisabled);
 	}
-	
-	addAction (action) {
+
+	createTreeItem (parentName, actionName, caption) {		
+		var action = this.actions[actionName];
+		return new TreeItem(parentName, actionName, caption, action);
+	}
+
+	addActionObj (action) {
 		this._actions[action.name] = action.impl;
+	}
+
+	addAction (name, impl) {
+		this._actions[name] = impl;
 	}
 	
 	get context () {
@@ -72,16 +108,19 @@ const OBJECT_TYPE = {
 	MENU : 'menu', 
 	GRID : 'grid', 
 	TREE : 'tree', 
-	WINDOW : 'window'
+	WINDOW : 'window',
+        TABBAR : 'tabbar',
+        TAB : 'tab'
 };
 
 /**
- * Checks if the parameter is a DOM node.
+ * Checks if the parameter is a DOM node or DOM id (string).
  * @param {mixed} o - Dom Node or any other variable.
  * @return {boolean} true if the parameter is a DOM Node.
  */   
 function isNode (o) {
 	return (
+		typeof Node === "string" ||
 		typeof Node === "object" ? o instanceof Node : 
 		typeof o === "object" && typeof o.nodeType === "number" && typeof o.nodeName==="string"
 	);
@@ -146,14 +185,11 @@ class BaseObject {
 	
 	attachEvent (eventName, actionManager) {
 		var self = this;
-		this.impl.attachEvent(eventName, function (id, zoneId, cas) {
-			if (DEBUG) {
-				console.log('Menu onClickEvent');
-			}
+		this.impl.attachEvent(eventName, function (id) {
 			
 			if (typeof self._childs[id] === 'function') {
 				// The context in the actionManager is sent to the action
-				self._childs[id](actionManager.context);
+				self._childs[id](arguments, actionManager.context);
 			}
 		});
 	}
@@ -233,6 +269,8 @@ class LayoutCell extends BaseObject {
 			
 			// Header is hidden by default
 			this.header = null;
+			
+			this.impl.fixSize(false, false);
 		} else {
 			throw new Error('LayoutCell init method requires two parameters');
 		}
@@ -298,12 +336,12 @@ class BaseLayout extends BaseObject {
 		}
 	}
 	
-	init(container, pattern) {
+	init (container, pattern) {
 		
 		if (arguments.length === 2) {
 		
 			// Creates the dhtmlx object (see function below)
-			var impl = initDhtmlxLayout(container, pattern);
+			var impl = this.initDhtmlxLayout(container, pattern);
 			
 			// BaseObject init method
 			super.init(OBJECT_TYPE.LAYOUT, container, impl);
@@ -327,36 +365,37 @@ class BaseLayout extends BaseObject {
 	 * Internal method called by the constructor, it creates the LayoutCell 
 	 * objects and adds them to the this.childs array
 	 */
-	initCells() {
+	initCells () {
 		// Needed inside the forEachItem
-		var cells = this.childs;	
+		var self = this;
+		var cells = this.childs;
 		this._impl.forEachItem(function (cellImpl) {
 			// here this point to the dhtmlXLayoutObject object.
-			var cell = new LayoutCell(this, cellImpl);
+			var cell = new LayoutCell(self, cellImpl);
 			// adds the new cell to this._childs
 			cells.push(cell);
 		});
 	}
-}
 
-/** Creates the dhtmlXLayoutObject inside its container. */
-function initDhtmlxLayout (container, pattern) {
-	var impl = null;
-	if (isNode(container)) {
+	/** Creates the dhtmlXLayoutObject inside its container. */
+	initDhtmlxLayout (container, pattern) {
+		var impl = null;
+		if (isNode(container)) {
+			
+			impl = new dhtmlXLayoutObject({
+				// id or object for parent container
+				parent: container,    	
+				// layout's pattern			
+				pattern: pattern,
+				// layout's skin
+				skin: SKIN
+			});
 		
-		impl = new dhtmlXLayoutObject({
-			// id or object for parent container
-			parent: container,    	
-			// layout's pattern			
-			pattern: pattern,
-			// layout's skin
-			skin: SKIN
-		});
-	
-	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
-		impl = container.impl.attachLayout(pattern);
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
+			impl = container.impl.attachLayout(pattern);
+		}
+		return impl;
 	}
-	return impl;
 }
 
 /** Layout with only one cell */
@@ -472,11 +511,22 @@ class Menu extends BaseObject {
 		if (DEBUG) {
 			console.log('Menu constructor');
 		}
-		// Creates the dhtmlx object (see function below)
-		var impl = initDhtmlxMenu(container);
 
-		// BaseObject constructor
-		super(OBJECT_TYPE.MENU, container, impl);
+		// We will init the BaseObject properties in the init method
+		super();
+		
+		if (arguments.length === 2) {
+			this.init(container, actionManager);
+		}	
+	}
+
+	init (container, actionManager) {
+
+		// Creates the dhtmlx object
+		var impl = this.initDhtmlxMenu(container);
+
+		// BaseObject init method
+		super.init(OBJECT_TYPE.MENU, container, impl);
 		
 		// Enable onClick event 
 		this.attachEvent("onClick", actionManager);
@@ -509,6 +559,22 @@ class Menu extends BaseObject {
 		// curryfing!
 		return this;
 	}
+
+	/** Creates the dhtmlXMenuObject inside its container. */
+	initDhtmlxMenu(container) {
+		var impl = null;
+		if (isNode(container)) {
+			impl = new dhtmlXMenuObject(container, SKIN);
+			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
+			|| container.type === OBJECT_TYPE.LAYOUT
+			|| container.type === OBJECT_TYPE.WINDOW) {
+			
+			impl = container.impl.attachMenu();
+			impl.setSkin(SKIN);
+		}
+		return impl;
+	}
 	
 	set childs (menuItems) {
 		// Clean array first
@@ -521,22 +587,67 @@ class Menu extends BaseObject {
 	}
 }
 
-/** Creates the dhtmlXMenuObject inside its container. */
-function initDhtmlxMenu(container) {
-	var impl = null;
-	if (isNode(container)) {
-		impl = new dhtmlXMenuObject(container, SKIN);
+/**
+  * Base class for all TreeView objects, see:
+  * http://docs.dhtmlx.com/treeview__index.html
+  */
+class BaseTree extends BaseObject {
+
+	constructor (container, actionManager = null) {
+		if (DEBUG) {
+			console.log('BaseTree constructor');
+		}
+
+		// We will init the BaseObject properties in the init method
+		super();
 		
-	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
-		|| container.type === OBJECT_TYPE.LAYOUT
-		|| container.type === OBJECT_TYPE.WINDOW) {
-		
-		impl = container.impl.attachMenu();
-		impl.setSkin(SKIN);
+		if (arguments.length >= 1) {
+			this.init(container, actionManager);
+		}
 	}
-	return impl;
+
+	init (container, actionManager = null) {
+
+		if (arguments.length >= 1) {
+
+			// Creates the dhtmlx object (see function below)
+			var impl = this.initDhtmlxTree(container);
+			impl.setSkin(SKIN);
+
+			// BaseObject init method
+			super.init(OBJECT_TYPE.TREE, container, impl);
+			
+			// Enable onSelect event 
+			if (actionManager != null) {
+				this.attachEvent("onSelect", actionManager);
+			}
+
+		} else {
+			throw new Error('BaseTree init method requires one parameter');
+		}
+	}
+
+	addItem (treeItem) {
+
+		this.impl.addItem(treeItem.id, treeItem.text, treeItem.parentId);
+		this._childs[treeItem.id] = treeItem.action;
+
+	}
+
+	initDhtmlxTree (container) {
+
+		var impl = null;
+		if (isNode(container)) {
+			
+			impl = new dhtmlXTreeView(container, "100%", "100%", 0);
+		
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
+			impl = container.impl.attachTreeView();
+		}
+		return impl;
+	}
 }
 
 // Here we import all "public" classes to expose them
 
-export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, Menu, MenuItem };
+export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, MenuItem };

@@ -4,7 +4,7 @@ import { SKIN, DEBUG } from 'global/config';
 import { BaseObject } from 'global/BaseObject';
 
 
-export class WindowManager {
+export class WindowManager extends BaseObject {
 
 	constructor () {
 		if (DEBUG) {

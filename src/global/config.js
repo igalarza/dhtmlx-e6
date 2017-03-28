@@ -14,7 +14,9 @@ export const OBJECT_TYPE = {
 	MENU : 'menu', 
 	GRID : 'grid', 
 	TREE : 'tree', 
-	WINDOW : 'window'
+	WINDOW : 'window',
+        TABBAR : 'tabbar',
+        TAB : 'tab'
 };
 
 /**
