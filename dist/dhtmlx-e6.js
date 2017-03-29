@@ -98,7 +98,7 @@ class ActionManager {
 const DEBUG = true;
 
 /** dhtmlx skin applied to all objects */
-const SKIN = 'material';
+const SKIN = 'dhx_skyblue';
 
 /** All the dhtmlx object types */
 const OBJECT_TYPE = {

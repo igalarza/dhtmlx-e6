@@ -4,7 +4,7 @@
 export const DEBUG = true;
 
 /** dhtmlx skin applied to all objects */
-export const SKIN = 'material';
+export const SKIN = 'dhx_skyblue';
 
 /** All the dhtmlx object types */
 export const OBJECT_TYPE = {
