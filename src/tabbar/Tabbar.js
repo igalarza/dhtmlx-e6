@@ -41,8 +41,7 @@ export class Tabbar extends BaseObject {
                 skin: SKIN
             });
             
-        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL ||
-                   container.type === OBJECT_TYPE.TAB) {
+        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
             
             impl = container.impl.attachTabbar();
         }

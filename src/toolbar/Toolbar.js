@@ -2,9 +2,6 @@
 import { isNode , OBJECT_TYPE , DEBUG , SKIN } from 'global/config';
 import { BaseObject } from 'global/BaseObject';
 
-
-
-
 export class Toolbar extends BaseObject {
 	
 	constructor (container, actionManager) {
@@ -20,12 +17,26 @@ export class Toolbar extends BaseObject {
 		this.attachEvent("onClick", actionManager);
 	}
 	
-	addToolbarButton (toolbarItem) {		
+	addToolbarButton (toolbarItem) {
 		this.impl.addButton(toolbarItem.name, (this._childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
 		this._childs[toolbarItem.name] = toolbarItem.action;
 		// curryfing!
 		return this;
-	}	
+	}
+	
+	addToolbarButtonSelect (toolbarItem) {
+		this.impl.addButtonSelect(toolbarItem.name, (this._childs.length), toolbarItem.caption, null, toolbarItem.icon, toolbarItem.iconDisabled);
+		this._childs[toolbarItem.name] = toolbarItem.action;
+		// curryfing!
+		return this;
+	}
+	
+	addToolbarListOption (parent, toolbarItem) {
+		this.impl.addListOption(parent, toolbarItem.name, (this._childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
+		this._childs[toolbarItem.name] = toolbarItem.action;
+		// curryfing!
+		return this;
+	}
 }
 
 /** Creates the dhtmlXToolbarObject inside its container. */
