@@ -47,7 +47,8 @@ function initDhtmlxToolbar (container) {
 		
 	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
 		|| container.type === OBJECT_TYPE.LAYOUT
-		|| container.type === OBJECT_TYPE.WINDOW) {
+		|| container.type === OBJECT_TYPE.WINDOW
+                || container.type === OBJECT_TYPE.TAB) {
 		
 		impl = container.impl.attachToolbar();
 		impl.setSkin(SKIN);
