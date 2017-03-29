@@ -17,6 +17,8 @@ import { TreeItem } from 'tree/TreeItem';
 import { Tabbar } from 'tabbar/Tabbar';
 import { Tab } from 'tabbar/Tab';
 
+import { Toolbar } from 'toolbar/Toolbar';
+
 export {
 	// Action management
 	ActionManager, 
@@ -37,5 +39,8 @@ export {
 	
 	// Tabbar
 	Tabbar,
-        Tab
+        Tab,
+        
+        // Toolbar
+        Toolbar
 };
