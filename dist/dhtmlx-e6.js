@@ -747,7 +747,7 @@ class Toolbar extends BaseObject {
 	}
 	
 	addToolbarButtonSelect (toolbarItem) {
-		this.impl.addButtonSelect(toolbarItem.name, (this._childs.length), toolbarItem.caption, null, toolbarItem.icon, toolbarItem.iconDisabled);
+		this.impl.addButtonSelect(toolbarItem.name, (this._childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
 		this._childs[toolbarItem.name] = toolbarItem.action;
 		// curryfing!
 		return this;
