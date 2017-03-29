@@ -640,10 +640,10 @@ class BaseTree extends BaseObject {
 		var impl = null;
 		if (isNode(container)) {
 			
-			impl = new dhtmlXTreeView(container, "100%", "100%", 0);
+			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
 		
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
-			impl = container.impl.attachTreeView();
+			impl = container.impl.attachTree();
 		}
 		return impl;
 	}
@@ -741,21 +741,21 @@ class Toolbar extends BaseObject {
 	
 	addToolbarButton (toolbarItem) {
 		this.impl.addButton(toolbarItem.name, (this._childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
-		this._childs[toolbarItem.name] = toolbarItem.action;
+		this._childs.push(toolbarItem.action);
 		// curryfing!
 		return this;
 	}
 	
 	addToolbarButtonSelect (toolbarItem) {
 		this.impl.addButtonSelect(toolbarItem.name, (this._childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
-		this._childs[toolbarItem.name] = toolbarItem.action;
+		this._childs.push(toolbarItem.action);
 		// curryfing!
 		return this;
 	}
 	
 	addToolbarListOption (parent, toolbarItem) {
 		this.impl.addListOption(parent, toolbarItem.name, (this._childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
-		this._childs[toolbarItem.name] = toolbarItem.action;
+		this._childs.push(toolbarItem.action);
 		// curryfing!
 		return this;
 	}
