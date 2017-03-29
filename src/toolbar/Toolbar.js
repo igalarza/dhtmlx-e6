@@ -19,21 +19,21 @@ export class Toolbar extends BaseObject {
 	
 	addToolbarButton (toolbarItem) {
 		this.impl.addButton(toolbarItem.name, (this._childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
-		this._childs[toolbarItem.name] = toolbarItem.action;
+		this._childs.push(toolbarItem.action);
 		// curryfing!
 		return this;
 	}
 	
 	addToolbarButtonSelect (toolbarItem) {
 		this.impl.addButtonSelect(toolbarItem.name, (this._childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
-		this._childs[toolbarItem.name] = toolbarItem.action;
+		this._childs.push(toolbarItem.action);
 		// curryfing!
 		return this;
 	}
 	
 	addToolbarListOption (parent, toolbarItem) {
 		this.impl.addListOption(parent, toolbarItem.name, (this._childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
-		this._childs[toolbarItem.name] = toolbarItem.action;
+		this._childs.push(toolbarItem.action);
 		// curryfing!
 		return this;
 	}
