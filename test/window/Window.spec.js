@@ -9,7 +9,7 @@ describe("Checks the Window object", function() {
 	var win = null;
 	
 	beforeAll(function() {
-		windowManager = new WindowManager();
+		windowManager = new WindowManager('name', document.body);
 		win = windowManager.create('window_id', 800, 600);
 	});
 	

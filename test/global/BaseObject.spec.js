@@ -8,7 +8,7 @@ describe("Checks the BaseObject object", function() {
 	beforeAll(function() {
 		obj = new BaseObject();
 		spyOn(obj, 'destroy').and.callThrough();	
-		obj.init('typeName', 'container', 'impl');
+		obj.init('objName', 'typeName', 'container', 'impl');
 	});
 
 	it("checking if the object is defined", function() {
@@ -34,5 +34,20 @@ describe("Checks the BaseObject object", function() {
 			// init must have 3 parameters
             obj.init('one', 'two');
         }).toThrowError();	
+	});
+	
+	it("checking if the search works", function() {
+		var child1 = new BaseObject('child1', 'typeName', obj, 'impl');
+		var child2 = new BaseObject('child2', 'typeName', obj, 'impl');
+		
+		var child2_1 = new BaseObject('child2_1', 'typeName', child2, 'impl');
+		var child2_2 = new BaseObject('child2_2', 'typeName', child2, 'impl');
+		var child2_2_1 = new BaseObject('child2_2_1', 'typeName', child2_2, 'impl');
+		
+		expect(child1.name).toEqual(obj.find('child1').name);
+		expect(child2.name).toEqual(obj.find('child2').name);
+		expect(child2_1.name).toEqual(obj.find('child2_1').name);
+		expect(child2_2.name).toEqual(obj.find('child2_2').name);
+		expect(child2_2_1.name).toEqual(obj.find('child2_2_1').name);
 	});
 });

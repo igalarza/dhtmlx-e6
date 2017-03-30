@@ -14,28 +14,28 @@ export class LayoutCell extends BaseObject {
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 * @param {string} impl - dhtmlx object, created in the BaseLayout class.
 	 */
-	constructor (container, impl) {
+	constructor (name, container, impl) {
 		if (DEBUG) {
 			console.log('LayoutCell constructor');
 		}
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length === 2) {
-			this.init(container, impl);
+		if (arguments.length === 3) {
+			this.init(name, container, impl);
 		}
 	}
 	
-	init (container, impl) {
-		if (arguments.length === 2) {
-			super.init(OBJECT_TYPE.LAYOUT_CELL, container, impl);
+	init (name, container, impl) {
+		if (arguments.length === 3) {
+			super.init(name, OBJECT_TYPE.LAYOUT_CELL, container, impl);
 			
 			// Header is hidden by default
 			this.header = null;
 			
 			this.impl.fixSize(false, false);
 		} else {
-			throw new Error('LayoutCell init method requires two parameters');
+			throw new Error('LayoutCell init method requires 3 parameters');
 		}
 	}
 	

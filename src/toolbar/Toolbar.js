@@ -4,7 +4,7 @@ import { BaseObject } from 'global/BaseObject';
 
 export class Toolbar extends BaseObject {
 	
-	constructor (container, actionManager) {
+	constructor (name, container, actionManager) {
 		if (DEBUG) {
 			console.log('Toolbar constructor');
 		}
@@ -12,7 +12,7 @@ export class Toolbar extends BaseObject {
 		var impl = initDhtmlxToolbar(container);
 		
 		// BaseObject constructor
-		super(OBJECT_TYPE.TOOLBAR, container, impl);
+		super(name, OBJECT_TYPE.TOOLBAR, container, impl);
 		
 		this.attachEvent("onClick", actionManager);
 	}

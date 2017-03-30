@@ -1,5 +1,5 @@
 
-import { DEBUG } from 'global/config';
+import { DEBUG, isNode } from 'global/config';
 
 /**
   * Parent class of all the objects in the library, it holds some common variables.
@@ -9,28 +9,36 @@ export class BaseObject {
 	/**
 	 * Called by child objects.
 	 * @constructor
+	 * @param {string} name - Object name, useful for searching child objects.
 	 * @param {string} type - Type of component: layout, window, grid, etc.
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 * @param {object} impl - dhtmlx object, must be created by child class.
 	 */
-    constructor (type, container, impl) {
+    constructor (name, type, container, impl) {
 		// It can be called without arguments, for testing integration reasons.
-		if (arguments.length === 3) {
-			this.init(type, container, impl);
+		if (arguments.length === 4) {
+			this.init(name, type, container, impl);
 		}		
     }
 	
-	init (type, container, impl) {			
-		if (arguments.length === 3) {
+	init (name, type, container, impl) {			
+		if (arguments.length === 4) {
 			// Clean up before assignations
 			this.destroy();
 			// Init properties
+			this._name = name;
 			this._type = type;
 			this._container = container;
 			this._impl = impl;
-			this._childs = [];	
+			this._childs = [];
+			
+			if (!isNode(container) &&
+				container.childs instanceof Array) {
+				
+				container.childs.push(this);
+			}
 		} else {
-			throw new Error('BaseObject init method requires 3 parameters');
+			throw new Error('BaseObject init method requires 4 parameters');
 		}
 	}
 	
@@ -38,8 +46,8 @@ export class BaseObject {
 	destroy () {
 		// First, the childs
 		if (typeof this._childs !== 'undefined') {
-			while (this.childs.length > 0) {
-				var child = this.childs.pop();
+			while (this._childs.length > 0) {
+				var child = this._childs.pop();
 				if (typeof child === 'object' 
 					&& typeof child.destroy === 'function') {
 						
@@ -50,14 +58,35 @@ export class BaseObject {
 		
 		// Finally, the object
 		if (typeof this._impl !== 'undefined' &&
-			typeof this.impl.unload === 'function') {
+			typeof this._impl.unload === 'function') {
 			if (DEBUG) {
 				console.log(this.type +': Call to unload() in destroy method.');
 			}
-			this.impl.unload();
+			this._impl.unload();
 		}
 	}
 	
+	/** Finds a child object by name */
+	find (name) {
+		if (this.name === name) {
+			return this;
+		} else {
+			if (typeof this._childs !== 'undefined') {
+				for (let i=0; i<this._childs.length; i++) {
+					var child = this._childs[i];
+					if (typeof child === 'object') {
+						var result = child.find(name);
+						if (result != null) {
+							return result;
+						}
+					}			
+				}
+			}
+		}
+		return null;
+	}
+	
+	/** Adds an event to the object, with an ActionManager object as a collection of actions. */
 	attachEvent (eventName, actionManager) {
 		var self = this;
 		this.impl.attachEvent(eventName, function (id) {
@@ -67,6 +96,26 @@ export class BaseObject {
 				self._childs[id](arguments, actionManager.context);
 			}
 		});
+	}
+	
+	/** Adds an event to the object, with a function parameter as an action. */
+	attachEvent (eventName, action) {
+		var self = this;
+		this.impl.attachEvent(eventName, function () {
+			
+			if (typeof action === 'function') {
+				// The context in the actionManager is sent to the action
+				action(arguments, actionManager.context);
+			}
+		});
+	}
+	
+	get name () {
+		if (typeof this._name !== 'undefined') {
+			return this._name;
+		} else {
+			throw new Error('this._name is undefined: init method has not been called');
+		}
 	}
 	
     /**
@@ -81,7 +130,7 @@ export class BaseObject {
 	}
 	
 	/**
-     * Usually is other dhtmlxObject, the root layout should be inside document.body
+     * Usually is other dhtmlx-e6 object, the root container should be inside document.body
      */
 	get container () { 
 		if (typeof this._container !== 'undefined') {

@@ -12,11 +12,11 @@ export class TwoColumnsLayout extends BaseLayout {
 	 * @constructor
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 */
-	constructor (container) {
+	constructor (name, container) {
 		if (DEBUG) {
 			console.log('TwoColumnsLayout constructor');
 		}
-		super(container, '2U');
+		super(name, container, '2U');
 	}
 	
 	/** Left LayoutCell */

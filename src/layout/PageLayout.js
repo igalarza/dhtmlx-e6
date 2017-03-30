@@ -12,21 +12,21 @@ export class PageLayout extends BaseLayout {
 	 * @param {int} headerHeight - Fixed header height in pixels.
 	 * @param {int} footerHeight - Fixed footer height in pixels.
 	 */
-	constructor (container, headerHeight, footerHeight) {
+	constructor (name, container, headerHeight, footerHeight) {
 		if (DEBUG) {
 			console.log('TwoColumnsLayout constructor');
 		}
 		
 		super();
 		
-		if (arguments.length === 3) {
-			this.init(container, headerHeight, footerHeight);
+		if (arguments.length === 4) {
+			this.init(name, container, headerHeight, footerHeight);
 		}	
 	}
 	
-	init (container, headerHeight, footerHeight) {
-		if (arguments.length === 3) {
-			super.init(container, '3E');
+	init (name, container, headerHeight, footerHeight) {
+		if (arguments.length === 4) {
+			super.init(name, container, '3E');
 			
 			this.header.height = headerHeight;
 			this.header.impl.fixSize(false, true);
@@ -36,7 +36,7 @@ export class PageLayout extends BaseLayout {
 			
 			this.impl.setAutoSize("a;b;c", "b");
 		} else {
-			throw new Error('PageLayout init method requires two parameters');
+			throw new Error('PageLayout init method requires 4 parameters');
 		}
 	}
 	

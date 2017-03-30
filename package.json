@@ -57,5 +57,8 @@
     "rollup-watch": "^2.5.0",
     "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0"
+  },
+  "dependencies": {
+    "rollup-plugin-buble": "^0.15.0"
   }
 }

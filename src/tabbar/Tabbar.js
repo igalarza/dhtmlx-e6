@@ -5,7 +5,7 @@ import { BaseObject } from 'global/BaseObject';
 
 export class Tabbar extends BaseObject {
     
-    constructor (container) {
+    constructor (name, container) {
         if (DEBUG) {
             console.log('Tabbar constructor');
         }
@@ -13,22 +13,22 @@ export class Tabbar extends BaseObject {
         // We will init the BaseObject properties in the init method
         super();
         
-        if (arguments.length === 1) {
-            this.init(container);
+        if (arguments.length === 2) {
+            this.init(name, container);
         }
     }
     
-    init (container) {
-        if (arguments.length === 1) {
+    init (name, container) {
+        if (arguments.length === 2) {
             
             // Creates the dhtmlx object (see function below)
             var impl = this.initDhtmlxTabbar(container);
             
             // BaseObject init method
-            super.init(OBJECT_TYPE.TABBAR, container, impl);
+            super.init(name, OBJECT_TYPE.TABBAR, container, impl);
             
         } else {
-            throw new Error('Tabbar init method requires one parameter');
+            throw new Error('Tabbar init method requires 2 parameters');
         }
     }
     

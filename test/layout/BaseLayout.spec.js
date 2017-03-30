@@ -9,7 +9,7 @@ describe("Checks the BaseLayout object", function() {
 	beforeAll(function() {
 		obj = new BaseLayout();
 		spyOn(obj, 'initCells').and.callThrough();	
-		obj.init(document.body, '1C');
+		obj.init('name', document.body, '1C');
 	});
 	
 	afterAll(function() {
@@ -33,7 +33,7 @@ describe("Checks the BaseLayout object", function() {
 		
 		spyOn(obj.impl, 'attachEvent').and.callThrough();
 		
-		var otherLayout = new BaseLayout(obj.childs[0], '1C');
+		var otherLayout = new BaseLayout('name', obj.childs[0], '1C');
 		
 		expect(obj.impl.attachEvent).toHaveBeenCalledTimes(1);
 	});

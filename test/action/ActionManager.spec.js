@@ -8,7 +8,7 @@ describe("Checks the ActionManager object", function() {
 	var obj = null;
 	
 	beforeAll(function() {
-		var layout = new SimpleLayout(document.body);
+		var layout = new SimpleLayout('name', document.body);
 		obj = new ActionManager(layout.cell);
 	});
 	

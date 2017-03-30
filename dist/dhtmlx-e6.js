@@ -135,28 +135,36 @@ class BaseObject {
 	/**
 	 * Called by child objects.
 	 * @constructor
+	 * @param {string} name - Object name, useful for searching child objects.
 	 * @param {string} type - Type of component: layout, window, grid, etc.
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 * @param {object} impl - dhtmlx object, must be created by child class.
 	 */
-    constructor (type, container, impl) {
+    constructor (name, type, container, impl) {
 		// It can be called without arguments, for testing integration reasons.
-		if (arguments.length === 3) {
-			this.init(type, container, impl);
+		if (arguments.length === 4) {
+			this.init(name, type, container, impl);
 		}		
     }
 	
-	init (type, container, impl) {			
-		if (arguments.length === 3) {
+	init (name, type, container, impl) {			
+		if (arguments.length === 4) {
 			// Clean up before assignations
 			this.destroy();
 			// Init properties
+			this._name = name;
 			this._type = type;
 			this._container = container;
 			this._impl = impl;
-			this._childs = [];	
+			this._childs = [];
+			
+			if (!isNode(container) &&
+				container.childs instanceof Array) {
+				
+				container.childs.push(this);
+			}
 		} else {
-			throw new Error('BaseObject init method requires 3 parameters');
+			throw new Error('BaseObject init method requires 4 parameters');
 		}
 	}
 	
@@ -164,8 +172,8 @@ class BaseObject {
 	destroy () {
 		// First, the childs
 		if (typeof this._childs !== 'undefined') {
-			while (this.childs.length > 0) {
-				var child = this.childs.pop();
+			while (this._childs.length > 0) {
+				var child = this._childs.pop();
 				if (typeof child === 'object' 
 					&& typeof child.destroy === 'function') {
 						
@@ -176,14 +184,35 @@ class BaseObject {
 		
 		// Finally, the object
 		if (typeof this._impl !== 'undefined' &&
-			typeof this.impl.unload === 'function') {
+			typeof this._impl.unload === 'function') {
 			if (DEBUG) {
 				console.log(this.type +': Call to unload() in destroy method.');
 			}
-			this.impl.unload();
+			this._impl.unload();
 		}
 	}
 	
+	/** Finds a child object by name */
+	find (name) {
+		if (this.name === name) {
+			return this;
+		} else {
+			if (typeof this._childs !== 'undefined') {
+				for (let i=0; i<this._childs.length; i++) {
+					var child = this._childs[i];
+					if (typeof child === 'object') {
+						var result = child.find(name);
+						if (result != null) {
+							return result;
+						}
+					}			
+				}
+			}
+		}
+		return null;
+	}
+	
+	/** Adds an event to the object, with an ActionManager object as a collection of actions. */
 	attachEvent (eventName, actionManager) {
 		var self = this;
 		this.impl.attachEvent(eventName, function (id) {
@@ -193,6 +222,26 @@ class BaseObject {
 				self._childs[id](arguments, actionManager.context);
 			}
 		});
+	}
+	
+	/** Adds an event to the object, with a function parameter as an action. */
+	attachEvent (eventName, action) {
+		var self = this;
+		this.impl.attachEvent(eventName, function () {
+			
+			if (typeof action === 'function') {
+				// The context in the actionManager is sent to the action
+				action(arguments, actionManager.context);
+			}
+		});
+	}
+	
+	get name () {
+		if (typeof this._name !== 'undefined') {
+			return this._name;
+		} else {
+			throw new Error('this._name is undefined: init method has not been called');
+		}
 	}
 	
     /**
@@ -207,7 +256,7 @@ class BaseObject {
 	}
 	
 	/**
-     * Usually is other dhtmlxObject, the root layout should be inside document.body
+     * Usually is other dhtmlx-e6 object, the root container should be inside document.body
      */
 	get container () { 
 		if (typeof this._container !== 'undefined') {
@@ -252,28 +301,28 @@ class LayoutCell extends BaseObject {
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 * @param {string} impl - dhtmlx object, created in the BaseLayout class.
 	 */
-	constructor (container, impl) {
+	constructor (name, container, impl) {
 		if (DEBUG) {
 			console.log('LayoutCell constructor');
 		}
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length === 2) {
-			this.init(container, impl);
+		if (arguments.length === 3) {
+			this.init(name, container, impl);
 		}
 	}
 	
-	init (container, impl) {
-		if (arguments.length === 2) {
-			super.init(OBJECT_TYPE.LAYOUT_CELL, container, impl);
+	init (name, container, impl) {
+		if (arguments.length === 3) {
+			super.init(name, OBJECT_TYPE.LAYOUT_CELL, container, impl);
 			
 			// Header is hidden by default
 			this.header = null;
 			
 			this.impl.fixSize(false, false);
 		} else {
-			throw new Error('LayoutCell init method requires two parameters');
+			throw new Error('LayoutCell init method requires 3 parameters');
 		}
 	}
 	
@@ -324,7 +373,7 @@ class BaseLayout extends BaseObject {
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 * @param {string} pattern - dhtmlx layout pattern, see: http://docs.dhtmlx.com/layout__patterns.html
 	 */
-	constructor (container, pattern) {
+	constructor (name, container, pattern) {
 		if (DEBUG) {
 			console.log('BaseLayout constructor');
 		}
@@ -332,20 +381,20 @@ class BaseLayout extends BaseObject {
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length === 2) {
-			this.init(container, pattern);
+		if (arguments.length === 3) {
+			this.init(name, container, pattern);
 		}
 	}
 	
-	init (container, pattern) {
+	init (name, container, pattern) {
 		
-		if (arguments.length === 2) {
+		if (arguments.length === 3) {
 		
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxLayout(container, pattern);
 			
 			// BaseObject init method
-			super.init(OBJECT_TYPE.LAYOUT, container, impl);
+			super.init(name, OBJECT_TYPE.LAYOUT, container, impl);
 			
 			// Inits the LayoutCell objects
 			this.initCells();
@@ -358,7 +407,7 @@ class BaseLayout extends BaseObject {
 			}
 			
 		} else {
-			throw new Error('BaseLayout init method requires two parameters');
+			throw new Error('BaseLayout init method requires 3 parameters');
 		}
 	}
 	
@@ -369,12 +418,11 @@ class BaseLayout extends BaseObject {
 	initCells () {
 		// Needed inside the forEachItem
 		var self = this;
-		var cells = this.childs;
+		var i = 1;
 		this._impl.forEachItem(function (cellImpl) {
 			// here this point to the dhtmlXLayoutObject object.
-			var cell = new LayoutCell(self, cellImpl);
-			// adds the new cell to this._childs
-			cells.push(cell);
+			var cellName = self.name + '_cell' + (i++);
+			var cell = new LayoutCell(cellName, self, cellImpl);
 		});
 	}
 
@@ -408,8 +456,8 @@ class SimpleLayout extends BaseLayout {
 	 * @constructor
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 */
-	constructor (container) {
-		super(container, '1C');
+	constructor (name, container) {
+		super(name, container, '1C');
 	}
 	
 	/** The only LayoutCell object in the layout */
@@ -428,11 +476,11 @@ class TwoColumnsLayout extends BaseLayout {
 	 * @constructor
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 */
-	constructor (container) {
+	constructor (name, container) {
 		if (DEBUG) {
 			console.log('TwoColumnsLayout constructor');
 		}
-		super(container, '2U');
+		super(name, container, '2U');
 	}
 	
 	/** Left LayoutCell */
@@ -456,21 +504,21 @@ class PageLayout extends BaseLayout {
 	 * @param {int} headerHeight - Fixed header height in pixels.
 	 * @param {int} footerHeight - Fixed footer height in pixels.
 	 */
-	constructor (container, headerHeight, footerHeight) {
+	constructor (name, container, headerHeight, footerHeight) {
 		if (DEBUG) {
 			console.log('TwoColumnsLayout constructor');
 		}
 		
 		super();
 		
-		if (arguments.length === 3) {
-			this.init(container, headerHeight, footerHeight);
+		if (arguments.length === 4) {
+			this.init(name, container, headerHeight, footerHeight);
 		}	
 	}
 	
-	init (container, headerHeight, footerHeight) {
-		if (arguments.length === 3) {
-			super.init(container, '3E');
+	init (name, container, headerHeight, footerHeight) {
+		if (arguments.length === 4) {
+			super.init(name, container, '3E');
 			
 			this.header.height = headerHeight;
 			this.header.impl.fixSize(false, true);
@@ -480,7 +528,7 @@ class PageLayout extends BaseLayout {
 			
 			this.impl.setAutoSize("a;b;c", "b");
 		} else {
-			throw new Error('PageLayout init method requires two parameters');
+			throw new Error('PageLayout init method requires 4 parameters');
 		}
 	}
 	
@@ -509,7 +557,7 @@ class Menu extends BaseObject {
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 * @param {actionManager} ActionManager - Contains the actions the menu will execute.
 	 */
-	constructor (container, actionManager) {
+	constructor (name, container, actionManager) {
 		if (DEBUG) {
 			console.log('Menu constructor');
 		}
@@ -517,18 +565,18 @@ class Menu extends BaseObject {
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length === 2) {
-			this.init(container, actionManager);
+		if (arguments.length === 3) {
+			this.init(name, container, actionManager);
 		}	
 	}
 
-	init (container, actionManager) {
+	init (name, container, actionManager) {
 
 		// Creates the dhtmlx object
 		var impl = this.initDhtmlxMenu(container);
 
 		// BaseObject init method
-		super.init(OBJECT_TYPE.MENU, container, impl);
+		super.init(name, OBJECT_TYPE.MENU, container, impl);
 		
 		// Enable onClick event 
 		this.attachEvent("onClick", actionManager);
@@ -595,7 +643,7 @@ class Menu extends BaseObject {
   */
 class BaseTree extends BaseObject {
 
-	constructor (container, actionManager = null) {
+	constructor (name, container, actionManager = null) {
 		if (DEBUG) {
 			console.log('BaseTree constructor');
 		}
@@ -603,21 +651,21 @@ class BaseTree extends BaseObject {
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length >= 1) {
-			this.init(container, actionManager);
+		if (arguments.length >= 2) {
+			this.init(name, container, actionManager);
 		}
 	}
 
 	init (container, actionManager = null) {
 
-		if (arguments.length >= 1) {
+		if (arguments.length >= 2) {
 
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxTree(container);
 			impl.setSkin(SKIN);
 
 			// BaseObject init method
-			super.init(OBJECT_TYPE.TREE, container, impl);
+			super.init(name, OBJECT_TYPE.TREE, container, impl);
 			
 			// Enable onSelect event 
 			if (actionManager != null) {
@@ -625,7 +673,7 @@ class BaseTree extends BaseObject {
 			}
 
 		} else {
-			throw new Error('BaseTree init method requires one parameter');
+			throw new Error('BaseTree init method requires 2 parameters');
 		}
 	}
 
@@ -652,7 +700,7 @@ class BaseTree extends BaseObject {
 
 class Tabbar extends BaseObject {
     
-    constructor (container) {
+    constructor (name, container) {
         if (DEBUG) {
             console.log('Tabbar constructor');
         }
@@ -660,22 +708,22 @@ class Tabbar extends BaseObject {
         // We will init the BaseObject properties in the init method
         super();
         
-        if (arguments.length === 1) {
-            this.init(container);
+        if (arguments.length === 2) {
+            this.init(name, container);
         }
     }
     
-    init (container) {
-        if (arguments.length === 1) {
+    init (name, container) {
+        if (arguments.length === 2) {
             
             // Creates the dhtmlx object (see function below)
             var impl = this.initDhtmlxTabbar(container);
             
             // BaseObject init method
-            super.init(OBJECT_TYPE.TABBAR, container, impl);
+            super.init(name, OBJECT_TYPE.TABBAR, container, impl);
             
         } else {
-            throw new Error('Tabbar init method requires one parameter');
+            throw new Error('Tabbar init method requires 2 parameters');
         }
     }
     
@@ -698,7 +746,7 @@ class Tabbar extends BaseObject {
 
 class Tab extends BaseObject {
     
-    constructor (container, id, text, position = null, active = false, close = false) {
+    constructor (name, container, id, text, position = null, active = false, close = false) {
         
         if (DEBUG) {
             console.log('Tab constructor');
@@ -707,13 +755,13 @@ class Tab extends BaseObject {
         // We will init the BaseObject properties in the init method
         super();
         
-        if (arguments.length >= 3) {
-            this.init(container, id, text, position, active, close);
+        if (arguments.length >= 4) {
+            this.init(name, container, id, text, position, active, close);
         }
     }
     
     
-    init (container, id, text, position = null, active = false, close = false) {
+    init (name, container, id, text, position = null, active = false, close = false) {
         
         // TODO check that container must be a Tabbar object
         container.impl.addTab(id, text, null, position, active, close);
@@ -721,13 +769,13 @@ class Tab extends BaseObject {
         var impl = container.impl.tabs(id);
         
          // BaseObject init method
-        super.init(OBJECT_TYPE.TAB, container, impl);
+        super.init(name, OBJECT_TYPE.TAB, container, impl);
     }
 }
 
 class Toolbar extends BaseObject {
 	
-	constructor (container, actionManager) {
+	constructor (name, container, actionManager) {
 		if (DEBUG) {
 			console.log('Toolbar constructor');
 		}
@@ -735,7 +783,7 @@ class Toolbar extends BaseObject {
 		var impl = initDhtmlxToolbar(container);
 		
 		// BaseObject constructor
-		super(OBJECT_TYPE.TOOLBAR, container, impl);
+		super(name, OBJECT_TYPE.TOOLBAR, container, impl);
 		
 		this.attachEvent("onClick", actionManager);
 	}
@@ -781,7 +829,7 @@ function initDhtmlxToolbar (container) {
 
 class BaseGrid extends BaseObject {
 
-	constructor (container, actionManager = null) {
+	constructor (name, container, actionManager = null) {
 		if (DEBUG) {
 			console.log('BaseGrid constructor');
 		}
@@ -789,21 +837,21 @@ class BaseGrid extends BaseObject {
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length >= 1) {
-			this.init(container, actionManager);
+		if (arguments.length >= 2) {
+			this.init(name, container, actionManager);
 		}
 	}
 
-	init (container, actionManager = null) {
+	init (name, container, actionManager = null) {
 
-		if (arguments.length >= 1) {
+		if (arguments.length >= 2) {
 
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxGrid(container);
 			impl.setSkin(SKIN);
 
 			// BaseObject init method
-			super.init(OBJECT_TYPE.GRID, container, impl);
+			super.init(name, OBJECT_TYPE.GRID, container, impl);
 			
 			// Enable onSelect event 
 			if (actionManager != null) {
@@ -811,7 +859,7 @@ class BaseGrid extends BaseObject {
 			}
 
 		} else {
-			throw new Error('BaseGrid init method requires one parameter');
+			throw new Error('BaseGrid init method requires 2 parameters');
 		}
 	}
 

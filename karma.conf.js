@@ -1,7 +1,7 @@
 
 var nodeResolve = require('rollup-plugin-node-resolve');
 var includePaths = require('rollup-plugin-includepaths');
-var babel = require('rollup-plugin-babel');
+var buble = require('rollup-plugin-buble');
 var istanbul = require('rollup-plugin-istanbul');
 
 module.exports = function(config) {
@@ -46,10 +46,7 @@ module.exports = function(config) {
 			istanbul({
                 exclude: ['test/**/*.spec.js']
             }),
-			babel({
-				presets: [["es2015", { "modules": false }]],
-				plugins: ["external-helpers"]
-			})		
+			buble()		
 		]       
     }
   });

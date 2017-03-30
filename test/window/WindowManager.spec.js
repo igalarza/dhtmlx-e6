@@ -8,7 +8,7 @@ describe("Checks the WindowManager object", function() {
 	var obj = null;
 	
 	beforeAll(function() {
-		obj = new WindowManager();
+		obj = new WindowManager('name', document.body);
 	});
 	
 	afterAll(function() {

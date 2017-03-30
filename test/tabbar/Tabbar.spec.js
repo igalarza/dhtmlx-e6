@@ -9,7 +9,7 @@ describe("Checks the Tabbar object", function() {
 	beforeAll(function() {
 		obj = new Tabbar();
 		spyOn(obj, 'initDhtmlxTabbar').and.callThrough();	
-		obj.init(document.body);
+		obj.init('name', document.body);
 	});
 	
 	afterAll(function() {
@@ -19,6 +19,6 @@ describe("Checks the Tabbar object", function() {
 	it("checking if the object is defined", function() {
 		expect(obj).toBeDefined();
 		expect(obj.initDhtmlxTabbar).toHaveBeenCalledTimes(1);
-                expect(obj.type).toEqual(OBJECT_TYPE.TABBAR);
+        expect(obj.type).toEqual(OBJECT_TYPE.TABBAR);
 	});
 });

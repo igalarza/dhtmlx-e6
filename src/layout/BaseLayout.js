@@ -15,7 +15,7 @@ export class BaseLayout extends BaseObject {
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 * @param {string} pattern - dhtmlx layout pattern, see: http://docs.dhtmlx.com/layout__patterns.html
 	 */
-	constructor (container, pattern) {
+	constructor (name, container, pattern) {
 		if (DEBUG) {
 			console.log('BaseLayout constructor');
 		}
@@ -23,20 +23,20 @@ export class BaseLayout extends BaseObject {
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length === 2) {
-			this.init(container, pattern);
+		if (arguments.length === 3) {
+			this.init(name, container, pattern);
 		}
 	}
 	
-	init (container, pattern) {
+	init (name, container, pattern) {
 		
-		if (arguments.length === 2) {
+		if (arguments.length === 3) {
 		
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxLayout(container, pattern);
 			
 			// BaseObject init method
-			super.init(OBJECT_TYPE.LAYOUT, container, impl);
+			super.init(name, OBJECT_TYPE.LAYOUT, container, impl);
 			
 			// Inits the LayoutCell objects
 			this.initCells();
@@ -49,7 +49,7 @@ export class BaseLayout extends BaseObject {
 			}
 			
 		} else {
-			throw new Error('BaseLayout init method requires two parameters');
+			throw new Error('BaseLayout init method requires 3 parameters');
 		}
 	}
 	
@@ -60,12 +60,11 @@ export class BaseLayout extends BaseObject {
 	initCells () {
 		// Needed inside the forEachItem
 		var self = this;
-		var cells = this.childs;
+		var i = 1;
 		this._impl.forEachItem(function (cellImpl) {
 			// here this point to the dhtmlXLayoutObject object.
-			var cell = new LayoutCell(self, cellImpl);
-			// adds the new cell to this._childs
-			cells.push(cell);
+			var cellName = self.name + '_cell' + (i++);
+			var cell = new LayoutCell(cellName, self, cellImpl);
 		});
 	}
 

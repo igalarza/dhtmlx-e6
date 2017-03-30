@@ -8,7 +8,7 @@ import { BaseObject } from 'global/BaseObject';
   */
 export class BaseTree extends BaseObject {
 
-	constructor (container, actionManager = null) {
+	constructor (name, container, actionManager = null) {
 		if (DEBUG) {
 			console.log('BaseTree constructor');
 		}
@@ -16,21 +16,21 @@ export class BaseTree extends BaseObject {
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length >= 1) {
-			this.init(container, actionManager);
+		if (arguments.length >= 2) {
+			this.init(name, container, actionManager);
 		}
 	}
 
 	init (container, actionManager = null) {
 
-		if (arguments.length >= 1) {
+		if (arguments.length >= 2) {
 
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxTree(container);
 			impl.setSkin(SKIN);
 
 			// BaseObject init method
-			super.init(OBJECT_TYPE.TREE, container, impl);
+			super.init(name, OBJECT_TYPE.TREE, container, impl);
 			
 			// Enable onSelect event 
 			if (actionManager != null) {
@@ -38,7 +38,7 @@ export class BaseTree extends BaseObject {
 			}
 
 		} else {
-			throw new Error('BaseTree init method requires one parameter');
+			throw new Error('BaseTree init method requires 2 parameters');
 		}
 	}
 

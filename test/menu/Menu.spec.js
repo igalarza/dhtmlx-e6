@@ -10,7 +10,7 @@ describe("Checks the Menu object", function() {
 	var actionManager = null;
 	
 	beforeAll(function() {
-		var layout = new SimpleLayout(document.body);
+		var layout = new SimpleLayout('name', document.body);
 		
 		var testAction = function() {
 			console.log("test action");
@@ -25,7 +25,7 @@ describe("Checks the Menu object", function() {
 		actionManager.addActionObj(new Action('test2', testAction2));
 
 		obj = new Menu();
-		obj.init(layout.cell, actionManager);
+		obj.init('name', layout.cell, actionManager);
 	});
 	
 	afterAll(function() {
@@ -38,7 +38,6 @@ describe("Checks the Menu object", function() {
 
 	it("checking if the object has its properties", function() {
 		
-
 		obj.addMenuItem(actionManager.createMenuItem('test', null, 'Menu item'));
 		obj.addTextContainer('text', 'TextContainer');
 		obj.addMenuItem(actionManager.createMenuItem('test2', 'text', 'Menu item'));

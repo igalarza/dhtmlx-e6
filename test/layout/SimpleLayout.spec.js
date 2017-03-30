@@ -7,7 +7,7 @@ describe("Checks the SimpleLayout object", function() {
 	var obj = null;
 	
 	beforeAll(function() {
-		obj = new SimpleLayout(document.body);
+		obj = new SimpleLayout('name', document.body);
 	});	
 
 	it("checking if the object is defined", function() {

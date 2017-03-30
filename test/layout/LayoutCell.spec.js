@@ -15,7 +15,7 @@ describe("Checks the LayoutCell object", function() {
 		loadAssets();
 
 		// We need to create a layout to have a cell implementation
-		layout = new BaseLayout(document.body, '3U');
+		layout = new BaseLayout('name', document.body, '3U');
 		
 		
 		obj = layout.childs[0];

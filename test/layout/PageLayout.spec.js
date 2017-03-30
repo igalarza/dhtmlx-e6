@@ -10,7 +10,7 @@ describe("Checks the PageLayout object", function() {
 		document.body.style = baseStyle;
 		document.documentElement.style = baseStyle;
 		// document.html.style = baseStyle;
-		obj = new PageLayout(document.body, 300, 200);
+		obj = new PageLayout('name', document.body, 300, 200);
 	});
 	
 	afterAll(function() {

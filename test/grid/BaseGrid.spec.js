@@ -9,7 +9,7 @@ describe("Checks the BaseGrid object", function() {
 	beforeAll(function() {
 		obj = new BaseGrid();
 		spyOn(obj, 'initDhtmlxGrid').and.callThrough();	
-		obj.init(document.body);
+		obj.init('name', document.body);
 	});
 	
 	afterAll(function() {

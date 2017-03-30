@@ -9,8 +9,8 @@ export class SimpleLayout extends BaseLayout {
 	 * @constructor
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 */
-	constructor (container) {
-		super(container, '1C');
+	constructor (name, container) {
+		super(name, container, '1C');
 	}
 	
 	/** The only LayoutCell object in the layout */

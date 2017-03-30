@@ -7,7 +7,7 @@ import { TwoColumnsLayout } from 'layout/TwoColumnsLayout';
 	var obj = null;
 	
 	beforeAll(function() {
-		obj = new TwoColumnsLayout(document.body);
+		obj = new TwoColumnsLayout('name', document.body);
 	});
 
 	it("checking if the object is defined", function() {

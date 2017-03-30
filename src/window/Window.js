@@ -7,7 +7,7 @@ import { BaseObject } from 'global/BaseObject';
   */	 
 export class Window extends BaseObject {
 
-	constructor (id, container, impl) {
+	constructor (name, container, impl) {
 		if (DEBUG) {
 			console.log('Window constructor');
 		}
@@ -16,15 +16,15 @@ export class Window extends BaseObject {
 		super();
 		
 		if (arguments.length === 3) {
-			this.init(container, impl);
+			this.init(name, container, impl);
 		}
 	}
 
-	init (container, impl) {
-		if (arguments.length === 2) {
+	init (name, container, impl) {
+		if (arguments.length === 3) {
 
 			// BaseObject init method
-			super.init(OBJECT_TYPE.WINDOW, container, impl);
+			super.init(name, OBJECT_TYPE.WINDOW, container, impl);
 
 			// Centered by default
 			impl.centerOnScreen();
@@ -33,7 +33,7 @@ export class Window extends BaseObject {
 			impl.setModal(true);
 
 		} else {
-			throw new Error('Window init method requires 2 parameters');
+			throw new Error('Window init method requires 3 parameters');
 		}
 	}
 }

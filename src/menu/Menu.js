@@ -15,7 +15,7 @@ export class Menu extends BaseObject {
 	 * @param {mixed} container - Object or dom id of the parent element.
 	 * @param {actionManager} ActionManager - Contains the actions the menu will execute.
 	 */
-	constructor (container, actionManager) {
+	constructor (name, container, actionManager) {
 		if (DEBUG) {
 			console.log('Menu constructor');
 		}
@@ -23,18 +23,18 @@ export class Menu extends BaseObject {
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length === 2) {
-			this.init(container, actionManager);
+		if (arguments.length === 3) {
+			this.init(name, container, actionManager);
 		}	
 	}
 
-	init (container, actionManager) {
+	init (name, container, actionManager) {
 
 		// Creates the dhtmlx object
 		var impl = this.initDhtmlxMenu(container);
 
 		// BaseObject init method
-		super.init(OBJECT_TYPE.MENU, container, impl);
+		super.init(name, OBJECT_TYPE.MENU, container, impl);
 		
 		// Enable onClick event 
 		this.attachEvent("onClick", actionManager);
