@@ -109,7 +109,9 @@ const OBJECT_TYPE = {
 	GRID : 'grid', 
 	TREE : 'tree', 
 	WINDOW : 'window',
-	WINDOW_MANAGER : 'windowManager'
+	WINDOW_MANAGER : 'windowManager',
+    TABBAR : 'tabbar',
+    TAB : 'tab'
 };
 
 /**
@@ -390,7 +392,8 @@ class BaseLayout extends BaseObject {
 				skin: SKIN
 			});
 		
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL || 
+			   container.type === OBJECT_TYPE.TAB) {			
 			impl = container.impl.attachLayout(pattern);
 		}
 		return impl;
@@ -638,15 +641,195 @@ class BaseTree extends BaseObject {
 		var impl = null;
 		if (isNode(container)) {
 			
-			impl = new dhtmlXTreeView(container, "100%", "100%", 0);
+			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
 		
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
-			impl = container.impl.attachTreeView();
+			impl = container.impl.attachTree();
 		}
 		return impl;
 	}
 }
 
+class Tabbar extends BaseObject {
+    
+    constructor (container) {
+        if (DEBUG) {
+            console.log('Tabbar constructor');
+        }
+        
+        // We will init the BaseObject properties in the init method
+        super();
+        
+        if (arguments.length === 1) {
+            this.init(container);
+        }
+    }
+    
+    init (container) {
+        if (arguments.length === 1) {
+            
+            // Creates the dhtmlx object (see function below)
+            var impl = this.initDhtmlxTabbar(container);
+            
+            // BaseObject init method
+            super.init(OBJECT_TYPE.TABBAR, container, impl);
+            
+        } else {
+            throw new Error('Tabbar init method requires one parameter');
+        }
+    }
+    
+    initDhtmlxTabbar (container) {
+        var impl = null;
+        if (isNode(container)) {
+            
+            impl = new dhtmlXTabBar({
+                parent: container,
+                skin: SKIN
+            });
+            
+        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
+            
+            impl = container.impl.attachTabbar();
+        }
+        return impl;
+    }
+}
+
+class Tab extends BaseObject {
+    
+    constructor (container, id, text, position = null, active = false, close = false) {
+        
+        if (DEBUG) {
+            console.log('Tab constructor');
+        }
+        
+        // We will init the BaseObject properties in the init method
+        super();
+        
+        if (arguments.length >= 3) {
+            this.init(container, id, text, position, active, close);
+        }
+    }
+    
+    
+    init (container, id, text, position = null, active = false, close = false) {
+        
+        // TODO check that container must be a Tabbar object
+        container.impl.addTab(id, text, null, position, active, close);
+        
+        var impl = container.impl.tabs(id);
+        
+         // BaseObject init method
+        super.init(OBJECT_TYPE.TAB, container, impl);
+    }
+}
+
+class Toolbar extends BaseObject {
+	
+	constructor (container, actionManager) {
+		if (DEBUG) {
+			console.log('Toolbar constructor');
+		}
+		// Creates the dhtmlx object (see function below)
+		var impl = initDhtmlxToolbar(container);
+		
+		// BaseObject constructor
+		super(OBJECT_TYPE.TOOLBAR, container, impl);
+		
+		this.attachEvent("onClick", actionManager);
+	}
+	
+	addToolbarButton (toolbarItem) {
+		this.impl.addButton(toolbarItem.name, (this._childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
+		this._childs.push(toolbarItem.action);
+		// curryfing!
+		return this;
+	}
+	
+	addToolbarButtonSelect (toolbarItem) {
+		this.impl.addButtonSelect(toolbarItem.name, (this._childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
+		this._childs.push(toolbarItem.action);
+		// curryfing!
+		return this;
+	}
+	
+	addToolbarListOption (parent, toolbarItem) {
+		this.impl.addListOption(parent, toolbarItem.name, (this._childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
+		this._childs.push(toolbarItem.action);
+		// curryfing!
+		return this;
+	}
+}
+
+/** Creates the dhtmlXToolbarObject inside its container. */
+function initDhtmlxToolbar (container) {
+	var impl = null;
+	if (isNode(container)) {
+		impl = new dhtmlXToolbarObject(container, SKIN);
+		
+	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
+		|| container.type === OBJECT_TYPE.LAYOUT
+		|| container.type === OBJECT_TYPE.WINDOW
+                || container.type === OBJECT_TYPE.TAB) {
+		
+		impl = container.impl.attachToolbar();
+		impl.setSkin(SKIN);
+	}
+	return impl;
+}
+
+class BaseGrid extends BaseObject {
+
+	constructor (container, actionManager = null) {
+		if (DEBUG) {
+			console.log('BaseGrid constructor');
+		}
+
+		// We will init the BaseObject properties in the init method
+		super();
+		
+		if (arguments.length >= 1) {
+			this.init(container, actionManager);
+		}
+	}
+
+	init (container, actionManager = null) {
+
+		if (arguments.length >= 1) {
+
+			// Creates the dhtmlx object (see function below)
+			var impl = this.initDhtmlxGrid(container);
+			impl.setSkin(SKIN);
+
+			// BaseObject init method
+			super.init(OBJECT_TYPE.GRID, container, impl);
+			
+			// Enable onSelect event 
+			if (actionManager != null) {
+				this.attachEvent("onSelect", actionManager);
+			}
+
+		} else {
+			throw new Error('BaseGrid init method requires one parameter');
+		}
+	}
+
+	initDhtmlxGrid (container) {
+
+		var impl = null;
+		if (isNode(container)) {
+			
+			impl = new dhtmlXGridObject(container);
+		
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
+			impl = container.impl.attachGrid();
+		}
+		return impl;
+	}
+
+}
+
 // Here we import all "public" classes to expose them
 
-export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, MenuItem };
+export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, MenuItem, Tabbar, Tab, Toolbar, BaseGrid };

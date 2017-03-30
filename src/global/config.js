@@ -15,7 +15,9 @@ export const OBJECT_TYPE = {
 	GRID : 'grid', 
 	TREE : 'tree', 
 	WINDOW : 'window',
-	WINDOW_MANAGER : 'windowManager'
+	WINDOW_MANAGER : 'windowManager',
+    TABBAR : 'tabbar',
+    TAB : 'tab'
 };
 
 /**

@@ -54,10 +54,10 @@ export class BaseTree extends BaseObject {
 		var impl = null;
 		if (isNode(container)) {
 			
-			impl = new dhtmlXTreeView(container, "100%", "100%", 0);
+			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
 		
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
-			impl = container.impl.attachTreeView();
+			impl = container.impl.attachTree();
 		}
 		return impl;
 	}
