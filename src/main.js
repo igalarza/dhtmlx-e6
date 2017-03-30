@@ -19,6 +19,8 @@ import { Tab } from 'tabbar/Tab';
 
 import { Toolbar } from 'toolbar/Toolbar';
 
+import { BaseGrid } from 'grid/BaseGrid';
+
 export {
 	// Action management
 	ActionManager, 
@@ -42,5 +44,8 @@ export {
         Tab,
         
         // Toolbar
-        Toolbar
+        Toolbar,
+
+	// Grid
+	BaseGrid
 };
