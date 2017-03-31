@@ -21,7 +21,7 @@ export class BaseTree extends BaseObject {
 		}
 	}
 
-	init (container, actionManager = null) {
+	init (name, container, actionManager = null) {
 
 		if (arguments.length >= 2) {
 

@@ -18,6 +18,7 @@ import { Tabbar } from 'tabbar/Tabbar';
 import { Tab } from 'tabbar/Tab';
 
 import { Toolbar } from 'toolbar/Toolbar';
+import { ToolbarButton } from 'toolbar/ToolbarButton';
 
 import { BaseGrid } from 'grid/BaseGrid';
 
@@ -45,6 +46,7 @@ export {
         
         // Toolbar
         Toolbar,
+	ToolbarButton,
 
 	// Grid
 	BaseGrid
