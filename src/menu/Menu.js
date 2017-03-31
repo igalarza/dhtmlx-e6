@@ -71,7 +71,8 @@ export class Menu extends BaseObject {
 	/** Creates the dhtmlXMenuObject inside its container. */
 	initDhtmlxMenu(container) {
 		var impl = null;
-		if (isNode(container)) {
+                // container can be null
+		if (isNode(container) || container == null) {
 			impl = new dhtmlXMenuObject(container, SKIN);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  

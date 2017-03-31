@@ -613,7 +613,8 @@ class Menu extends BaseObject {
 	/** Creates the dhtmlXMenuObject inside its container. */
 	initDhtmlxMenu(container) {
 		var impl = null;
-		if (isNode(container)) {
+                // container can be null
+		if (isNode(container) || container == null) {
 			impl = new dhtmlXMenuObject(container, SKIN);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
@@ -635,6 +636,34 @@ class Menu extends BaseObject {
 			this.addMenuItem(menuItems[i]);
 		}
 	}
+}
+
+class ContextMenu extends Menu {
+    
+    constructor(name, container, actionManager) {
+        if (DEBUG) {
+            console.log('ContextMenu constructor');
+        }
+        
+        // We will init the BaseObject properties in the init method
+        super();
+        
+        if (arguments.length === 3) {
+                this.init(name, container, actionManager);
+        }
+    }
+    
+    init (name, container, actionManager) {
+        
+        // Menu init method, container must be null
+        super.init(name, null, actionManager);
+        
+        this.impl.renderAsContextMenu();
+        
+        if (this.impl.isContextZone(container)) {
+            this.impl.addContextZone(container);    
+        }
+    }
 }
 
 /**
@@ -900,4 +929,4 @@ class BaseGrid extends BaseObject {
 
 // Here we import all "public" classes to expose them
 
-export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid };
+export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid };

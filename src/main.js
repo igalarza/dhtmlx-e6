@@ -9,6 +9,7 @@ import { TwoColumnsLayout } from 'layout/TwoColumnsLayout';
 import { PageLayout } from 'layout/PageLayout';
 
 import { Menu } from 'menu/Menu';
+import { ContextMenu } from 'menu/ContextMenu';
 import { MenuItem } from 'menu/MenuItem';
 
 import { BaseTree } from 'tree/BaseTree';
@@ -37,7 +38,8 @@ export {
 	TreeItem,
 
         // Menus
-	Menu, 
+	Menu,
+        ContextMenu,
 	MenuItem,
 	
 	// Tabbar
