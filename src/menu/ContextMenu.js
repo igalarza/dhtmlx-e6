@@ -25,8 +25,14 @@ export class ContextMenu extends Menu {
         
         this.impl.renderAsContextMenu();
         
-        if (this.impl.isContextZone(container)) {
-            this.impl.addContextZone(container);    
+        if (typeof container === 'object' &&
+            this.impl.isContextZone(container.impl)) {
+            this.impl.addContextZone(container.impl);    
+        
+        } else if (container.type === OBJECT_TYPE.GRID  
+            || container.type === OBJECT_TYPE.TREE) {
+            
+            container.impl.enableContextMenu(this.impl);
         }
     }
 }
