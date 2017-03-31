@@ -818,25 +818,34 @@ class Toolbar extends BaseObject {
 	}
 	
 	addToolbarButton (toolbarItem) {
-		this.impl.addButton(toolbarItem.name, (this._childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
-		this._childs.push(toolbarItem.action);
+		this.impl.addButton(toolbarItem.name, (this.childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
+		this.childs.push(toolbarItem.action);
+                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
 		// curryfing!
 		return this;
 	}
 	
 	addToolbarButtonSelect (toolbarItem) {
-		this.impl.addButtonSelect(toolbarItem.name, (this._childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
-		this._childs.push(toolbarItem.action);
+		this.impl.addButtonSelect(toolbarItem.name, (this.childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
+		this.childs.push(toolbarItem.action);
+                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
 		// curryfing!
 		return this;
 	}
 	
 	addToolbarListOption (parent, toolbarItem) {
-		this.impl.addListOption(parent, toolbarItem.name, (this._childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
-		this._childs.push(toolbarItem.action);
+		this.impl.addListOption(parent, toolbarItem.name, (this.childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
+		this.childs.push(toolbarItem.action);
+                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
 		// curryfing!
 		return this;
 	}
+	
+	addTooltip (name, text) {
+            if (typeof text !== 'undefined') {
+                this.impl.setItemToolTip(name, text);
+            }
+        }
 }
 
 /** Creates the dhtmlXToolbarObject inside its container. */
