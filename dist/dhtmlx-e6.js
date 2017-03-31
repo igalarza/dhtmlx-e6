@@ -158,8 +158,9 @@ class BaseObject {
 			this._impl = impl;
 			this._childs = [];
 			
-			if (!isNode(container) &&
-				container.childs instanceof Array) {
+			if (container !== null &&
+                            !isNode(container) &&
+                            container.childs instanceof Array) {
 				
 				container.childs.push(this);
 			}
