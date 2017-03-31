@@ -105,7 +105,7 @@ export class BaseObject {
 			
 			if (typeof action === 'function') {
 				// The context in the actionManager is sent to the action
-				action(arguments, actionManager.context);
+				action(arguments, action);
 			}
 		});
 	}
