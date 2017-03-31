@@ -225,13 +225,13 @@ class BaseObject {
 	}
 	
 	/** Adds an event to the object, with a function parameter as an action. */
-	attachEvent (eventName, action) {
+	attachEvent (eventName, action, context) {
 		var self = this;
 		this.impl.attachEvent(eventName, function () {
 			
 			if (typeof action === 'function') {
 				// The context in the actionManager is sent to the action
-				action(arguments, action);
+				action(arguments, context);
 			}
 		});
 	}
