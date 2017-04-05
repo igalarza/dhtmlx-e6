@@ -603,7 +603,7 @@ class Menu extends BaseObject {
 	 * returns {Menu} The menu object itself, to chain item creation
 	 */
 	addMenuItem (menuItem) {
-		if (typeof menuItem.parentName !== 'undefined') {
+		if (typeof menuItem.parentName === 'undefined') {
                     let previousItem = this.lastAddedItem;
                     this.impl.addNewSibling(previousItem, menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
                     this.lastAddedItem = menuItem.name;
