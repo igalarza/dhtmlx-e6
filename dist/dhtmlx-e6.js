@@ -565,6 +565,8 @@ class Menu extends BaseObject {
 
 		// We will init the BaseObject properties in the init method
 		super();
+                
+                this.lastAddedItem = null;
 		
 		if (arguments.length === 3) {
 			this.init(name, container, actionManager);
@@ -602,9 +604,12 @@ class Menu extends BaseObject {
 	 */
 	addMenuItem (menuItem) {
 		if (menuItem.parentName === '') {
-			this.impl.addNewSibling(null, menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+                    let previousItem = this.lastAddedItem;
+                    this.impl.addNewSibling(previousItem, menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+                    this.lastAddedItem = menuItem.name;
 		} else {
-			this.impl.addNewChild(menuItem.parentName, (this._childs.length), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+                    this.impl.addNewChild(menuItem.parentName, (this._childs.length), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+                    this.lastAddedItem = null;
 		}
 		this._childs[menuItem.name] = menuItem.action;
 		// curryfing!
