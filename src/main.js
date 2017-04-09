@@ -22,6 +22,8 @@ import { Toolbar } from 'toolbar/Toolbar';
 
 import { BaseGrid } from 'grid/BaseGrid';
 
+import { Form } from 'form/Form';
+
 export {
 	// Config functions
 	getConfig, 
@@ -52,5 +54,7 @@ export {
 	Toolbar,
 
 	// Grid
-	BaseGrid
+	BaseGrid,
+	
+	Form
 };
