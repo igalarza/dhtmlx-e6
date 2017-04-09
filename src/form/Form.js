@@ -1,5 +1,5 @@
 
-import { OBJECT_TYPE , DEBUG , SKIN } from 'global/config';
+import { OBJECT_TYPE, DEBUG, SKIN } from 'global/config';
 import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 
@@ -22,6 +22,7 @@ export class Form extends BaseObject {
 
 		// Creates the dhtmlx object
 		var impl = this.initDhtmlxForm(container);
+		impl.setSkin(SKIN);
 
 		// BaseObject init method
 		super.init(name, OBJECT_TYPE.FORM, container, impl);
@@ -37,8 +38,10 @@ export class Form extends BaseObject {
 			|| container.type === OBJECT_TYPE.TAB) {
 			
 			impl = container.impl.attachForm();			
+		} else {
+			throw new Error('initDhtmlxForm: container is not valid.');
 		}
-		impl.setSkin(SKIN);
+		
 		return impl;
 	}
 }
