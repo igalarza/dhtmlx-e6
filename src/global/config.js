@@ -24,7 +24,8 @@ export function setConfig(cfg) {
 export const OBJECT_TYPE = {
 	LAYOUT : 'layout',
 	LAYOUT_CELL : 'layoutCell',
-	TOOLBAR : 'toolbar', 
+	TOOLBAR : 'toolbar',
+	FORM : 'form', 
 	MENU : 'menu', 
 	GRID : 'grid', 
 	TREE : 'tree', 
