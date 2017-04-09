@@ -1,5 +1,6 @@
 
-import { isNode , OBJECT_TYPE , DEBUG , SKIN } from 'global/config';
+import { OBJECT_TYPE , DEBUG , SKIN } from 'global/config';
+import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 import { Action } from 'actions/Action';
 import { MenuItem } from 'menu/MenuItem';
@@ -71,7 +72,7 @@ export class Menu extends BaseObject {
 	/** Creates the dhtmlXMenuObject inside its container. */
 	initDhtmlxMenu(container) {
 		var impl = null;
-		if (isNode(container)) {
+		if (Util.isNode(container)) {
 			impl = new dhtmlXMenuObject(container, SKIN);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  

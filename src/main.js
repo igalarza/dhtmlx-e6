@@ -1,5 +1,6 @@
 
 // Here we import all "public" classes to expose them
+import { getConfig, setConfig } from 'global/config';
 
 import { ActionManager } from 'actions/ActionManager';
 import { Action } from 'actions/Action';
@@ -22,6 +23,10 @@ import { Toolbar } from 'toolbar/Toolbar';
 import { BaseGrid } from 'grid/BaseGrid';
 
 export {
+	// Config functions
+	getConfig, 
+	setConfig,
+	
 	// Action management
 	ActionManager, 
 	Action, 
@@ -35,16 +40,16 @@ export {
 	BaseTree,
 	TreeItem,
 
-        // Menus
+	// Menus
 	Menu, 
 	MenuItem,
 	
 	// Tabbar
 	Tabbar,
-        Tab,
+	Tab,
         
-        // Toolbar
-        Toolbar,
+	// Toolbar
+	Toolbar,
 
 	// Grid
 	BaseGrid

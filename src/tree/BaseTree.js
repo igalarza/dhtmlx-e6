@@ -1,5 +1,6 @@
 
-import { isNode , OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 
 /**
@@ -46,13 +47,12 @@ export class BaseTree extends BaseObject {
 
 		this.impl.addItem(treeItem.id, treeItem.text, treeItem.parentId);
 		this._childs[treeItem.id] = treeItem.action;
-
 	}
 
 	initDhtmlxTree (container) {
 
 		var impl = null;
-		if (isNode(container)) {
+		if (Util.isNode(container)) {
 			
 			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
 		

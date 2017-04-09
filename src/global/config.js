@@ -1,10 +1,24 @@
 
+let config = {
+	/** Enables console.log comments */
+	DEBUG: false,
+	/** dhtmlx skin applied to all objects */
+	SKIN: 'dhx_web',
+	/** Used by Grid, Accordion, Menu, Grid, Tree and TreeGrid  */
+	DEFAULT_ICONS_PATH: '',
+	DEFAULT_IMAGES_PATH: ''
+};
 
-/** Enables console.log comments */
-export const DEBUG = true;
+export let DEBUG = config.DEBUG;
+export let SKIN = config.SKIN;
 
-/** dhtmlx skin applied to all objects */
-export const SKIN = 'dhx_web';
+export function getConfig() {
+	return config;
+}
+
+export function setConfig(cfg) {
+	config = cfg;
+}
 
 /** All the dhtmlx object types */
 export const OBJECT_TYPE = {
@@ -19,17 +33,3 @@ export const OBJECT_TYPE = {
     TABBAR : 'tabbar',
     TAB : 'tab'
 };
-
-/**
- * Checks if the parameter is a DOM node or DOM id (string).
- * @param {mixed} o - Dom Node or any other variable.
- * @return {boolean} true if the parameter is a DOM Node.
- */   
-export function isNode (o) {
-	return (
-		typeof Node === "string" ||
-		typeof Node === "object" ? o instanceof Node : 
-		typeof o === "object" && typeof o.nodeType === "number" && typeof o.nodeName==="string"
-	);
-}
-

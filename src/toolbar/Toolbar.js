@@ -1,5 +1,6 @@
 
-import { isNode , OBJECT_TYPE , DEBUG , SKIN } from 'global/config';
+import { OBJECT_TYPE , DEBUG , SKIN } from 'global/config';
+import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 
 export class Toolbar extends BaseObject {
@@ -42,7 +43,7 @@ export class Toolbar extends BaseObject {
 /** Creates the dhtmlXToolbarObject inside its container. */
 function initDhtmlxToolbar (container) {
 	var impl = null;
-	if (isNode(container)) {
+	if (Util.isNode(container)) {
 		impl = new dhtmlXToolbarObject(container, SKIN);
 		
 	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  

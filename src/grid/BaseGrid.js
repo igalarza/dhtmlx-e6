@@ -1,5 +1,6 @@
 
-import { isNode , OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 
 export class BaseGrid extends BaseObject {
@@ -41,7 +42,7 @@ export class BaseGrid extends BaseObject {
 	initDhtmlxGrid (container) {
 
 		var impl = null;
-		if (isNode(container)) {
+		if (Util.isNode(container)) {
 			
 			impl = new dhtmlXGridObject(container);
 		
