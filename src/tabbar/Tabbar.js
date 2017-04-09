@@ -1,6 +1,6 @@
 
 
-import { OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { OBJECT_TYPE, SKIN, DEBUG, TABBAR_ICONS_PATH } from 'global/config';
 import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 
@@ -24,6 +24,7 @@ export class Tabbar extends BaseObject {
             
             // Creates the dhtmlx object (see function below)
             var impl = this.initDhtmlxTabbar(container);
+			impl.setIconsPath(TABBAR_ICONS_PATH);
             
             // BaseObject init method
             super.init(name, OBJECT_TYPE.TABBAR, container, impl);
@@ -45,7 +46,10 @@ export class Tabbar extends BaseObject {
         } else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
             
             impl = container.impl.attachTabbar();
-        }
+			impl.setSkin(SKIN);
+        } else {
+			throw new Error('initDhtmlxTabbar: container is not valid.');
+		}
         return impl;
     }
 }

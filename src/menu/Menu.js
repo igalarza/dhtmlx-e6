@@ -1,5 +1,5 @@
 
-import { OBJECT_TYPE , DEBUG , SKIN } from 'global/config';
+import { OBJECT_TYPE, DEBUG, SKIN, MENU_ICONS_PATH } from 'global/config';
 import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 import { Action } from 'actions/Action';
@@ -33,6 +33,7 @@ export class Menu extends BaseObject {
 
 		// Creates the dhtmlx object
 		var impl = this.initDhtmlxMenu(container);
+		impl.setIconsPath(MENU_ICONS_PATH);
 
 		// BaseObject init method
 		super.init(name, OBJECT_TYPE.MENU, container, impl);
@@ -81,6 +82,8 @@ export class Menu extends BaseObject {
 			
 			impl = container.impl.attachMenu();
 			impl.setSkin(SKIN);
+		} else {
+			throw new Error('initDhtmlxMenu: container is not valid.');
 		}
 		return impl;
 	}

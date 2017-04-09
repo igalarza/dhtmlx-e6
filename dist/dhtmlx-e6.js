@@ -1,15 +1,28 @@
+let DEBUG = config.DEBUG;
+let SKIN = config.SKIN;
+let TOOLBAR_ICONS_PATH = config.TOOLBAR_ICONS_PATH;
+let GRID_ICONS_PATH = config.GRID_ICONS_PATH;
+let TREE_ICONS_PATH = config.TREE_ICONS_PATH;
+let MENU_ICONS_PATH = config.MENU_ICONS_PATH;
+let TABBAR_ICONS_PATH = config.TABBAR_ICONS_PATH;
+
 let config = {
 	/** Enables console.log comments */
 	DEBUG: false,
 	/** dhtmlx skin applied to all objects */
 	SKIN: 'dhx_web',
+	
+	BASE_PATH: '/',
 	/** Used by Grid, Accordion, Menu, Grid, Tree and TreeGrid  */
-	DEFAULT_ICONS_PATH: '',
-	DEFAULT_IMAGES_PATH: ''
+	DEFAULT_ICONS_PATH: config.BASE_PATH + 'vendor/imgs/',
+	DEFAULT_IMAGES_PATH: config.BASE_PATH + 'vendor/imgs/',
+	
+	TOOLBAR_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxtoolbar_web/',
+	GRID_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxgrid_web/',
+	TREE_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxtree_web/',
+	MENU_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxmenu_web/',
+	TABBAR_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxtabbar_web/'
 };
-
-let DEBUG = config.DEBUG;
-let SKIN = config.SKIN;
 
 function getConfig() {
 	return config;
@@ -593,6 +606,7 @@ class Menu extends BaseObject {
 
 		// Creates the dhtmlx object
 		var impl = this.initDhtmlxMenu(container);
+		impl.setIconsPath(MENU_ICONS_PATH);
 
 		// BaseObject init method
 		super.init(name, OBJECT_TYPE.MENU, container, impl);
@@ -641,6 +655,8 @@ class Menu extends BaseObject {
 			
 			impl = container.impl.attachMenu();
 			impl.setSkin(SKIN);
+		} else {
+			throw new Error('initDhtmlxMenu: container is not valid.');
 		}
 		return impl;
 	}
@@ -682,6 +698,7 @@ class BaseTree extends BaseObject {
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxTree(container);
 			impl.setSkin(SKIN);
+			impl.setIconsPath(TREE_ICONS_PATH);
 
 			// BaseObject init method
 			super.init(name, OBJECT_TYPE.TREE, container, impl);
@@ -706,11 +723,14 @@ class BaseTree extends BaseObject {
 
 		var impl = null;
 		if (Util.isNode(container)) {
-			
+			// call to dhtmlx object constructor 
 			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
 		
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
 			impl = container.impl.attachTree();
+			
+		} else {
+			throw new Error('initDhtmlxTree: container is not valid.');
 		}
 		return impl;
 	}
@@ -736,6 +756,7 @@ class Tabbar extends BaseObject {
             
             // Creates the dhtmlx object (see function below)
             var impl = this.initDhtmlxTabbar(container);
+			impl.setIconsPath(TABBAR_ICONS_PATH);
             
             // BaseObject init method
             super.init(name, OBJECT_TYPE.TABBAR, container, impl);
@@ -757,7 +778,10 @@ class Tabbar extends BaseObject {
         } else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
             
             impl = container.impl.attachTabbar();
-        }
+			impl.setSkin(SKIN);
+        } else {
+			throw new Error('initDhtmlxTabbar: container is not valid.');
+		}
         return impl;
     }
 }
@@ -799,6 +823,7 @@ class Toolbar extends BaseObject {
 		}
 		// Creates the dhtmlx object (see function below)
 		var impl = initDhtmlxToolbar(container);
+		impl.setIconsPath(TOOLBAR_ICONS_PATH);
 		
 		// BaseObject constructor
 		super(name, OBJECT_TYPE.TOOLBAR, container, impl);
@@ -841,6 +866,8 @@ function initDhtmlxToolbar (container) {
 		
 		impl = container.impl.attachToolbar();
 		impl.setSkin(SKIN);
+	} else {
+		throw new Error('initDhtmlxToolbar: container is not valid.');
 	}
 	return impl;
 }
@@ -867,6 +894,7 @@ class BaseGrid extends BaseObject {
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxGrid(container);
 			impl.setSkin(SKIN);
+			impl.setIconsPath(GRID_ICONS_PATH);
 
 			// BaseObject init method
 			super.init(name, OBJECT_TYPE.GRID, container, impl);
@@ -890,10 +918,11 @@ class BaseGrid extends BaseObject {
 		
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
 			impl = container.impl.attachGrid();
+		} else {
+			throw new Error('initDhtmlxToolbar: container is not valid.');
 		}
 		return impl;
 	}
-
 }
 
 class Form extends BaseObject {
