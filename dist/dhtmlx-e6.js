@@ -1,10 +1,6 @@
-let DEBUG = config.DEBUG;
-let SKIN = config.SKIN;
-let TOOLBAR_ICONS_PATH = config.TOOLBAR_ICONS_PATH;
-let GRID_ICONS_PATH = config.GRID_ICONS_PATH;
-let TREE_ICONS_PATH = config.TREE_ICONS_PATH;
-let MENU_ICONS_PATH = config.MENU_ICONS_PATH;
-let TABBAR_ICONS_PATH = config.TABBAR_ICONS_PATH;
+const basePath = '/';
+const defaultIconsPath = basePath + 'vendor/imgs/';
+const defaultImagesPath = basePath + 'vendor/imgs/';
 
 let config = {
 	/** Enables console.log comments */
@@ -12,17 +8,24 @@ let config = {
 	/** dhtmlx skin applied to all objects */
 	SKIN: 'dhx_web',
 	
-	BASE_PATH: '/',
+	BASE_PATH: basePath,
 	/** Used by Grid, Accordion, Menu, Grid, Tree and TreeGrid  */
-	DEFAULT_ICONS_PATH: config.BASE_PATH + 'vendor/imgs/',
-	DEFAULT_IMAGES_PATH: config.BASE_PATH + 'vendor/imgs/',
+	DEFAULT_ICONS_PATH: defaultIconsPath,
+	DEFAULT_IMAGES_PATH: defaultImagesPath,
 	
-	TOOLBAR_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxtoolbar_web/',
-	GRID_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxgrid_web/',
-	TREE_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxtree_web/',
-	MENU_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxmenu_web/',
-	TABBAR_ICONS_PATH: config.DEFAULT_ICONS_PATH + 'dhxtabbar_web/'
+	TOOLBAR_ICONS_PATH: defaultIconsPath + 'dhxtoolbar_web/',
+	GRID_ICONS_PATH: defaultIconsPath + 'dhxgrid_web/',
+	TREE_ICONS_PATH: defaultIconsPath + 'dhxtree_web/',
+	MENU_ICONS_PATH: defaultIconsPath + 'dhxmenu_web/'
 };
+
+let DEBUG = config.DEBUG;
+let SKIN = config.SKIN;
+let TOOLBAR_ICONS_PATH = config.TOOLBAR_ICONS_PATH;
+let GRID_ICONS_PATH = config.GRID_ICONS_PATH;
+let TREE_ICONS_PATH = config.TREE_ICONS_PATH;
+let MENU_ICONS_PATH = config.MENU_ICONS_PATH;
+
 
 function getConfig() {
 	return config;
@@ -189,10 +192,10 @@ class BaseObject {
 			this._impl = impl;
 			this._childs = [];
 			
-			// Checking if container is a BaseObject subclass
-			if (!Util.isNode(container) &&
-				container.childs instanceof Array) {
-				// Add this to container childs
+			if (container !== null &&
+                !Util.isNode(container) &&
+                container.childs instanceof Array) {
+				// Adds this to parent as a child
 				container.childs.push(this);
 			}
 		} else {
@@ -257,13 +260,13 @@ class BaseObject {
 	}
 	
 	/** Adds an event to the object, with a function parameter as an action. */
-	attachEvent (eventName, action) {
+	attachEvent (eventName, action, context) {
 		var self = this;
 		this.impl.attachEvent(eventName, function () {
 			
 			if (typeof action === 'function') {
 				// The context in the actionManager is sent to the action
-				action(arguments, actionManager.context);
+				action(arguments, context);
 			}
 		});
 	}
@@ -596,6 +599,8 @@ class Menu extends BaseObject {
 
 		// We will init the BaseObject properties in the init method
 		super();
+                
+                this.lastAddedItem = null;
 		
 		if (arguments.length === 3) {
 			this.init(name, container, actionManager);
@@ -633,10 +638,13 @@ class Menu extends BaseObject {
 	 * returns {Menu} The menu object itself, to chain item creation
 	 */
 	addMenuItem (menuItem) {
-		if (menuItem.parentName === '') {
-			this.impl.addNewSibling(null, menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+		if (typeof menuItem.parentName === 'undefined') {
+                    let previousItem = this.lastAddedItem;
+                    this.impl.addNewSibling(previousItem, menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+                    this.lastAddedItem = menuItem.name;
 		} else {
-			this.impl.addNewChild(menuItem.parentName, (this._childs.length), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+                    this.impl.addNewChild(menuItem.parentName, (this._childs.length), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
+                    this.lastAddedItem = null;
 		}
 		this._childs[menuItem.name] = menuItem.action;
 		// curryfing!
@@ -646,7 +654,8 @@ class Menu extends BaseObject {
 	/** Creates the dhtmlXMenuObject inside its container. */
 	initDhtmlxMenu(container) {
 		var impl = null;
-		if (Util.isNode(container)) {
+        // container can be null
+		if (container == null || Util.isNode(container)) {
 			impl = new dhtmlXMenuObject(container, SKIN);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
@@ -672,6 +681,40 @@ class Menu extends BaseObject {
 	}
 }
 
+class ContextMenu extends Menu {
+    
+    constructor(name, container, actionManager) {
+        if (DEBUG) {
+            console.log('ContextMenu constructor');
+        }
+        
+        // We will init the BaseObject properties in the init method
+        super();
+        
+        if (arguments.length === 3) {
+                this.init(name, container, actionManager);
+        }
+    }
+    
+    init (name, container, actionManager) {
+        
+        // Menu init method, container must be null
+        super.init(name, null, actionManager);
+        
+        this.impl.renderAsContextMenu();
+        
+        if (typeof container === 'object' &&
+            this.impl.isContextZone(container.impl)) {
+            this.impl.addContextZone(container.impl);    
+        
+        } else if (container.type === OBJECT_TYPE.GRID  
+            || container.type === OBJECT_TYPE.TREE) {
+            
+            container.impl.enableContextMenu(this.impl);
+        }
+    }
+}
+
 /**
   * Base class for all TreeView objects, see:
   * http://docs.dhtmlx.com/treeview__index.html
@@ -691,7 +734,7 @@ class BaseTree extends BaseObject {
 		}
 	}
 
-	init (container, actionManager = null) {
+	init (name, container, actionManager = null) {
 
 		if (arguments.length >= 2) {
 
@@ -756,7 +799,6 @@ class Tabbar extends BaseObject {
             
             // Creates the dhtmlx object (see function below)
             var impl = this.initDhtmlxTabbar(container);
-			impl.setIconsPath(TABBAR_ICONS_PATH);
             
             // BaseObject init method
             super.init(name, OBJECT_TYPE.TABBAR, container, impl);
@@ -832,25 +874,34 @@ class Toolbar extends BaseObject {
 	}
 	
 	addToolbarButton (toolbarItem) {
-		this.impl.addButton(toolbarItem.name, (this._childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
-		this._childs.push(toolbarItem.action);
+		this.impl.addButton(toolbarItem.name, (this.childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
+		this.childs.push(toolbarItem.action);
+                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
 		// curryfing!
 		return this;
 	}
 	
 	addToolbarButtonSelect (toolbarItem) {
-		this.impl.addButtonSelect(toolbarItem.name, (this._childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
-		this._childs.push(toolbarItem.action);
+		this.impl.addButtonSelect(toolbarItem.name, (this.childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
+		this.childs.push(toolbarItem.action);
+                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
 		// curryfing!
 		return this;
 	}
 	
 	addToolbarListOption (parent, toolbarItem) {
-		this.impl.addListOption(parent, toolbarItem.name, (this._childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
-		this._childs.push(toolbarItem.action);
+		this.impl.addListOption(parent, toolbarItem.name, (this.childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
+		this.childs.push(toolbarItem.action);
+                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
 		// curryfing!
 		return this;
 	}
+	
+	addTooltip (name, text) {
+            if (typeof text !== 'undefined') {
+                this.impl.setItemToolTip(name, text);
+            }
+        }
 }
 
 /** Creates the dhtmlXToolbarObject inside its container. */
@@ -870,6 +921,26 @@ function initDhtmlxToolbar (container) {
 		throw new Error('initDhtmlxToolbar: container is not valid.');
 	}
 	return impl;
+}
+
+class ToolbarButton {
+	
+	constructor (type, name, action, caption, icon = null, iconDisabled = null) {
+		
+		this._type = type;
+		this._name = name;
+		this._action = action;
+		this._caption = caption;
+		this._icon = icon;
+		this._iconDisabled = iconDisabled;
+	}
+	
+	get type () { return this._type; }
+	get name () { return this._name; }
+	get action () { return this._action; }
+	get caption () { return this._caption; }
+	get icon () { return this._icon; }
+	get iconDisabled () { return this._iconDisabled; }
 }
 
 class BaseGrid extends BaseObject {
@@ -944,6 +1015,7 @@ class Form extends BaseObject {
 
 		// Creates the dhtmlx object
 		var impl = this.initDhtmlxForm(container);
+		impl.setSkin(SKIN);
 
 		// BaseObject init method
 		super.init(name, OBJECT_TYPE.FORM, container, impl);
@@ -959,12 +1031,14 @@ class Form extends BaseObject {
 			|| container.type === OBJECT_TYPE.TAB) {
 			
 			impl = container.impl.attachForm();			
+		} else {
+			throw new Error('initDhtmlxForm: container is not valid.');
 		}
-		impl.setSkin(SKIN);
+		
 		return impl;
 	}
 }
 
 // Here we import all "public" classes to expose them
 
-export { getConfig, setConfig, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, MenuItem, Tabbar, Tab, Toolbar, BaseGrid, Form };
+export { getConfig, setConfig, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid, Form };

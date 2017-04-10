@@ -33,10 +33,10 @@ export class BaseObject {
 			this._impl = impl;
 			this._childs = [];
 			
-			// Checking if container is a BaseObject subclass
-			if (!Util.isNode(container) &&
-				container.childs instanceof Array) {
-				// Add this to container childs
+			if (container !== null &&
+                !Util.isNode(container) &&
+                container.childs instanceof Array) {
+				// Adds this to parent as a child
 				container.childs.push(this);
 			}
 		} else {
@@ -101,13 +101,13 @@ export class BaseObject {
 	}
 	
 	/** Adds an event to the object, with a function parameter as an action. */
-	attachEvent (eventName, action) {
+	attachEvent (eventName, action, context) {
 		var self = this;
 		this.impl.attachEvent(eventName, function () {
 			
 			if (typeof action === 'function') {
 				// The context in the actionManager is sent to the action
-				action(arguments, actionManager.context);
+				action(arguments, context);
 			}
 		});
 	}
