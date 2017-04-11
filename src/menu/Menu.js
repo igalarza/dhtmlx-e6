@@ -22,8 +22,6 @@ export class Menu extends BaseObject {
 
 		// We will init the BaseObject properties in the init method
 		super();
-                
-                this.lastAddedItem = null;
 		
 		if (arguments.length === 3) {
 			this.init(name, container, actionManager);
@@ -50,8 +48,9 @@ export class Menu extends BaseObject {
 	 * @param {parentName} string - The name of the parent MenuItem (default null).
 	 * returns {Menu} The menu object itself, to chain item creation.
 	 */
-	addTextContainer (name, caption, parentName = null) {		
-		return this.addMenuItem(new MenuItem(parentName, name, null, caption));
+	addTextContainer (name, caption, parentName = null) {
+            let menuItem = new MenuItem(parentName, name, null, caption);
+            return this.addMenuItem(menuItem);
 	}
 	
 	/**
@@ -61,14 +60,10 @@ export class Menu extends BaseObject {
 	 */
 	addMenuItem (menuItem) {
 		if (typeof menuItem.parentName === 'undefined') {
-                    let previousItem = this.lastAddedItem;
-                    this.impl.addNewSibling(previousItem, menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
-                    this.lastAddedItem = menuItem.name;
-		} else {
-                    this.impl.addNewChild(menuItem.parentName, (this._childs.length), menuItem.name, menuItem.caption, menuItem.icon, menuItem.iconDisabled);
-                    this.lastAddedItem = null;
-		}
-		this._childs[menuItem.name] = menuItem.action;
+                    menuItem.parentName = null;
+		} 
+                this.impl.addNewChild(menuItem.parentName, (this._childs.length), menuItem.name, menuItem.caption, false, menuItem.icon, menuItem.iconDisabled);		
+		this._childs.push(menuItem);
 		// curryfing!
 		return this;
 	}
