@@ -1,3 +1,55 @@
+const basePath = '/';
+const defaultIconsPath = basePath + 'vendor/imgs/';
+const defaultImagesPath = basePath + 'vendor/imgs/';
+
+let config = {
+	/** Enables console.log comments */
+	DEBUG: false,
+	/** dhtmlx skin applied to all objects */
+	SKIN: 'dhx_web',
+	
+	BASE_PATH: basePath,
+	/** Used by Grid, Accordion, Menu, Grid, Tree and TreeGrid  */
+	DEFAULT_ICONS_PATH: defaultIconsPath,
+	DEFAULT_IMAGES_PATH: defaultImagesPath,
+	
+	TOOLBAR_ICONS_PATH: defaultIconsPath + 'dhxtoolbar_web/',
+	GRID_ICONS_PATH: defaultIconsPath + 'dhxgrid_web/',
+	TREE_ICONS_PATH: defaultIconsPath + 'dhxtree_web/',
+	MENU_ICONS_PATH: defaultIconsPath + 'dhxmenu_web/'
+};
+
+let DEBUG = config.DEBUG;
+let SKIN = config.SKIN;
+let TOOLBAR_ICONS_PATH = config.TOOLBAR_ICONS_PATH;
+let GRID_ICONS_PATH = config.GRID_ICONS_PATH;
+let TREE_ICONS_PATH = config.TREE_ICONS_PATH;
+let MENU_ICONS_PATH = config.MENU_ICONS_PATH;
+
+
+function getConfig() {
+	return config;
+}
+
+function setConfig(cfg) {
+	config = cfg;
+}
+
+/** All the dhtmlx object types */
+const OBJECT_TYPE = {
+	LAYOUT : 'layout',
+	LAYOUT_CELL : 'layoutCell',
+	TOOLBAR : 'toolbar',
+	FORM : 'form', 
+	MENU : 'menu', 
+	GRID : 'grid', 
+	TREE : 'tree', 
+	WINDOW : 'window',
+	WINDOW_MANAGER : 'windowManager',
+    TABBAR : 'tabbar',
+    TAB : 'tab'
+};
+
 class Action {
 		
 	constructor (name, impl) {
@@ -94,37 +146,19 @@ class ActionManager {
 	}
 }
 
-/** Enables console.log comments */
-const DEBUG = true;
-
-/** dhtmlx skin applied to all objects */
-const SKIN = 'dhx_web';
-
-/** All the dhtmlx object types */
-const OBJECT_TYPE = {
-	LAYOUT : 'layout',
-	LAYOUT_CELL : 'layoutCell',
-	TOOLBAR : 'toolbar', 
-	MENU : 'menu', 
-	GRID : 'grid', 
-	TREE : 'tree', 
-	WINDOW : 'window',
-	WINDOW_MANAGER : 'windowManager',
-        TABBAR : 'tabbar',
-        TAB : 'tab'
-};
-
-/**
- * Checks if the parameter is a DOM node or DOM id (string).
- * @param {mixed} o - Dom Node or any other variable.
- * @return {boolean} true if the parameter is a DOM Node.
- */   
-function isNode (o) {
-	return (
-		typeof Node === "string" ||
-		typeof Node === "object" ? o instanceof Node : 
-		typeof o === "object" && typeof o.nodeType === "number" && typeof o.nodeName==="string"
-	);
+class Util {
+	/**
+	 * Checks if the parameter is a DOM node or DOM id (string).
+	 * @param {mixed} o - Dom Node or any other variable.
+	 * @return {boolean} true if the parameter is a DOM Node.
+	 */   
+	static isNode (o) {
+		return (
+			typeof Node === "string" ||
+			typeof Node === "object" ? o instanceof Node : 
+			typeof o === "object" && typeof o.nodeType === "number" && typeof o.nodeName==="string"
+		);
+	}
 }
 
 /**
@@ -159,9 +193,9 @@ class BaseObject {
 			this._childs = [];
 			
 			if (container !== null &&
-                            !isNode(container) &&
-                            container.childs instanceof Array) {
-				
+                !Util.isNode(container) &&
+                container.childs instanceof Array) {
+				// Adds this to parent as a child
 				container.childs.push(this);
 			}
 		} else {
@@ -430,7 +464,7 @@ class BaseLayout extends BaseObject {
 	/** Creates the dhtmlXLayoutObject inside its container. */
 	initDhtmlxLayout (container, pattern) {
 		var impl = null;
-		if (isNode(container)) {
+		if (Util.isNode(container)) {
 			
 			impl = new dhtmlXLayoutObject({
 				// id or object for parent container
@@ -577,6 +611,7 @@ class Menu extends BaseObject {
 
 		// Creates the dhtmlx object
 		var impl = this.initDhtmlxMenu(container);
+		impl.setIconsPath(MENU_ICONS_PATH);
 
 		// BaseObject init method
 		super.init(name, OBJECT_TYPE.MENU, container, impl);
@@ -619,8 +654,8 @@ class Menu extends BaseObject {
 	/** Creates the dhtmlXMenuObject inside its container. */
 	initDhtmlxMenu(container) {
 		var impl = null;
-                // container can be null
-		if (container == null || isNode(container)) {
+        // container can be null
+		if (container == null || Util.isNode(container)) {
 			impl = new dhtmlXMenuObject(container, SKIN);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
@@ -629,6 +664,8 @@ class Menu extends BaseObject {
 			
 			impl = container.impl.attachMenu();
 			impl.setSkin(SKIN);
+		} else {
+			throw new Error('initDhtmlxMenu: container is not valid.');
 		}
 		return impl;
 	}
@@ -704,6 +741,7 @@ class BaseTree extends BaseObject {
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxTree(container);
 			impl.setSkin(SKIN);
+			impl.setIconsPath(TREE_ICONS_PATH);
 
 			// BaseObject init method
 			super.init(name, OBJECT_TYPE.TREE, container, impl);
@@ -722,18 +760,20 @@ class BaseTree extends BaseObject {
 
 		this.impl.addItem(treeItem.id, treeItem.text, treeItem.parentId);
 		this._childs[treeItem.id] = treeItem.action;
-
 	}
 
 	initDhtmlxTree (container) {
 
 		var impl = null;
-		if (isNode(container)) {
-			
+		if (Util.isNode(container)) {
+			// call to dhtmlx object constructor 
 			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
 		
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
 			impl = container.impl.attachTree();
+			
+		} else {
+			throw new Error('initDhtmlxTree: container is not valid.');
 		}
 		return impl;
 	}
@@ -770,7 +810,7 @@ class Tabbar extends BaseObject {
     
     initDhtmlxTabbar (container) {
         var impl = null;
-        if (isNode(container)) {
+        if (Util.isNode(container)) {
             
             impl = new dhtmlXTabBar({
                 parent: container,
@@ -780,7 +820,10 @@ class Tabbar extends BaseObject {
         } else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
             
             impl = container.impl.attachTabbar();
-        }
+			impl.setSkin(SKIN);
+        } else {
+			throw new Error('initDhtmlxTabbar: container is not valid.');
+		}
         return impl;
     }
 }
@@ -822,6 +865,7 @@ class Toolbar extends BaseObject {
 		}
 		// Creates the dhtmlx object (see function below)
 		var impl = initDhtmlxToolbar(container);
+		impl.setIconsPath(TOOLBAR_ICONS_PATH);
 		
 		// BaseObject constructor
 		super(name, OBJECT_TYPE.TOOLBAR, container, impl);
@@ -863,7 +907,7 @@ class Toolbar extends BaseObject {
 /** Creates the dhtmlXToolbarObject inside its container. */
 function initDhtmlxToolbar (container) {
 	var impl = null;
-	if (isNode(container)) {
+	if (Util.isNode(container)) {
 		impl = new dhtmlXToolbarObject(container, SKIN);
 		
 	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
@@ -873,6 +917,8 @@ function initDhtmlxToolbar (container) {
 		
 		impl = container.impl.attachToolbar();
 		impl.setSkin(SKIN);
+	} else {
+		throw new Error('initDhtmlxToolbar: container is not valid.');
 	}
 	return impl;
 }
@@ -919,6 +965,7 @@ class BaseGrid extends BaseObject {
 			// Creates the dhtmlx object (see function below)
 			var impl = this.initDhtmlxGrid(container);
 			impl.setSkin(SKIN);
+			impl.setIconsPath(GRID_ICONS_PATH);
 
 			// BaseObject init method
 			super.init(name, OBJECT_TYPE.GRID, container, impl);
@@ -936,18 +983,62 @@ class BaseGrid extends BaseObject {
 	initDhtmlxGrid (container) {
 
 		var impl = null;
-		if (isNode(container)) {
+		if (Util.isNode(container)) {
 			
 			impl = new dhtmlXGridObject(container);
 		
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
 			impl = container.impl.attachGrid();
+		} else {
+			throw new Error('initDhtmlxToolbar: container is not valid.');
 		}
 		return impl;
 	}
+}
 
+class Form extends BaseObject {
+		
+	constructor (name, container, actionManager = null) {
+		if (DEBUG) {
+			console.log('Form constructor');
+		}
+		
+		// We will init the BaseObject properties in the init method
+		super();
+		
+		if (arguments.length === 3) {
+			this.init(name, container, actionManager);
+		}
+	}
+	
+	init (name, container, actionManager = null) {
+
+		// Creates the dhtmlx object
+		var impl = this.initDhtmlxForm(container);
+		impl.setSkin(SKIN);
+
+		// BaseObject init method
+		super.init(name, OBJECT_TYPE.FORM, container, impl);
+	}
+	
+	initDhtmlxForm (container) {
+		var impl = null;
+		if (Util.isNode(container)) {
+			impl = new dhtmlXFormObject(container, null);
+			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
+			|| container.type === OBJECT_TYPE.WINDOW
+			|| container.type === OBJECT_TYPE.TAB) {
+			
+			impl = container.impl.attachForm();			
+		} else {
+			throw new Error('initDhtmlxForm: container is not valid.');
+		}
+		
+		return impl;
+	}
 }
 
 // Here we import all "public" classes to expose them
 
-export { ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid };
+export { getConfig, setConfig, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid, Form };

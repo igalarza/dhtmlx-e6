@@ -1,5 +1,6 @@
 
-import { isNode , OBJECT_TYPE , DEBUG , SKIN } from 'global/config';
+import { OBJECT_TYPE, DEBUG, SKIN, TOOLBAR_ICONS_PATH } from 'global/config';
+import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 
 export class Toolbar extends BaseObject {
@@ -10,6 +11,7 @@ export class Toolbar extends BaseObject {
 		}
 		// Creates the dhtmlx object (see function below)
 		var impl = initDhtmlxToolbar(container);
+		impl.setIconsPath(TOOLBAR_ICONS_PATH);
 		
 		// BaseObject constructor
 		super(name, OBJECT_TYPE.TOOLBAR, container, impl);
@@ -51,7 +53,7 @@ export class Toolbar extends BaseObject {
 /** Creates the dhtmlXToolbarObject inside its container. */
 function initDhtmlxToolbar (container) {
 	var impl = null;
-	if (isNode(container)) {
+	if (Util.isNode(container)) {
 		impl = new dhtmlXToolbarObject(container, SKIN);
 		
 	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
@@ -61,6 +63,8 @@ function initDhtmlxToolbar (container) {
 		
 		impl = container.impl.attachToolbar();
 		impl.setSkin(SKIN);
+	} else {
+		throw new Error('initDhtmlxToolbar: container is not valid.');
 	}
 	return impl;
 }

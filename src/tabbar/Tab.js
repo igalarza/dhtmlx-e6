@@ -1,5 +1,5 @@
 
-import { isNode , OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
 import { BaseObject } from 'global/BaseObject';
 
 export class Tab extends BaseObject {

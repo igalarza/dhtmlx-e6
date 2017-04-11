@@ -1,6 +1,7 @@
 
 
-import { isNode , OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 
 export class Tabbar extends BaseObject {
@@ -34,7 +35,7 @@ export class Tabbar extends BaseObject {
     
     initDhtmlxTabbar (container) {
         var impl = null;
-        if (isNode(container)) {
+        if (Util.isNode(container)) {
             
             impl = new dhtmlXTabBar({
                 parent: container,
@@ -44,7 +45,10 @@ export class Tabbar extends BaseObject {
         } else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
             
             impl = container.impl.attachTabbar();
-        }
+			impl.setSkin(SKIN);
+        } else {
+			throw new Error('initDhtmlxTabbar: container is not valid.');
+		}
         return impl;
     }
 }

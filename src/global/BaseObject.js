@@ -1,5 +1,6 @@
 
-import { DEBUG, isNode } from 'global/config';
+import { DEBUG } from 'global/config';
+import { Util } from 'global/Util';
 
 /**
   * Parent class of all the objects in the library, it holds some common variables.
@@ -33,9 +34,9 @@ export class BaseObject {
 			this._childs = [];
 			
 			if (container !== null &&
-                            !isNode(container) &&
-                            container.childs instanceof Array) {
-				
+                !Util.isNode(container) &&
+                container.childs instanceof Array) {
+				// Adds this to parent as a child
 				container.childs.push(this);
 			}
 		} else {

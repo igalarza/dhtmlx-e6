@@ -1,7 +1,6 @@
 
-import { isNode , OBJECT_TYPE , DEBUG , SKIN } from 'global/config';
+import { OBJECT_TYPE, DEBUG, SKIN } from 'global/config';
 import { Menu } from 'menu/Menu';
-
 
 export class ContextMenu extends Menu {
     

@@ -1,5 +1,6 @@
 
-import { isNode , OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { OBJECT_TYPE, SKIN, DEBUG } from 'global/config';
+import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 import { LayoutCell } from 'LayoutCell';
 
@@ -71,7 +72,7 @@ export class BaseLayout extends BaseObject {
 	/** Creates the dhtmlXLayoutObject inside its container. */
 	initDhtmlxLayout (container, pattern) {
 		var impl = null;
-		if (isNode(container)) {
+		if (Util.isNode(container)) {
 			
 			impl = new dhtmlXLayoutObject({
 				// id or object for parent container
