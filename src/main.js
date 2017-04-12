@@ -8,6 +8,7 @@ import { Action } from 'actions/Action';
 import { SimpleLayout } from 'layout/SimpleLayout';
 import { TwoColumnsLayout } from 'layout/TwoColumnsLayout';
 import { PageLayout } from 'layout/PageLayout';
+import { WindowLayout } from 'layout/WindowLayout';
 
 import { Menu } from 'menu/Menu';
 import { ContextMenu } from 'menu/ContextMenu';
@@ -45,6 +46,7 @@ export {
 	SimpleLayout, 
 	TwoColumnsLayout, 
 	PageLayout,
+        WindowLayout,
 
 	// Tree layouts
 	BaseTree,

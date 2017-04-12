@@ -581,6 +581,26 @@ class PageLayout extends BaseLayout {
 	}
 }
 
+class WindowLayout extends BaseLayout {
+	
+	/**
+	 * Creates the WindowLayout object
+	 * @constructor
+	 * @param {mixed} container - Object or dom id of the parent element.
+	 */
+	constructor (name, container) {
+		super(name, container, '2E');
+	}
+
+	get body () {
+		return this.childs[0];
+	}
+	
+	get footer () {
+		return this.childs[1];
+	}
+}
+
 /**
  * Base class for Menu objects, see:
  * http://docs.dhtmlx.com/menu__index.html
@@ -1114,4 +1134,4 @@ let windowManager = new WindowManager('windowManager');
 
 // Here we import all "public" classes to expose them
 
-export { getConfig, setConfig, windowManager, Window, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid, Form };
+export { getConfig, setConfig, windowManager, Window, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, WindowLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid, Form };
