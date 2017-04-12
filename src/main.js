@@ -26,10 +26,16 @@ import { BaseGrid } from 'grid/BaseGrid';
 
 import { Form } from 'form/Form';
 
+import { windowManager } from 'window/WindowManager';
+import { Window } from 'window/Window';
+
 export {
 	// Config functions
 	getConfig, 
 	setConfig,
+        
+        windowManager,
+        Window,
 	
 	// Action management
 	ActionManager, 
@@ -44,17 +50,17 @@ export {
 	BaseTree,
 	TreeItem,
 
-    // Menus
+        // Menus
 	Menu,
-    ContextMenu,
+        ContextMenu,
 	MenuItem,
 	
 	// Tabbar
 	Tabbar,
 	Tab,
 
-    // Toolbar
-    Toolbar,
+        // Toolbar
+        Toolbar,
 	ToolbarButton,
 
 	// Grid

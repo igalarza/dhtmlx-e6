@@ -5,9 +5,9 @@ import { BaseObject } from 'global/BaseObject';
 import { Window } from 'window/Window';
 
 
-export class WindowManager extends BaseObject {
+class WindowManager extends BaseObject {
 
-	constructor (name, container) {
+	constructor (name) {
 		if (DEBUG) {
 			console.log('WindowManager constructor');
 		}
@@ -15,22 +15,22 @@ export class WindowManager extends BaseObject {
 		// We will init the BaseObject properties in the init method
 		super();
 		
-		if (arguments.length === 2) {
-			this.init(name, container);
+		if (arguments.length === 1) {
+			this.init(name);
 		}
 	}
 
 	init (name, container) {
-		if (arguments.length === 2) {
+		if (arguments.length === 1) {
 
 			// Creates the dhtmlx object (see function below)
 			var impl = new dhtmlXWindows(SKIN);
 
 			// BaseObject init method
-			super.init(name, OBJECT_TYPE.WINDOW_MANAGER, container, impl);
+			super.init(name, OBJECT_TYPE.WINDOW_MANAGER, null, impl);
 
 		} else {
-			throw new Error('WindowManager init method requires 2 parameters');
+			throw new Error('WindowManager init method requires 1 parameter');
 		}
 	}
 
@@ -38,9 +38,11 @@ export class WindowManager extends BaseObject {
 		// The window gets centered inside the Window object
 		var coordX = 0 ; 
 		var coordY = 0 ; 
-		var windowImpl = this.impl.createWindow(name, coordX, coordY, width, height);
-		var win = new Window(name, this, windowImpl);
-		this.childs.push(win);
-		return win;
+		return this.impl.createWindow(name, coordX, coordY, width, height);
 	}
 }
+
+// For now, only one WindowManager will do
+let windowManager = new WindowManager('windowManager');
+
+export { windowManager } ;

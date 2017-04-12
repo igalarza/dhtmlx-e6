@@ -1,19 +1,22 @@
 
 import { DEBUG, OBJECT_TYPE } from 'global/config';
 import { BaseObject } from 'global/BaseObject';
+import { windowManager } from 'window/WindowManager';
 
 /**
   * 
   */	 
 export class Window extends BaseObject {
 
-	constructor (name, container, impl) {
+	constructor (name, container, width, height) {
 		if (DEBUG) {
 			console.log('Window constructor');
 		}
 
 		// We will init the BaseObject properties in the init method
 		super();
+                
+                let impl = windowManager.create(name, width, height);
 		
 		if (arguments.length === 3) {
 			this.init(name, container, impl);
