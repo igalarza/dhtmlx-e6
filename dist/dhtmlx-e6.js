@@ -4,7 +4,7 @@ const defaultImagesPath = basePath + 'vendor/imgs/';
 
 let config = {
 	/** Enables console.log comments */
-	DEBUG: false,
+	DEBUG: true,
 	/** dhtmlx skin applied to all objects */
 	SKIN: 'dhx_web',
 	
@@ -114,7 +114,7 @@ class TreeItem {
 
 class ActionManager {
 	
-	constructor (context) {	
+	constructor (context) {
 		this._context = context;
 		this._actions = [];
 	}
@@ -248,22 +248,20 @@ class BaseObject {
 	}
 	
 	/** Adds an event to the object, with an ActionManager object as a collection of actions. */
-	attachEvent (eventName, actionManager) {
-		var self = this;
+	attachActionManager (eventName, actionManager) {
 		this.impl.attachEvent(eventName, function (id) {
-			
-			if (typeof self._childs[id] === 'function') {
+			// Checking if the actionManager has the action with the right id
+			if (typeof actionManager.actions[id] === 'function') {
 				// The context in the actionManager is sent to the action
-				self._childs[id](arguments, actionManager.context);
+				actionManager.actions[id](arguments, actionManager.context);
 			}
 		});
 	}
 	
 	/** Adds an event to the object, with a function parameter as an action. */
-	attachEvent (eventName, action, context) {
-		var self = this;
+	attachAction (eventName, action, context) {
 		this.impl.attachEvent(eventName, function () {
-			
+			// Making sure the action param is really an object
 			if (typeof action === 'function') {
 				// The context in the actionManager is sent to the action
 				action(arguments, context);
@@ -436,7 +434,7 @@ class BaseLayout extends BaseObject {
 			
 			if (container instanceof LayoutCell) {
 				var containerLayout = container.container;
-				containerLayout.attachEvent("onResizeFinish", function(){
+				containerLayout.attachAction("onResizeFinish", function(){
 					impl.setSizes();
 				});
 			}
@@ -635,7 +633,7 @@ class Menu extends BaseObject {
 		super.init(name, OBJECT_TYPE.MENU, container, impl);
 		
 		// Enable onClick event 
-		this.attachEvent("onClick", actionManager);
+		this.attachActionManager("onClick", actionManager);
 	}
 	
 	/**
@@ -763,7 +761,7 @@ class BaseTree extends BaseObject {
 			
 			// Enable onSelect event 
 			if (actionManager != null) {
-				this.attachEvent("onSelect", actionManager);
+				this.attachActionManager("onSelect", actionManager);
 			}
 
 		} else {
@@ -878,20 +876,31 @@ class Toolbar extends BaseObject {
 		if (DEBUG) {
 			console.log('Toolbar constructor');
 		}
+		
+		// We will init the BaseObject properties in the init method
+		super();
+		
+		if (arguments.length === 3) {
+			this.init(name, container, actionManager);
+		}
+	}
+	
+	init (name, container, actionManager) {
 		// Creates the dhtmlx object (see function below)
 		var impl = initDhtmlxToolbar(container);
 		impl.setIconsPath(TOOLBAR_ICONS_PATH);
 		
 		// BaseObject constructor
-		super(name, OBJECT_TYPE.TOOLBAR, container, impl);
+		super.init(name, OBJECT_TYPE.TOOLBAR, container, impl);
 		
-		this.attachEvent("onClick", actionManager);
+		this.attachActionManager("onClick", actionManager);
 	}
 	
 	addToolbarButton (toolbarItem) {
 		this.impl.addButton(toolbarItem.name, (this.childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
 		this.childs.push(toolbarItem.action);
-                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+        this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+		
 		// curryfing!
 		return this;
 	}
@@ -899,7 +908,8 @@ class Toolbar extends BaseObject {
 	addToolbarButtonSelect (toolbarItem) {
 		this.impl.addButtonSelect(toolbarItem.name, (this.childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
 		this.childs.push(toolbarItem.action);
-                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+        this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+		
 		// curryfing!
 		return this;
 	}
@@ -907,16 +917,17 @@ class Toolbar extends BaseObject {
 	addToolbarListOption (parent, toolbarItem) {
 		this.impl.addListOption(parent, toolbarItem.name, (this.childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
 		this.childs.push(toolbarItem.action);
-                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+        this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+		
 		// curryfing!
 		return this;
 	}
 	
 	addTooltip (name, text) {
-            if (typeof text !== 'undefined') {
-                this.impl.setItemToolTip(name, text);
-            }
-        }
+		if (typeof text !== 'undefined') {
+			this.impl.setItemToolTip(name, text);
+		}
+    }
 }
 
 /** Creates the dhtmlXToolbarObject inside its container. */
@@ -928,7 +939,7 @@ function initDhtmlxToolbar (container) {
 	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
 		|| container.type === OBJECT_TYPE.LAYOUT
 		|| container.type === OBJECT_TYPE.WINDOW
-                || container.type === OBJECT_TYPE.TAB) {
+        || container.type === OBJECT_TYPE.TAB) {
 		
 		impl = container.impl.attachToolbar();
 		impl.setSkin(SKIN);
@@ -987,7 +998,7 @@ class BaseGrid extends BaseObject {
 			
 			// Enable onSelect event 
 			if (actionManager != null) {
-				this.attachEvent("onSelect", actionManager);
+				this.attachActionManager("onSelect", actionManager);
 			}
 
 		} else {
@@ -1039,7 +1050,7 @@ class Form extends BaseObject {
 	initDhtmlxForm (container) {
 		var impl = null;
 		if (Util.isNode(container)) {
-			impl = new dhtmlXFormObject(container, null);
+			impl = new dhtmlXForm(container, null);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
 			|| container.type === OBJECT_TYPE.WINDOW
