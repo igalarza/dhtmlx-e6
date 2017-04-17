@@ -31,7 +31,7 @@ export class Form extends BaseObject {
 	initDhtmlxForm (container) {
 		var impl = null;
 		if (Util.isNode(container)) {
-			impl = new dhtmlXFormObject(container, null);
+			impl = new dhtmlXForm(container, null);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
 			|| container.type === OBJECT_TYPE.WINDOW
