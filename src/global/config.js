@@ -5,7 +5,7 @@ const defaultImagesPath = basePath + 'vendor/imgs/';
 
 let config = {
 	/** Enables console.log comments */
-	DEBUG: false,
+	DEBUG: true,
 	/** dhtmlx skin applied to all objects */
 	SKIN: 'dhx_web',
 	
