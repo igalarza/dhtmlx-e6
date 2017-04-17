@@ -15,8 +15,9 @@ describe("Checks if the configuration works properly", function() {
 		cfg.DEBUG = false;
 		cfg.SKIN = 'material';
 		
-		expect(cfg).toBeDefined();
-		expect(cfg.DEBUG).toEqual(false);
-		expect(cfg.SKIN).toEqual('material');
+		setConfig(cfg);
+		expect(getConfig()).toBeDefined();
+		expect(getConfig().DEBUG).toEqual(false);
+		expect(getConfig().SKIN).toEqual('material');
 	});
 });

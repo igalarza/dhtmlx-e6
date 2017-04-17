@@ -7,8 +7,17 @@ describe("Checks the BaseObject object", function() {
 	
 	beforeAll(function() {
 		obj = new BaseObject();
-		spyOn(obj, 'destroy').and.callThrough();	
-		obj.init('objName', 'typeName', 'container', 'impl');
+		spyOn(obj, 'destroy').and.callThrough();
+		obj.init('objName', 'typeName', 'container', {});
+		
+		// We need a attachEvent mock function in the impl object
+		let attachEventStub = function(name, action) {
+			console.log('attachEventStub has been called!');
+			// Event is called!
+			action('id');
+		};
+		obj.impl.attachEvent = attachEventStub;
+		spyOn(obj.impl, "attachEvent").and.callThrough();
 	});
 
 	it("checking if the object is defined", function() {
@@ -21,7 +30,36 @@ describe("Checks the BaseObject object", function() {
 	it("checking if the object has its properties", function() {
 		expect(obj.type).toEqual('typeName');
 		expect(obj.container).toEqual('container');
-		expect(obj.impl).toEqual('impl');
+		expect(obj.impl).toEqual(jasmine.any(Object));
+	});
+	
+	it("checking the attachAction method", function() {
+		let eventFunction = function() {
+			console.log('eventFunction has been called!');
+		};				
+		obj.attachAction('test', eventFunction, this);		
+		expect(obj.impl.attachEvent).toHaveBeenCalled();
+	});
+	
+	it("checking the attachActionManager method", function() {
+		let actionManager = {};
+		actionManager.actions = [];
+		actionManager.context = this;
+		actionManager.actions['id'] = function() {
+			console.log('action with id has been called!');
+		};
+		obj.attachActionManager('test', actionManager);
+		expect(obj.impl.attachEvent).toHaveBeenCalled();
+	});
+	
+	it("checking exceptions", function() {
+		let obj2 = new BaseObject();
+		// If init method is not called, getters will raise exception.
+		expect(function () {obj2.name}).toThrowError(Error);
+		expect(function () {obj2.type}).toThrowError(Error);
+		expect(function () {obj2.container}).toThrowError(Error);
+		expect(function () {obj2.impl}).toThrowError(Error);
+		expect(function () {obj2.childs}).toThrowError(Error);
 	});
 	
 	it("checking if the init method without parameters throws an error", function() {
