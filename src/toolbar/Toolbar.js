@@ -9,12 +9,22 @@ export class Toolbar extends BaseObject {
 		if (DEBUG) {
 			console.log('Toolbar constructor');
 		}
+		
+		// We will init the BaseObject properties in the init method
+		super();
+		
+		if (arguments.length === 3) {
+			this.init(name, container, actionManager);
+		}
+	}
+	
+	init (name, container, actionManager) {
 		// Creates the dhtmlx object (see function below)
 		var impl = initDhtmlxToolbar(container);
 		impl.setIconsPath(TOOLBAR_ICONS_PATH);
 		
 		// BaseObject constructor
-		super(name, OBJECT_TYPE.TOOLBAR, container, impl);
+		super.init(name, OBJECT_TYPE.TOOLBAR, container, impl);
 		
 		this.attachActionManager("onClick", actionManager);
 	}
@@ -22,7 +32,8 @@ export class Toolbar extends BaseObject {
 	addToolbarButton (toolbarItem) {
 		this.impl.addButton(toolbarItem.name, (this.childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
 		this.childs.push(toolbarItem.action);
-                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+        this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+		
 		// curryfing!
 		return this;
 	}
@@ -30,7 +41,8 @@ export class Toolbar extends BaseObject {
 	addToolbarButtonSelect (toolbarItem) {
 		this.impl.addButtonSelect(toolbarItem.name, (this.childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
 		this.childs.push(toolbarItem.action);
-                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+        this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+		
 		// curryfing!
 		return this;
 	}
@@ -38,16 +50,17 @@ export class Toolbar extends BaseObject {
 	addToolbarListOption (parent, toolbarItem) {
 		this.impl.addListOption(parent, toolbarItem.name, (this.childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
 		this.childs.push(toolbarItem.action);
-                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+        this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+		
 		// curryfing!
 		return this;
 	}
 	
 	addTooltip (name, text) {
-            if (typeof text !== 'undefined') {
-                this.impl.setItemToolTip(name, text);
-            }
-        }
+		if (typeof text !== 'undefined') {
+			this.impl.setItemToolTip(name, text);
+		}
+    }
 }
 
 /** Creates the dhtmlXToolbarObject inside its container. */
@@ -59,7 +72,7 @@ function initDhtmlxToolbar (container) {
 	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
 		|| container.type === OBJECT_TYPE.LAYOUT
 		|| container.type === OBJECT_TYPE.WINDOW
-                || container.type === OBJECT_TYPE.TAB) {
+        || container.type === OBJECT_TYPE.TAB) {
 		
 		impl = container.impl.attachToolbar();
 		impl.setSkin(SKIN);
