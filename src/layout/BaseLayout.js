@@ -44,7 +44,7 @@ export class BaseLayout extends BaseObject {
 			
 			if (container instanceof LayoutCell) {
 				var containerLayout = container.container;
-				containerLayout.attachEvent("onResizeFinish", function(){
+				containerLayout.attachAction("onResizeFinish", function(){
 					impl.setSizes();
 				});
 			}

@@ -32,7 +32,7 @@ export class BaseGrid extends BaseObject {
 			
 			// Enable onSelect event 
 			if (actionManager != null) {
-				this.attachEvent("onSelect", actionManager);
+				this.attachActionManager("onSelect", actionManager);
 			}
 
 		} else {

@@ -39,7 +39,7 @@ export class Menu extends BaseObject {
 		super.init(name, OBJECT_TYPE.MENU, container, impl);
 		
 		// Enable onClick event 
-		this.attachEvent("onClick", actionManager);
+		this.attachActionManager("onClick", actionManager);
 	}
 	
 	/**

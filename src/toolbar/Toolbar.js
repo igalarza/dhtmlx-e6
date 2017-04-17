@@ -16,7 +16,7 @@ export class Toolbar extends BaseObject {
 		// BaseObject constructor
 		super(name, OBJECT_TYPE.TOOLBAR, container, impl);
 		
-		this.attachEvent("onClick", actionManager);
+		this.attachActionManager("onClick", actionManager);
 	}
 	
 	addToolbarButton (toolbarItem) {

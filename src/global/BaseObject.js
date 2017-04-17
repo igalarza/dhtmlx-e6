@@ -89,7 +89,7 @@ export class BaseObject {
 	}
 	
 	/** Adds an event to the object, with an ActionManager object as a collection of actions. */
-	attachEvent (eventName, actionManager) {
+	attachActionManager (eventName, actionManager) {
 		var self = this;
 		this.impl.attachEvent(eventName, function (id) {
 			
@@ -101,7 +101,7 @@ export class BaseObject {
 	}
 	
 	/** Adds an event to the object, with a function parameter as an action. */
-	attachEvent (eventName, action, context) {
+	attachAction (eventName, action, context) {
 		var self = this;
 		this.impl.attachEvent(eventName, function () {
 			
