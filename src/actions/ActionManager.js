@@ -5,7 +5,7 @@ import { TreeItem } from 'tree/TreeItem';
 
 export class ActionManager {
 	
-	constructor (context) {	
+	constructor (context) {
 		this._context = context;
 		this._actions = [];
 	}

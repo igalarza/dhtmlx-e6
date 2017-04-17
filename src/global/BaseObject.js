@@ -90,21 +90,19 @@ export class BaseObject {
 	
 	/** Adds an event to the object, with an ActionManager object as a collection of actions. */
 	attachActionManager (eventName, actionManager) {
-		var self = this;
 		this.impl.attachEvent(eventName, function (id) {
-			
-			if (typeof self._childs[id] === 'function') {
+			// Checking if the actionManager has the action with the right id
+			if (typeof actionManager.actions[id] === 'function') {
 				// The context in the actionManager is sent to the action
-				self._childs[id](arguments, actionManager.context);
+				actionManager.actions[id](arguments, actionManager.context);
 			}
 		});
 	}
 	
 	/** Adds an event to the object, with a function parameter as an action. */
 	attachAction (eventName, action, context) {
-		var self = this;
 		this.impl.attachEvent(eventName, function () {
-			
+			// Making sure the action param is really an object
 			if (typeof action === 'function') {
 				// The context in the actionManager is sent to the action
 				action(arguments, context);
