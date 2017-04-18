@@ -29,6 +29,7 @@ import { Form } from 'form/Form';
 
 import { windowManager } from 'window/WindowManager';
 import { Window } from 'window/Window';
+import { Message } from 'window/Message';
 
 export {
 	// Config functions
@@ -37,6 +38,7 @@ export {
         
         windowManager,
         Window,
+	Message,
 	
 	// Action management
 	ActionManager, 
