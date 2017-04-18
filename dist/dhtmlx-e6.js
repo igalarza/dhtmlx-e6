@@ -1143,6 +1143,59 @@ class WindowManager extends BaseObject {
 // For now, only one WindowManager will do
 let windowManager = new WindowManager('windowManager');
 
+class Message {
+
+	static alert (title, text, modal = false) {
+
+		if (modal) {
+			dhtmlx.alert({
+			    title: title,
+			    type: 'alert',
+			    text: text
+			});
+		} else {
+			dhtmlx.message({
+			    title: title,
+			    type: 'alert',
+			    text: text
+			});
+		}
+		
+	}
+
+	static warning (title, text, modal = false) {
+		if (modal) {
+			dhtmlx.alert({
+			    title: title,
+			    type: 'alert-warning',
+			    text: text
+			});
+		} else {
+			dhtmlx.message({
+			    title: title,
+			    type: 'alert-warning',
+			    text: text
+			});
+		}
+	}
+
+	static error (title, text, modal = false) {
+		if (modal) {
+			dhtmlx.alert({
+			    title: title,
+			    type: 'alert-error',
+			    text: text
+			});
+		} else {
+			dhtmlx.message({
+			    title: title,
+			    type: 'alert-error',
+			    text: text
+			});
+		}
+	}
+}
+
 // Here we import all "public" classes to expose them
 
-export { getConfig, setConfig, windowManager, Window, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, WindowLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid, Form };
+export { getConfig, setConfig, windowManager, Window, Message, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, WindowLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid, Form };
