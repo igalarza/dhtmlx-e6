@@ -1080,13 +1080,13 @@ class Window extends BaseObject {
                 
                 let impl = windowManager.create(name, width, height);
 		
-		if (arguments.length === 3) {
+		if (arguments.length === 4) {
 			this.init(name, container, impl);
 		}
 	}
 
 	init (name, container, impl) {
-		if (arguments.length === 3) {
+		if (arguments.length === 4) {
 
 			// BaseObject init method
 			super.init(name, OBJECT_TYPE.WINDOW, container, impl);
