@@ -21,7 +21,7 @@ export class Window extends BaseObject {
 		}
 	}
 
-	init (name, container, impl) {
+	init (name, container, width, height) {
 		if (arguments.length === 4) {
                     
                         let impl = windowManager.create(name, width, height);
