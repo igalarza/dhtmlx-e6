@@ -15,16 +15,16 @@ export class Window extends BaseObject {
 
 		// We will init the BaseObject properties in the init method
 		super();
-                
-                let impl = windowManager.create(name, width, height);
 		
 		if (arguments.length === 4) {
-			this.init(name, container, impl);
+			this.init(name, container, width, height);
 		}
 	}
 
 	init (name, container, impl) {
 		if (arguments.length === 4) {
+                    
+                        let impl = windowManager.create(name, width, height);
 
 			// BaseObject init method
 			super.init(name, OBJECT_TYPE.WINDOW, container, impl);
