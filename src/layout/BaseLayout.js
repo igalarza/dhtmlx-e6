@@ -83,8 +83,9 @@ export class BaseLayout extends BaseObject {
 				skin: SKIN
 			});
 		
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL || 
-			   container.type === OBJECT_TYPE.TAB) {			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL 
+                        || container.type === OBJECT_TYPE.TAB
+                        || container.type === OBJECT_TYPE.WINDOW) {			
 			impl = container.impl.attachLayout(pattern);
 		}
 		return impl;

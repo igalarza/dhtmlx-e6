@@ -46,8 +46,8 @@ const OBJECT_TYPE = {
 	TREE : 'tree', 
 	WINDOW : 'window',
 	WINDOW_MANAGER : 'windowManager',
-    TABBAR : 'tabbar',
-    TAB : 'tab'
+        TABBAR : 'tabbar',
+        TAB : 'tab'
 };
 
 class Action {
@@ -473,8 +473,9 @@ class BaseLayout extends BaseObject {
 				skin: SKIN
 			});
 		
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL || 
-			   container.type === OBJECT_TYPE.TAB) {			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL 
+                        || container.type === OBJECT_TYPE.TAB
+                        || container.type === OBJECT_TYPE.WINDOW) {			
 			impl = container.impl.attachLayout(pattern);
 		}
 		return impl;
