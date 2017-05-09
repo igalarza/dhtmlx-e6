@@ -253,7 +253,7 @@ class BaseObject {
 			// Checking if the actionManager has the action with the right id
 			if (typeof actionManager.actions[id] === 'function') {
 				// The context in the actionManager is sent to the action
-				actionManager.actions[id](arguments, actionManager.context);
+				return actionManager.actions[id](arguments, actionManager.context);
 			}
 		});
 	}
@@ -264,7 +264,7 @@ class BaseObject {
 			// Making sure the action param is really an object
 			if (typeof action === 'function') {
 				// The context in the actionManager is sent to the action
-				action(arguments, context);
+				return action(arguments, context);
 			}
 		});
 	}
