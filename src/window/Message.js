@@ -51,4 +51,23 @@ export class Message {
 			});
 		}
 	}
+
+	static confirm (title, text, ok, cancel) {
+            let promise = new Promise((resolve, reject) => {
+                dhtmlx.confirm({
+                    title: title,
+                    text: text,
+                    ok: ok,
+                    cancel: cancel,
+                    callback: function(response) {
+                        if (response) {
+                            resolve();
+                        } else {
+                            reject();    
+                        }
+                    }
+                });
+            });
+            return promise;
+	}
 }
