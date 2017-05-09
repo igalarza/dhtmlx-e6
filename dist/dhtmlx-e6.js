@@ -1149,13 +1149,13 @@ class Message {
 	static alert (title, text, modal = false) {
 
 		if (modal) {
-			dhtmlx.alert({
+			dhtmlx.message({
 			    title: title,
 			    type: 'alert',
 			    text: text
 			});
 		} else {
-			dhtmlx.message({
+			dhtmlx.alert({
 			    title: title,
 			    type: 'alert',
 			    text: text
@@ -1166,13 +1166,13 @@ class Message {
 
 	static warning (title, text, modal = false) {
 		if (modal) {
-			dhtmlx.alert({
+			dhtmlx.message({
 			    title: title,
 			    type: 'alert-warning',
 			    text: text
 			});
 		} else {
-			dhtmlx.message({
+			dhtmlx.alert({
 			    title: title,
 			    type: 'alert-warning',
 			    text: text
@@ -1182,13 +1182,13 @@ class Message {
 
 	static error (title, text, modal = false) {
 		if (modal) {
-			dhtmlx.alert({
+			dhtmlx.message({
 			    title: title,
 			    type: 'alert-error',
 			    text: text
 			});
 		} else {
-			dhtmlx.message({
+			dhtmlx.alert({
 			    title: title,
 			    type: 'alert-error',
 			    text: text
