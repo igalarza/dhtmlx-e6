@@ -235,12 +235,12 @@ class BaseObject {
 			if (typeof this._childs !== 'undefined') {
 				for (let i=0; i<this._childs.length; i++) {
 					var child = this._childs[i];
-					if (typeof child === 'object') {
+					if (typeof child === 'object' && typeof child.find === 'function') {
 						var result = child.find(name);
 						if (result != null) {
 							return result;
 						}
-					}			
+					}
 				}
 			}
 		}
