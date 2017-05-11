@@ -902,7 +902,7 @@ class Toolbar extends BaseObject {
 	addToolbarButton (toolbarItem) {
 		this.impl.addButton(toolbarItem.name, (this.childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
 		this.childs.push(toolbarItem.action);
-        this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
 		
 		// curryfing!
 		return this;
@@ -921,6 +921,28 @@ class Toolbar extends BaseObject {
 		this.impl.addListOption(parent, toolbarItem.name, (this.childs.length), 'button', toolbarItem.caption, toolbarItem.icon);
 		this.childs.push(toolbarItem.action);
         this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+		
+		// curryfing!
+		return this;
+	}
+	
+	addSeparator (toolbarItem) {
+		this.impl.addSeparator(toolbarItem.name, (this.childs.length));
+		this.childs.push(toolbarItem.action);
+		
+		// curryfing!
+		return this;
+	}
+	
+	addText (toolbarItem) {
+		this.impl.addText(toolbarItem.name, (this.childs.length), toolbarItem.caption);
+		
+		// curryfing!
+		return this;
+	}
+	
+	addInput (toolbarItem, width) {
+		this.impl.addText(toolbarItem.name, (this.childs.length), toolbarItem.caption, width);
 		
 		// curryfing!
 		return this;
