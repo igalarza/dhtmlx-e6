@@ -38,6 +38,15 @@ export class Toolbar extends BaseObject {
 		return this;
 	}
 	
+	addToolbarButtonTwoState (toolbarItem) {
+		this.impl.addButtonTwoState(toolbarItem.name, (this.childs.length), toolbarItem.caption, toolbarItem.icon, toolbarItem.iconDisabled);
+		this.childs.push(toolbarItem.action);
+                this.addTooltip(toolbarItem.name, toolbarItem.tooltip);
+		
+		// curryfing!
+		return this;
+	}
+	
 	addToolbarButtonSelect (toolbarItem) {
 		this.impl.addButtonSelect(toolbarItem.name, (this.childs.length), toolbarItem.caption, [], toolbarItem.icon, toolbarItem.iconDisabled);
 		this.childs.push(toolbarItem.action);
@@ -58,7 +67,6 @@ export class Toolbar extends BaseObject {
 	
 	addSeparator (toolbarItem) {
 		this.impl.addSeparator(toolbarItem.name, (this.childs.length));
-		this.childs.push(toolbarItem.action);
 		
 		// curryfing!
 		return this;
@@ -72,7 +80,7 @@ export class Toolbar extends BaseObject {
 	}
 	
 	addInput (toolbarItem, width) {
-		this.impl.addText(toolbarItem.name, (this.childs.length), toolbarItem.caption, width);
+		this.impl.addInput(toolbarItem.name, (this.childs.length), toolbarItem.caption, width);
 		
 		// curryfing!
 		return this;
