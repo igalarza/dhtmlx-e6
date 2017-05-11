@@ -22,6 +22,8 @@ export class ContextMenu extends Menu {
         // Menu init method, container must be null
         super.init(name, null, actionManager);
         
+        container.childs.push(this);
+        
         this.impl.renderAsContextMenu();
         
         if (typeof container === 'object' &&
