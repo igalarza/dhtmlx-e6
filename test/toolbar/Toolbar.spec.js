@@ -18,5 +18,11 @@ describe("Checks the Toolbar object", function() {
 
 	it("checking if the object is defined", function() {
 		expect(obj).toBeDefined();
+		obj.addToolbarButton({
+			name: 'test',
+			caption: 'Caption',
+			icon: 'iconName.png',
+			iconDisabled: 'iconName.png'
+		});
 	});
 });

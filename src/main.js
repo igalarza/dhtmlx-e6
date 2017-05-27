@@ -21,9 +21,9 @@ import { Tabbar } from 'tabbar/Tabbar';
 import { Tab } from 'tabbar/Tab';
 
 import { Toolbar } from 'toolbar/Toolbar';
-import { ToolbarButton } from 'toolbar/ToolbarButton';
 
 import { BaseGrid } from 'grid/BaseGrid';
+import { PropertyGrid } from 'grid/PropertyGrid';
 
 import { Form } from 'form/Form';
 
@@ -36,8 +36,8 @@ export {
 	getConfig, 
 	setConfig,
         
-        windowManager,
-        Window,
+    windowManager,
+    Window,
 	Message,
 	
 	// Action management
@@ -48,27 +48,26 @@ export {
 	SimpleLayout, 
 	TwoColumnsLayout, 
 	PageLayout,
-        WindowLayout,
+    WindowLayout,
 
 	// Tree layouts
 	BaseTree,
 	TreeItem,
 
-        // Menus
+    // Menus
 	Menu,
-        ContextMenu,
+    ContextMenu,
 	MenuItem,
 	
 	// Tabbar
 	Tabbar,
 	Tab,
-
-        // Toolbar
-        Toolbar,
-	ToolbarButton,
-
+	
 	// Grid
 	BaseGrid,
-	
+	PropertyGrid,
+
+    // Other
+    Toolbar,
 	Form
 };

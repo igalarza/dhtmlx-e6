@@ -46,8 +46,8 @@ const OBJECT_TYPE = {
 	TREE : 'tree', 
 	WINDOW : 'window',
 	WINDOW_MANAGER : 'windowManager',
-        TABBAR : 'tabbar',
-        TAB : 'tab'
+    TABBAR : 'tabbar',
+    TAB : 'tab'
 };
 
 class Action {
@@ -114,9 +114,15 @@ class TreeItem {
 
 class ActionManager {
 	
-	constructor (context) {
+	constructor (context, parent = null) {
 		this._context = context;
 		this._actions = [];
+		this._parent = parent;
+		this._childs = [];
+		
+		if (parent !== null) {
+			parent.childs.push(this);
+		}
 	}
 	
 	createMenuItem (parentName, actionName, caption, icon, iconDisabled) {		
@@ -137,8 +143,16 @@ class ActionManager {
 		this._actions[name] = impl;
 	}
 	
+	get childs () {
+		return this._childs;
+	}
+	
 	get context () {
 		return this._context;
+	}
+	
+	get parent () {
+		return this._parent;
 	}
 	
 	get actions () {
@@ -146,7 +160,7 @@ class ActionManager {
 	}
 }
 
-class Util {
+class Util$1 {
 	/**
 	 * Checks if the parameter is a DOM node or DOM id (string).
 	 * @param {mixed} o - Dom Node or any other variable.
@@ -193,7 +207,7 @@ class BaseObject {
 			this._childs = [];
 			
 			if (container !== null &&
-                !Util.isNode(container) &&
+                !Util$1.isNode(container) &&
                 container.childs instanceof Array) {
 				// Adds this to parent as a child
 				container.childs.push(this);
@@ -462,7 +476,7 @@ class BaseLayout extends BaseObject {
 	/** Creates the dhtmlXLayoutObject inside its container. */
 	initDhtmlxLayout (container, pattern) {
 		var impl = null;
-		if (Util.isNode(container)) {
+		if (Util$1.isNode(container)) {
 			
 			impl = new dhtmlXLayoutObject({
 				// id or object for parent container
@@ -669,7 +683,7 @@ class Menu extends BaseObject {
 	initDhtmlxMenu(container) {
 		var impl = null;
         // container can be null
-		if (container == null || Util.isNode(container)) {
+		if (container == null || Util$1.isNode(container)) {
 			impl = new dhtmlXMenuObject(container, SKIN);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
@@ -781,7 +795,7 @@ class BaseTree extends BaseObject {
 	initDhtmlxTree (container) {
 
 		var impl = null;
-		if (Util.isNode(container)) {
+		if (Util$1.isNode(container)) {
 			// call to dhtmlx object constructor 
 			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
 		
@@ -826,7 +840,7 @@ class Tabbar extends BaseObject {
     
     initDhtmlxTabbar (container) {
         var impl = null;
-        if (Util.isNode(container)) {
+        if (Util$1.isNode(container)) {
             
             impl = new dhtmlXTabBar({
                 parent: container,
@@ -966,7 +980,7 @@ class Toolbar extends BaseObject {
 /** Creates the dhtmlXToolbarObject inside its container. */
 function initDhtmlxToolbar (container) {
 	var impl = null;
-	if (Util.isNode(container)) {
+	if (Util$1.isNode(container)) {
 		impl = new dhtmlXToolbarObject(container, SKIN);
 		
 	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
@@ -980,26 +994,6 @@ function initDhtmlxToolbar (container) {
 		throw new Error('initDhtmlxToolbar: container is not valid.');
 	}
 	return impl;
-}
-
-class ToolbarButton {
-	
-	constructor (type, name, action, caption, icon = null, iconDisabled = null) {
-		
-		this._type = type;
-		this._name = name;
-		this._action = action;
-		this._caption = caption;
-		this._icon = icon;
-		this._iconDisabled = iconDisabled;
-	}
-	
-	get type () { return this._type; }
-	get name () { return this._name; }
-	get action () { return this._action; }
-	get caption () { return this._caption; }
-	get icon () { return this._icon; }
-	get iconDisabled () { return this._iconDisabled; }
 }
 
 class BaseGrid extends BaseObject {
@@ -1042,12 +1036,67 @@ class BaseGrid extends BaseObject {
 	initDhtmlxGrid (container) {
 
 		var impl = null;
-		if (Util.isNode(container)) {
+		if (Util$1.isNode(container)) {
 			
 			impl = new dhtmlXGridObject(container);
 		
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
 			impl = container.impl.attachGrid();
+		} else {
+			throw new Error('initDhtmlxToolbar: container is not valid.');
+		}
+		return impl;
+	}
+}
+
+class PropertyGrid extends BaseObject {
+	
+	constructor (name, container, actionManager = null) {
+		if (DEBUG) {
+			console.log('BaseGrid constructor');
+		}
+
+		// We will init the BaseObject properties in the init method
+		super();
+		
+		if (arguments.length >= 2) {
+			this.init(name, container, actionManager);
+		}
+	}
+	
+	init (name, container, actionManager = null) {
+		if (arguments.length >= 2) {
+
+			// Creates the dhtmlx object (see function below)
+			var impl = this.initDhtmlxPropertyGrid(container);
+			impl.setSkin(SKIN);
+			impl.setIconsPath(GRID_ICONS_PATH);
+
+			// BaseObject init method
+			super.init(name, OBJECT_TYPE.GRID, container, impl);
+			
+			// Enable onSelect event 
+			if (actionManager != null) {
+				this.attachActionManager("onSelect", actionManager);
+			}
+
+		} else {
+			throw new Error('PropertyGrid init method requires 2 parameters');
+		}
+	}
+	
+	initDhtmlxPropertyGrid (container) {
+		
+		var impl = null;
+		if (Util.isNode(container)) {
+			
+			impl = new dhtmlXPropertyGrid(container);
+		
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL ||
+			container.type === OBJECT_TYPE.WINDOW ||
+			container.type === OBJECT_TYPE.TAB) {
+				
+			impl = new dhtmlXPropertyGrid(container.impl);
 		} else {
 			throw new Error('initDhtmlxToolbar: container is not valid.');
 		}
@@ -1082,7 +1131,7 @@ class Form extends BaseObject {
 	
 	initDhtmlxForm (container) {
 		var impl = null;
-		if (Util.isNode(container)) {
+		if (Util$1.isNode(container)) {
 			impl = new dhtmlXForm(container, null);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
@@ -1267,4 +1316,4 @@ class Message {
 
 // Here we import all "public" classes to expose them
 
-export { getConfig, setConfig, windowManager, Window, Message, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, WindowLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, Toolbar, ToolbarButton, BaseGrid, Form };
+export { getConfig, setConfig, windowManager, Window, Message, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, WindowLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, BaseGrid, PropertyGrid, Toolbar, Form };

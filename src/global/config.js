@@ -47,6 +47,6 @@ export const OBJECT_TYPE = {
 	TREE : 'tree', 
 	WINDOW : 'window',
 	WINDOW_MANAGER : 'windowManager',
-        TABBAR : 'tabbar',
-        TAB : 'tab'
+    TABBAR : 'tabbar',
+    TAB : 'tab'
 };
