@@ -5,10 +5,11 @@ import { Action } from 'actions/Action';
 
 describe("Checks the ActionManager object", function() {
 
-	var obj = null;
+	let obj = null;
+	let layout = null;
 	
 	beforeAll(function() {
-		var layout = new SimpleLayout('name', document.body);
+		layout = new SimpleLayout('name', document.body);
 		obj = new ActionManager(layout.cell);
 	});
 	
@@ -38,7 +39,12 @@ describe("Checks the ActionManager object", function() {
 		expect(obj.actions['test2']).toBe(testAction2);
 
 		var menuItem = obj.createMenuItem('test', null, 'Menu item');
-
+	});
+	
+	it("checking parent and child properties", function() {
+		var otherActionManager = new ActionManager(layout.cell, obj);
+		expect(otherActionManager.parent).toBeDefined();
+		expect(obj.childs.length).toBe(1);
 	});
 
 });

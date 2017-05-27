@@ -5,9 +5,15 @@ import { TreeItem } from 'tree/TreeItem';
 
 export class ActionManager {
 	
-	constructor (context) {
+	constructor (context, parent = null) {
 		this._context = context;
 		this._actions = [];
+		this._parent = parent;
+		this._childs = [];
+		
+		if (parent !== null) {
+			parent.childs.push(this);
+		}
 	}
 	
 	createMenuItem (parentName, actionName, caption, icon, iconDisabled) {		
@@ -28,8 +34,16 @@ export class ActionManager {
 		this._actions[name] = impl;
 	}
 	
+	get childs () {
+		return this._childs;
+	}
+	
 	get context () {
 		return this._context;
+	}
+	
+	get parent () {
+		return this._parent;
 	}
 	
 	get actions () {
