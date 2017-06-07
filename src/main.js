@@ -4,7 +4,8 @@ import { getConfig, setConfig } from 'global/config';
 
 import { ActionManager } from 'actions/ActionManager';
 import { Action } from 'actions/Action';
- 
+
+import { BaseLayout } from 'layout/BaseLayout'; 
 import { SimpleLayout } from 'layout/SimpleLayout';
 import { TwoColumnsLayout } from 'layout/TwoColumnsLayout';
 import { PageLayout } from 'layout/PageLayout';
@@ -45,6 +46,7 @@ export {
 	Action, 
 
 	// Layouts
+	BaseLayout,
 	SimpleLayout, 
 	TwoColumnsLayout, 
 	PageLayout,

@@ -1316,4 +1316,4 @@ class Message {
 
 // Here we import all "public" classes to expose them
 
-export { getConfig, setConfig, windowManager, Window, Message, ActionManager, Action, SimpleLayout, TwoColumnsLayout, PageLayout, WindowLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, BaseGrid, PropertyGrid, Toolbar, Form };
+export { getConfig, setConfig, windowManager, Window, Message, ActionManager, Action, BaseLayout, SimpleLayout, TwoColumnsLayout, PageLayout, WindowLayout, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, BaseGrid, PropertyGrid, Toolbar, Form };
