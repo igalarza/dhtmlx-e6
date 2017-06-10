@@ -1,15 +1,15 @@
 # dhtmlx-e6
 
-Here are some wrapper objects for the dhxmlx library written in ECMAScript 6 with the help of rollup, babel and some other cool javascript libraries.
-
-Warning! Still in early development.
+Here are some wrapper objects for the [dhtmlx](http://dhtmlx.com/) library written in ECMAScript 6 with the help of rollup, babel and some other cool javascript libraries.
 
 ### Install ###
 
 Dowonload the repository with `git clone https://github.com/igalarza/dhtmlx-e6.git`
 
-Change directory! `cd dhtmlx-e6`
-
 Run `npm install` to generate dist and docs folders
 
-You can use gulp to run other useful commands, see gulpfile.js for more info
+### Build & Test ###
+
+Run `gulp` to generate distribution and documentation folders.
+
+Run `gulp test` or `gulp tdd` to execute tests and create coverage reports.
