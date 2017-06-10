@@ -125,6 +125,10 @@ class ActionManager {
 		}
 	}
 	
+	run (action, params, context) {
+		this._actions[action](params, context);
+	}
+	
 	createMenuItem (parentName, actionName, caption, icon, iconDisabled) {		
 		var action = this.actions[actionName];
 		return new MenuItem(parentName, actionName, action, caption, icon, iconDisabled);
