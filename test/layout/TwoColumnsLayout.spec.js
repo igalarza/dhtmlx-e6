@@ -2,12 +2,16 @@
 import { OBJECT_TYPE } from 'global/config';
 import { TwoColumnsLayout } from 'layout/TwoColumnsLayout';
 
-	describe("Checks the TwoColumnsLayout object!", function() {
+	describe("the TwoColumnsLayout object", function() {
 	
-	var obj = null;
+	let obj = null;
 	
-	beforeAll(function() {
+	beforeEach(function() {
 		obj = new TwoColumnsLayout('name', document.body);
+	});
+	
+	afterEach(function() {
+		obj.destroy();
 	});
 
 	it("checking if the object is defined", function() {
@@ -18,9 +22,5 @@ import { TwoColumnsLayout } from 'layout/TwoColumnsLayout';
 		expect(obj.type).toEqual(OBJECT_TYPE.LAYOUT);
 		expect(obj.left.type).toEqual(OBJECT_TYPE.LAYOUT_CELL);
 		expect(obj.right.type).toEqual(OBJECT_TYPE.LAYOUT_CELL);
-	});
-	
-	afterAll(function() {
-		obj.destroy();
-	});
+	});	
 });

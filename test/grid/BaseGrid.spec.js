@@ -20,5 +20,6 @@ describe("Checks the BaseGrid object", function() {
 		let actionManager = new ActionManager(layout);
 		let obj = new BaseGrid('TestGrid', layout.cell, actionManager);
 		expect(obj.impl).toBeDefined();
+		layout.destroy();
 	});
 });

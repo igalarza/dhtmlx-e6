@@ -9,20 +9,30 @@ module.exports = function(config) {
     browsers: ['Chrome'],
     frameworks: ['jasmine'],
     files: [
+		// depends
 		{ pattern: 'vendor/dhtmlx.max.js', included: true },
 		{ pattern: 'src/**/*.js', included: true },
+		
+		// tests
 		{ pattern: 'test/**/*.js', included: true }, 
+		
 		// css files are required for size validations
-		{ pattern: 'test/main.css', included: false },
-		{ pattern: 'vendor/dhtmlx.css', included: false },
-		{ pattern: 'vendor/imgs/**/**.*', included: false },
-		{ pattern: 'vendor/fonts/**/**.*', included: false }
+		'test/main.css',
+		'vendor/dhtmlx.css',
+		
+		// assets
+		{ pattern: 'vendor/imgs/**/**.*', watched: false, included: false, served: true, nocache: false},
+		{ pattern: 'vendor/fonts/**/**.*', watched: false, included: false, served: true, nocache: false},
+		
+		// fixtures
+        'test/body.html'
     ],
 	
 	// coverage reporter generates the coverage
     reporters: ['progress', 'coverage'],
 	
 	preprocessors: {
+		'test/*.html': ['html2js'],
 		'src/**/*.js': ['rollup'],
         'test/**/*.js': ['rollup']
     },

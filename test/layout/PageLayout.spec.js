@@ -5,7 +5,7 @@ describe("Checks the PageLayout object", function() {
 	
 	var obj = null;
 	
-	beforeAll(function() {
+	beforeEach(function() {
 		var baseStyle = "width:100%;height:100%;margin:0px;overflow:hidden;";
 		document.body.style = baseStyle;
 		document.documentElement.style = baseStyle;
@@ -13,7 +13,7 @@ describe("Checks the PageLayout object", function() {
 		obj = new PageLayout('name', document.body, 300, 200);
 	});
 	
-	afterAll(function() {
+	afterEach(function() {
 		obj.destroy();
 	});
 

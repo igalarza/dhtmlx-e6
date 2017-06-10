@@ -3,14 +3,14 @@ import { Form } from 'form/Form';
 
 describe("Checks the Form object", function() {
 
-	var obj = null;
+	let obj = null;
 	
-	beforeAll(function() {
+	beforeEach(function() {
 		obj = new Form();
 		obj.init('name', document.body);
 	});
 	
-	afterAll(function() {
+	afterEach(function() {
 		obj.destroy();
 	});
 

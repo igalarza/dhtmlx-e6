@@ -4,14 +4,12 @@ import { BaseLayout } from 'layout/BaseLayout';
 import { LayoutCell } from 'layout/LayoutCell';
 import { loadAssets } from 'loadcss';
 
-describe("Checks the LayoutCell object", function() {
+describe("the LayoutCell object", function() {
 	
-	var layout = null;
-	var obj = null;
+	let layout = null;
+	let obj = null;
 	
-	beforeAll(function() {
-
-		jasmine.clock().install();
+	beforeEach(function() {
 		loadAssets();
 
 		// We need to create a layout to have a cell implementation
@@ -21,14 +19,11 @@ describe("Checks the LayoutCell object", function() {
 		obj = layout.childs[0];
 		spyOn(obj.impl, 'setHeight').and.callThrough();
 		spyOn(obj.impl, 'setWidth').and.callThrough();
-		spyOn(obj.impl, 'attachHTMLString').and.callThrough();
-
-		
+		spyOn(obj.impl, 'attachHTMLString').and.callThrough();	
 	});
 	
-	afterAll(function() {
-		obj.unload();
-		jasmine.clock().uninstall();
+	afterEach(function() {
+		layout.destroy();
 	});
 
 	it("checking if the object is defined", function() {
@@ -43,18 +38,16 @@ describe("Checks the LayoutCell object", function() {
 	
 	it("checking if the object has been init properly", function() {
 		
-		var headerText = obj.impl.getText();
+		let headerText = obj.impl.getText();
 		expect(headerText).toBe('');
 		
-		var isHeaderVisible = obj.impl.isHeaderVisible();
+		let isHeaderVisible = obj.impl.isHeaderVisible();
 		expect(isHeaderVisible).toBe(false);
 	});
 	
 	it("checking if setters are working", function() {
-
-		jasmine.clock().tick(1000);
-		var widthValue = 100;
-		var heightValue = 200;
+		let widthValue = 100;
+		let heightValue = 200;
 		obj.height = heightValue;
 		obj.width = widthValue;
 		obj.html = "<p>test</p>";

@@ -3,9 +3,9 @@ import { BaseObject } from 'global/BaseObject';
 
 describe("Checks the BaseObject object", function() {
 	
-	var obj = null;
+	let obj = null;
 	
-	beforeAll(function() {
+	beforeEach(function() {
 		obj = new BaseObject();
 		spyOn(obj, 'destroy').and.callThrough();
 		obj.init('objName', 'typeName', 'container', {});
@@ -18,6 +18,10 @@ describe("Checks the BaseObject object", function() {
 		};
 		obj.impl.attachEvent = attachEventStub;
 		spyOn(obj.impl, "attachEvent").and.callThrough();
+	});
+	
+	afterEach(function() {
+		obj.destroy();
 	});
 
 	it("checking if the object is defined", function() {

@@ -6,9 +6,13 @@ describe("Checks the SimpleLayout object", function() {
 	
 	var obj = null;
 	
-	beforeAll(function() {
+	beforeEach(function() {
 		obj = new SimpleLayout('name', document.body);
-	});	
+	});
+	
+	afterEach(function() {
+		obj.destroy();
+	});
 
 	it("checking if the object is defined", function() {
 		expect(obj).toBeDefined();
@@ -17,9 +21,5 @@ describe("Checks the SimpleLayout object", function() {
 	it("checking if the object has its properties", function() {
 		expect(obj.type).toEqual(OBJECT_TYPE.LAYOUT);
 		expect(obj.cell.type).toEqual(OBJECT_TYPE.LAYOUT_CELL);
-	});
-	
-	afterAll(function() {
-		obj.destroy();
-	});
+	});	
 });

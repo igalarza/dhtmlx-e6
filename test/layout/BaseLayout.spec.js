@@ -2,26 +2,26 @@
 import { OBJECT_TYPE } from 'global/config';
 import { BaseLayout } from 'layout/BaseLayout';
 
-describe("Checks the BaseLayout object", function() {
+describe("the BaseLayout object", function() {
 	
-	var obj = null;
+	let obj = null;
 	
-	beforeAll(function() {
+	beforeEach(function() {
 		obj = new BaseLayout();
 		spyOn(obj, 'initCells').and.callThrough();	
 		obj.init('name', document.body, '1C');
 	});
 	
-	afterAll(function() {
+	afterEach(function() {
 		obj.destroy();
 	});
 
-	it("checking if the object is defined", function() {
+	it("checks if the object is defined", function() {
 		expect(obj).toBeDefined();
 		expect(obj.initCells).toHaveBeenCalledTimes(1);
 	});
 	
-	it("checking if the object has its properties", function() {
+	it("checks if the object has its properties", function() {
 		expect(obj.type).toEqual(OBJECT_TYPE.LAYOUT);
 		expect(obj.childs).toBeDefined();
 		expect(obj.childs.length).toEqual(1);
@@ -29,11 +29,11 @@ describe("Checks the BaseLayout object", function() {
 		expect(obj.childs[0].impl).toBeDefined();
 	});
 	
-	it("checking that the resize method is called", function() {
+	it("checks that the attachEvent method is called", function() {
 		
 		spyOn(obj.impl, 'attachEvent').and.callThrough();
 		
-		var otherLayout = new BaseLayout('name', obj.childs[0], '1C');
+		let otherLayout = new BaseLayout('name', obj.childs[0], '1C');
 		
 		expect(obj.impl.attachEvent).toHaveBeenCalledTimes(1);
 	});
