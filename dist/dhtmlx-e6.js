@@ -1100,7 +1100,7 @@ class PropertyGrid extends BaseObject {
 			container.type === OBJECT_TYPE.WINDOW ||
 			container.type === OBJECT_TYPE.TAB) {
 				
-			impl = new dhtmlXPropertyGrid(container.impl);
+			impl = container.impl.attachPropertyGrid();
 		} else {
 			throw new Error('initDhtmlxToolbar: container is not valid.');
 		}
