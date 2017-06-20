@@ -1,5 +1,6 @@
 
 import { OBJECT_TYPE, SKIN, DEBUG, GRID_ICONS_PATH } from 'global/config';
+import { Util } from 'global/Util';
 import { BaseObject } from 'global/BaseObject';
 
 export class PropertyGrid extends BaseObject {

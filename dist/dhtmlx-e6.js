@@ -164,7 +164,7 @@ class ActionManager {
 	}
 }
 
-class Util$1 {
+class Util {
 	/**
 	 * Checks if the parameter is a DOM node or DOM id (string).
 	 * @param {mixed} o - Dom Node or any other variable.
@@ -211,7 +211,7 @@ class BaseObject {
 			this._childs = [];
 			
 			if (container !== null &&
-                !Util$1.isNode(container) &&
+                !Util.isNode(container) &&
                 container.childs instanceof Array) {
 				// Adds this to parent as a child
 				container.childs.push(this);
@@ -480,7 +480,7 @@ class BaseLayout extends BaseObject {
 	/** Creates the dhtmlXLayoutObject inside its container. */
 	initDhtmlxLayout (container, pattern) {
 		var impl = null;
-		if (Util$1.isNode(container)) {
+		if (Util.isNode(container)) {
 			
 			impl = new dhtmlXLayoutObject({
 				// id or object for parent container
@@ -687,7 +687,7 @@ class Menu extends BaseObject {
 	initDhtmlxMenu(container) {
 		var impl = null;
         // container can be null
-		if (container == null || Util$1.isNode(container)) {
+		if (container == null || Util.isNode(container)) {
 			impl = new dhtmlXMenuObject(container, SKIN);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
@@ -799,7 +799,7 @@ class BaseTree extends BaseObject {
 	initDhtmlxTree (container) {
 
 		var impl = null;
-		if (Util$1.isNode(container)) {
+		if (Util.isNode(container)) {
 			// call to dhtmlx object constructor 
 			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
 		
@@ -844,7 +844,7 @@ class Tabbar extends BaseObject {
     
     initDhtmlxTabbar (container) {
         var impl = null;
-        if (Util$1.isNode(container)) {
+        if (Util.isNode(container)) {
             
             impl = new dhtmlXTabBar({
                 parent: container,
@@ -984,7 +984,7 @@ class Toolbar extends BaseObject {
 /** Creates the dhtmlXToolbarObject inside its container. */
 function initDhtmlxToolbar (container) {
 	var impl = null;
-	if (Util$1.isNode(container)) {
+	if (Util.isNode(container)) {
 		impl = new dhtmlXToolbarObject(container, SKIN);
 		
 	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
@@ -1040,7 +1040,7 @@ class BaseGrid extends BaseObject {
 	initDhtmlxGrid (container) {
 
 		var impl = null;
-		if (Util$1.isNode(container)) {
+		if (Util.isNode(container)) {
 			
 			impl = new dhtmlXGridObject(container);
 		
@@ -1135,7 +1135,7 @@ class Form extends BaseObject {
 	
 	initDhtmlxForm (container) {
 		var impl = null;
-		if (Util$1.isNode(container)) {
+		if (Util.isNode(container)) {
 			impl = new dhtmlXForm(container, null);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
