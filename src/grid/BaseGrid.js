@@ -47,7 +47,9 @@ export class BaseGrid extends BaseObject {
 			
 			impl = new dhtmlXGridObject(container);
 		
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {			
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL 
+                        || container.type === OBJECT_TYPE.TAB
+                        || container.type === OBJECT_TYPE.WINDOW) {		
 			impl = container.impl.attachGrid();
 		} else {
 			throw new Error('initDhtmlxToolbar: container is not valid.');
