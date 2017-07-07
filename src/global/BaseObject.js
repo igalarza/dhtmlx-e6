@@ -57,6 +57,13 @@ export class BaseObject {
 				}			
 			}
 		}
+
+		// Removing from container
+		if (typeof this._container !== 'undefined'
+			&& typeof this._container.childs !== 'undefined') {
+
+			this._container.childs = this._container.childs.filter((elem) => elem !== this);
+		}
 		
 		// Finally, the object
 		if (typeof this._impl !== 'undefined' &&
@@ -118,9 +125,9 @@ export class BaseObject {
 		}
 	}
 	
-    /**
-     * Type of component: layout, window, grid, etc. 
-     */
+        /**
+        * Type of component: layout, window, grid, etc. 
+        */
 	get type () {
 		if (typeof this._type !== 'undefined') {
 			return this._type;
@@ -130,8 +137,8 @@ export class BaseObject {
 	}
 	
 	/**
-     * Usually is other dhtmlx-e6 object, the root container should be inside document.body
-     */
+        * Usually is other dhtmlx-e6 object, the root container should be inside document.body
+        */
 	get container () { 
 		if (typeof this._container !== 'undefined') {
 			return this._container;
@@ -141,8 +148,8 @@ export class BaseObject {
 	}
 	
 	/**
-     * dhtmlx object, must be created by child class before calling super in the constructor.
-     */
+        * dhtmlx object, must be created by child class before calling super in the constructor.
+        */
 	get impl () {
 		if (typeof this._impl !== 'undefined') {
 			return this._impl;
@@ -161,4 +168,8 @@ export class BaseObject {
 			throw new Error('this._childs is undefined: init method has not been called');
 		}
 	}
+	
+	set childs (childs) {
+            this._childs = childs;
+        }
 }
