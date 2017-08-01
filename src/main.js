@@ -21,6 +21,8 @@ import { TreeItem } from 'tree/TreeItem';
 import { Tabbar } from 'tabbar/Tabbar';
 import { Tab } from 'tabbar/Tab';
 
+import { Accordion } from 'accordion/Accordion';
+
 import { Toolbar } from 'toolbar/Toolbar';
 
 import { BaseGrid } from 'grid/BaseGrid';
@@ -50,7 +52,9 @@ export {
 	SimpleLayout, 
 	TwoColumnsLayout, 
 	PageLayout,
-    WindowLayout,
+        WindowLayout,
+        
+        Accordion,
 
 	// Tree layouts
 	BaseTree,
