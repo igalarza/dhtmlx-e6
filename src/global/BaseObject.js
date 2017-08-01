@@ -95,6 +95,24 @@ export class BaseObject {
 		return null;
 	}
 	
+	/** Finds a parent object by name */
+	findParent (name) {
+		if (this.name === name) {
+			return this;
+		} else {
+			if (typeof this._container !== 'undefined') {
+                                var parent = this._container;
+                                if (typeof parent === 'object' && typeof parent.findParent === 'function') {
+                                        var result = parent.findParent(name);
+                                        if (result != null) {
+                                                return result;
+                                        }
+                                }
+			}
+		}
+		return null;
+	}
+	
 	/** Adds an event to the object, with an ActionManager object as a collection of actions. */
 	attachActionManager (eventName, actionManager) {
 		this.impl.attachEvent(eventName, function (id) {
