@@ -22,6 +22,7 @@ import { Tabbar } from 'tabbar/Tabbar';
 import { Tab } from 'tabbar/Tab';
 
 import { Accordion } from 'accordion/Accordion';
+import { AccordionCell } from 'accordion/AccordionCell';
 
 import { Toolbar } from 'toolbar/Toolbar';
 
@@ -55,6 +56,7 @@ export {
         WindowLayout,
         
         Accordion,
+        AccordionCell,
 
 	// Tree layouts
 	BaseTree,

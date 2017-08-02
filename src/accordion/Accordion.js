@@ -42,9 +42,10 @@ export class Accordion extends BaseObject {
                 skin: SKIN
             });
             
-        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL 
-                   || container.type === OBJECT_TYPE.TAB
-                   || container.type === OBJECT_TYPE.WINDOW) {
+        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL
+                || container.type === OBJECT_TYPE.ACCORDION_CELL
+                || container.type === OBJECT_TYPE.TAB
+                || container.type === OBJECT_TYPE.WINDOW) {
             
             impl = container.impl.attachAccordion();
             impl.setSkin(SKIN);

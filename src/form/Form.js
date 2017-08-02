@@ -34,10 +34,11 @@ export class Form extends BaseObject {
 			impl = new dhtmlXForm(container, null);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
-			|| container.type === OBJECT_TYPE.WINDOW
-			|| container.type === OBJECT_TYPE.TAB) {
+                    || container.type === OBJECT_TYPE.ACCORDION_CELL
+                    || container.type === OBJECT_TYPE.WINDOW
+                    || container.type === OBJECT_TYPE.TAB) {
 			
-			impl = container.impl.attachForm();			
+			impl = container.impl.attachForm();
 		} else {
 			throw new Error('initDhtmlxForm: container is not valid.');
 		}

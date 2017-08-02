@@ -37,17 +37,19 @@ function setConfig(cfg) {
 
 /** All the dhtmlx object types */
 const OBJECT_TYPE = {
-	LAYOUT : 'layout',
-	LAYOUT_CELL : 'layoutCell',
-	TOOLBAR : 'toolbar',
-	FORM : 'form', 
-	MENU : 'menu', 
-	GRID : 'grid', 
-	TREE : 'tree', 
-	WINDOW : 'window',
-	WINDOW_MANAGER : 'windowManager',
+    LAYOUT : 'layout',
+    LAYOUT_CELL : 'layoutCell',
+    TOOLBAR : 'toolbar',
+    FORM : 'form', 
+    MENU : 'menu', 
+    GRID : 'grid', 
+    TREE : 'tree', 
+    WINDOW : 'window',
+    WINDOW_MANAGER : 'windowManager',
     TABBAR : 'tabbar',
-    TAB : 'tab'
+    TAB : 'tab',
+    ACCORDION : 'accordion',
+    ACCORDION_CELL : 'accordionCell' 
 };
 
 class Action {
@@ -880,10 +882,14 @@ class Tabbar extends BaseObject {
                 skin: SKIN
             });
             
-        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
+        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL
+            || container.type === OBJECT_TYPE.ACCORDION_CELL
+            || container.type === OBJECT_TYPE.WINDOW
+            || container.type === OBJECT_TYPE.TAB) {
             
             impl = container.impl.attachTabbar();
-			impl.setSkin(SKIN);
+            impl.setSkin(SKIN);
+        
         } else {
 			throw new Error('initDhtmlxTabbar: container is not valid.');
 		}
@@ -958,9 +964,10 @@ class Accordion extends BaseObject {
                 skin: SKIN
             });
             
-        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL 
-                   || container.type === OBJECT_TYPE.TAB
-                   || container.type === OBJECT_TYPE.WINDOW) {
+        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL
+                || container.type === OBJECT_TYPE.ACCORDION_CELL
+                || container.type === OBJECT_TYPE.TAB
+                || container.type === OBJECT_TYPE.WINDOW) {
             
             impl = container.impl.attachAccordion();
             impl.setSkin(SKIN);
@@ -968,6 +975,34 @@ class Accordion extends BaseObject {
             throw new Error('initDhtmlxAccordion: container is not valid.');
         }
         return impl;
+    }
+}
+
+class AccordionCell extends BaseObject {
+    
+    constructor (name, container, id, text, open = false, height = null, icon = null) {
+        
+        if (DEBUG) {
+            console.log('AccordionCell constructor');
+        }
+        
+        // We will init the BaseObject properties in the init method
+        super();
+        
+        if (arguments.length >= 4) {
+            this.init(name, container, id, text, open, height, icon);
+        }
+    }    
+    
+    init (name, container, id, text, open = false, height = null, icon = null) {
+        
+        // TODO check that container must be a Accordion object
+        container.impl.addItem(id, text, open, height, icon);
+        
+        var impl = container.impl.cells(id);
+        
+         // BaseObject init method
+        super.init(name, OBJECT_TYPE.ACCORDION_CELL, container, impl);
     }
 }
 
@@ -1067,10 +1102,11 @@ function initDhtmlxToolbar (container) {
 	if (Util.isNode(container)) {
 		impl = new dhtmlXToolbarObject(container, SKIN);
 		
-	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
+	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
+                || container.type === OBJECT_TYPE.ACCORDION_CELL
 		|| container.type === OBJECT_TYPE.LAYOUT
 		|| container.type === OBJECT_TYPE.WINDOW
-        || container.type === OBJECT_TYPE.TAB) {
+                || container.type === OBJECT_TYPE.TAB) {
 		
 		impl = container.impl.attachToolbar();
 		impl.setSkin(SKIN);
@@ -1124,7 +1160,8 @@ class BaseGrid extends BaseObject {
 			
 			impl = new dhtmlXGridObject(container);
 		
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL 
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
+                        || container.type === OBJECT_TYPE.ACCORDION_CELL
                         || container.type === OBJECT_TYPE.TAB
                         || container.type === OBJECT_TYPE.WINDOW) {		
 			impl = container.impl.attachGrid();
@@ -1221,10 +1258,11 @@ class Form extends BaseObject {
 			impl = new dhtmlXForm(container, null);
 			
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
-			|| container.type === OBJECT_TYPE.WINDOW
-			|| container.type === OBJECT_TYPE.TAB) {
+                    || container.type === OBJECT_TYPE.ACCORDION_CELL
+                    || container.type === OBJECT_TYPE.WINDOW
+                    || container.type === OBJECT_TYPE.TAB) {
 			
-			impl = container.impl.attachForm();			
+			impl = container.impl.attachForm();
 		} else {
 			throw new Error('initDhtmlxForm: container is not valid.');
 		}
@@ -1402,4 +1440,4 @@ class Message {
 
 // Here we import all "public" classes to expose them
 
-export { getConfig, setConfig, windowManager, Window, Message, ActionManager, Action, BaseLayout, SimpleLayout, TwoColumnsLayout, PageLayout, WindowLayout, Accordion, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, BaseGrid, PropertyGrid, Toolbar, Form };
+export { getConfig, setConfig, windowManager, Window, Message, ActionManager, Action, BaseLayout, SimpleLayout, TwoColumnsLayout, PageLayout, WindowLayout, Accordion, AccordionCell, BaseTree, TreeItem, Menu, ContextMenu, MenuItem, Tabbar, Tab, BaseGrid, PropertyGrid, Toolbar, Form };

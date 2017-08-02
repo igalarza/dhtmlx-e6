@@ -42,10 +42,14 @@ export class Tabbar extends BaseObject {
                 skin: SKIN
             });
             
-        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
+        } else if (container.type === OBJECT_TYPE.LAYOUT_CELL
+            || container.type === OBJECT_TYPE.ACCORDION_CELL
+            || container.type === OBJECT_TYPE.WINDOW
+            || container.type === OBJECT_TYPE.TAB) {
             
             impl = container.impl.attachTabbar();
-			impl.setSkin(SKIN);
+            impl.setSkin(SKIN);
+        
         } else {
 			throw new Error('initDhtmlxTabbar: container is not valid.');
 		}

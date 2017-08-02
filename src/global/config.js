@@ -38,15 +38,17 @@ export function setConfig(cfg) {
 
 /** All the dhtmlx object types */
 export const OBJECT_TYPE = {
-	LAYOUT : 'layout',
-	LAYOUT_CELL : 'layoutCell',
-	TOOLBAR : 'toolbar',
-	FORM : 'form', 
-	MENU : 'menu', 
-	GRID : 'grid', 
-	TREE : 'tree', 
-	WINDOW : 'window',
-	WINDOW_MANAGER : 'windowManager',
+    LAYOUT : 'layout',
+    LAYOUT_CELL : 'layoutCell',
+    TOOLBAR : 'toolbar',
+    FORM : 'form', 
+    MENU : 'menu', 
+    GRID : 'grid', 
+    TREE : 'tree', 
+    WINDOW : 'window',
+    WINDOW_MANAGER : 'windowManager',
     TABBAR : 'tabbar',
-    TAB : 'tab'
+    TAB : 'tab',
+    ACCORDION : 'accordion',
+    ACCORDION_CELL : 'accordionCell' 
 };

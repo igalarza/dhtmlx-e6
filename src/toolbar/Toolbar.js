@@ -99,10 +99,11 @@ function initDhtmlxToolbar (container) {
 	if (Util.isNode(container)) {
 		impl = new dhtmlXToolbarObject(container, SKIN);
 		
-	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL  
+	} else if (container.type === OBJECT_TYPE.LAYOUT_CELL
+                || container.type === OBJECT_TYPE.ACCORDION_CELL
 		|| container.type === OBJECT_TYPE.LAYOUT
 		|| container.type === OBJECT_TYPE.WINDOW
-        || container.type === OBJECT_TYPE.TAB) {
+                || container.type === OBJECT_TYPE.TAB) {
 		
 		impl = container.impl.attachToolbar();
 		impl.setSkin(SKIN);
