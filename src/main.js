@@ -30,6 +30,7 @@ import { BaseGrid } from 'grid/BaseGrid';
 import { PropertyGrid } from 'grid/PropertyGrid';
 
 import { Form } from 'form/Form';
+import { Vault } from 'vault/Vault';
 
 import { windowManager } from 'window/WindowManager';
 import { Window } from 'window/Window';
@@ -77,5 +78,6 @@ export {
 
     // Other
     Toolbar,
-	Form
+	Form,
+        Vault
 };
