@@ -128,7 +128,7 @@ class ActionManager {
 	}
 	
 	run (action, params, context) {
-		this._actions[action](params, context);
+		return this._actions[action](params, context);
 	}
 	
 	createMenuItem (parentName, actionName, caption, icon, iconDisabled) {		
