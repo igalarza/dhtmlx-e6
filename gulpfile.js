@@ -24,9 +24,10 @@ var cache;
 // Generates dist files
 gulp.task('build', function() {
 	return rollup({
-      entry: './src/main.js',
+      input: './src/main.js',
 	  cache: cache,
-	  sourceMap: false,
+	  sourcemap: 'inline',
+	  format: 'es',
 	  plugins: [
 		includePaths({
 			include: {},
