@@ -115,7 +115,7 @@ export class BaseObject {
 	
 	/** Adds an event to the object, with an ActionManager object as a collection of actions. */
 	attachActionManager (eventName, actionManager) {
-		this.impl.attachEvent(eventName, function (id) {
+		return this.impl.attachEvent(eventName, function (id) {
 			// Checking if the actionManager has the action with the right id
 			if (typeof actionManager.actions[id] === 'function') {
 				// The context in the actionManager is sent to the action
@@ -126,7 +126,7 @@ export class BaseObject {
 	
 	/** Adds an event to the object, with a function parameter as an action. */
 	attachAction (eventName, action, context) {
-		this.impl.attachEvent(eventName, function () {
+		return this.impl.attachEvent(eventName, function () {
 			// Making sure the action param is really an object
 			if (typeof action === 'function') {
 				// The context in the actionManager is sent to the action
