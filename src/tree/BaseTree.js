@@ -49,6 +49,18 @@ export class BaseTree extends BaseObject {
 		this.impl.addItem(treeItem.id, treeItem.text, treeItem.parentId);
 		this._childs[treeItem.id] = treeItem.action;
 	}
+	
+	load (url, type = 'json') {
+		return new Promise((resolve, reject) => {
+			try {
+				this.impl.load(url, function(response) {
+					resolve(response);
+				}, type);
+			} catch (e) {
+				reject(e);
+			}
+		});		
+	}
 
 	initDhtmlxTree (container) {
 

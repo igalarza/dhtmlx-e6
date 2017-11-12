@@ -22,4 +22,19 @@ describe("Checks the BaseGrid object", function() {
 		expect(obj.impl).toBeDefined();
 		layout.destroy();
 	});
+	
+	it("checking if the load call works properly", function(done) {
+		let layout = new SimpleLayout('layout', document.body);
+		let actionManager = new ActionManager(layout);
+		let obj = new BaseGrid('TestGrid', layout.cell, actionManager);
+		spyOn(obj.impl, 'load').and.callFake(function(url, callback, type) {
+			let response = {};
+			callback(response);
+		});
+		obj.load()
+			.then((res) => {				
+				expect(res).toBeDefined();
+				done();
+			});
+	});		
 });
