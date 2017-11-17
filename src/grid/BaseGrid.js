@@ -39,6 +39,18 @@ export class BaseGrid extends BaseObject {
 			throw new Error('BaseGrid init method requires 2 parameters');
 		}
 	}
+	
+	load (url, type = 'json') {
+		return new Promise((resolve, reject) => {
+			try {
+				this.impl.load(url, function(response) {
+					resolve(response);
+				}, type);
+			} catch (e) {
+				reject(e);
+			}
+		});		
+	}
 
 	initDhtmlxGrid (container) {
 

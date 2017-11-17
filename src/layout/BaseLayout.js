@@ -85,7 +85,8 @@ export class BaseLayout extends BaseObject {
 		
 		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL 
                         || container.type === OBJECT_TYPE.TAB
-                        || container.type === OBJECT_TYPE.WINDOW) {			
+                        || container.type === OBJECT_TYPE.WINDOW
+						|| container.type === OBJECT_TYPE.ACCORDION_CELL) {
 			impl = container.impl.attachLayout(pattern);
 		}
 		return impl;
