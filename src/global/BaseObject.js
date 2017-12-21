@@ -120,6 +120,9 @@ export class BaseObject {
 			if (typeof actionManager.actions[id] === 'function') {
 				// The context in the actionManager is sent to the action
 				return actionManager.actions[id](arguments, actionManager.context);
+			// TODO Solve it recursively, right now only goes up one level
+			} else if (actionManager.parent !== null && typeof actionManager.parent.actions[id] === 'function') {
+				return actionManager.parent.actions[id](arguments, actionManager.parent.context);
 			}
 		});
 	}
