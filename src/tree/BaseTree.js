@@ -69,7 +69,8 @@ export class BaseTree extends BaseObject {
 			// call to dhtmlx object constructor 
 			impl = new dhtmlXTreeObject(container, "100%", "100%", 0);
 		
-		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL) {
+		} else if (container.type === OBJECT_TYPE.LAYOUT_CELL ||
+			container.type === OBJECT_TYPE.ACCORDION_CELL) {
 			impl = container.impl.attachTree();
 			
 		} else {
