@@ -72,6 +72,14 @@ export class Toolbar extends BaseObject {
 		// curryfing!
 		return this;
 	}
+
+	addListSeparator (parent, toolbarItem) {
+                this.impl.addListOption(parent, toolbarItem.name, (this.childs.length), 'separator');
+
+                // curryfing!
+                return this;
+        }
+
 	
 	addText (toolbarItem) {
 		this.impl.addText(toolbarItem.name, (this.childs.length), toolbarItem.caption);
